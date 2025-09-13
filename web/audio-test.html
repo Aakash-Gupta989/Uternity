@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Test - UTERNITY</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+        .test-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        .status-indicator {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+        .status-success { background: #dcfce7; color: #166534; }
+        .status-error { background: #fee2e2; color: #991b1b; }
+        .status-warning { background: #fef3c7; color: #92400e; }
+        .status-info { background: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold text-center mb-8">🔊 Audio System Test</h1>
+            
+            <div class="test-card">
+                <h2 class="text-xl font-semibold mb-4">Voice Synthesis Status</h2>
+                <div id="voice-status" class="status-indicator status-info">Checking...</div>
+                
+                <div class="mt-4 space-y-2">
+                    <button onclick="testBasicAudio()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        🔊 Test Basic Audio
+                    </button>
+                    <button onclick="testQuestionAudio()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                        🎯 Test Question Audio
+                    </button>
+                    <button onclick="testConversationAudio()" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg">
+                        💬 Test Conversation Audio
+                    </button>
+                    <button onclick="checkBrowserInfo()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
+                        🌐 Browser Info
+                    </button>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h2 class="text-xl font-semibold mb-4">Available Voices</h2>
+                <div id="voices-list" class="text-sm text-gray-600">Loading...</div>
+            </div>
+            
+            <div class="test-card">
+                <h2 class="text-xl font-semibold mb-4">Test Results</h2>
+                <div id="test-results" class="text-sm text-gray-600">No tests run yet</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let speechSynthesis = window.speechSynthesis;
+        let voicesLoaded = false;
+        let testResults = [];
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeVoices();
+        });
+
+        function initializeVoices() {
+            console.log("🎭 Initializing speech synthesis voices...");
+            updateVoiceStatus("Initializing...", "info");
+            
+            if (!speechSynthesis) {
+                updateVoiceStatus("Speech synthesis not supported", "error");
+                return;
+            }
+            
+            // Check if voices are already loaded
+            let voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                console.log("✅ Voices already loaded:", voices.length);
+                voicesLoaded = true;
+                updateVoiceStatus(`Ready (${voices.length} voices)`, "success");
+                updateVoicesList(voices);
+                return;
+            }
+            
+            // Wait for voices to load
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = function() {
+                    voices = speechSynthesis.getVoices();
+                    console.log("✅ Voices loaded via onvoiceschanged:", voices.length);
+                    voicesLoaded = true;
+                    updateVoiceStatus(`Ready (${voices.length} voices)`, "success");
+                    updateVoicesList(voices);
+                };
+            } else {
+                console.warn("⚠️ onvoiceschanged not supported");
+                voicesLoaded = true;
+                updateVoiceStatus("Ready (fallback)", "warning");
+            }
+        }
+
+        function updateVoiceStatus(status, type = "info") {
+            const statusElement = document.getElementById('voice-status');
+            if (statusElement) {
+                statusElement.textContent = status;
+                statusElement.className = `status-indicator status-${type}`;
+            }
+        }
+
+        function updateVoicesList(voices) {
+            const voicesElement = document.getElementById('voices-list');
+            if (voicesElement) {
+                let html = `<p class="mb-2"><strong>Total voices:</strong> ${voices.length}</p>`;
+                voices.forEach((voice, index) => {
+                    const isDefault = voice.default ? ' (DEFAULT)' : '';
+                    html += `<div class="mb-1">${index + 1}. ${voice.name} (${voice.lang})${isDefault}</div>`;
+                });
+                voicesElement.innerHTML = html;
+            }
+        }
+
+        function testBasicAudio() {
+            if (!voicesLoaded) {
+                addTestResult("❌ Basic Audio Test", "Voices not yet loaded", "error");
+                return;
+            }
+
+            const voices = speechSynthesis.getVoices();
+            if (voices.length === 0) {
+                addTestResult("❌ Basic Audio Test", "No voices available", "error");
+                return;
+            }
+
+            const testVoice = voices[0];
+            const utterance = new SpeechSynthesisUtterance("Hello! This is a basic audio test. Can you hear me speaking clearly?");
+            utterance.voice = testVoice;
+            utterance.rate = 0.9;
+            utterance.volume = 0.8;
+
+            utterance.onstart = () => {
+                addTestResult("🔊 Basic Audio Test", "Started playing", "info");
+            };
+
+            utterance.onend = () => {
+                addTestResult("✅ Basic Audio Test", "Completed successfully", "success");
+            };
+
+            utterance.onerror = (event) => {
+                addTestResult("❌ Basic Audio Test", `Error: ${event.error}`, "error");
+            };
+
+            speechSynthesis.speak(utterance);
+        }
+
+        function testQuestionAudio() {
+            if (!voicesLoaded) {
+                addTestResult("❌ Question Audio Test", "Voices not yet loaded", "error");
+                return;
+            }
+
+            const voices = speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice => 
+                voice.name.includes('Karen') || 
+                voice.name.includes('Samantha') ||
+                voice.name.includes('Daniel') ||
+                voice.lang.startsWith('en-US')
+            ) || voices[0];
+
+            const questionText = "Some people prefer to study in a quiet environment, while others prefer to study with background music. Which do you prefer and why?";
+            const utterance = new SpeechSynthesisUtterance(questionText);
+            utterance.voice = preferredVoice;
+            utterance.rate = 0.9;
+            utterance.volume = 0.8;
+
+            utterance.onstart = () => {
+                addTestResult("🔊 Question Audio Test", "Started playing question", "info");
+            };
+
+            utterance.onend = () => {
+                addTestResult("✅ Question Audio Test", "Question completed successfully", "success");
+            };
+
+            utterance.onerror = (event) => {
+                addTestResult("❌ Question Audio Test", `Error: ${event.error}`, "error");
+            };
+
+            speechSynthesis.speak(utterance);
+        }
+
+        function testConversationAudio() {
+            if (!voicesLoaded) {
+                addTestResult("❌ Conversation Audio Test", "Voices not yet loaded", "error");
+                return;
+            }
+
+            const voices = speechSynthesis.getVoices();
+            const femaleVoice = voices.find(voice => 
+                voice.name.includes('Karen') || 
+                voice.name.includes('Samantha') ||
+                voice.lang.startsWith('en-US')
+            ) || voices[0];
+
+            const maleVoice = voices.find(voice => 
+                voice.name.includes('Daniel') || 
+                voice.name.includes('Alex') ||
+                voice.lang.startsWith('en-US') && voice !== femaleVoice
+            ) || voices[voices.length > 1 ? 1 : 0];
+
+            const conversation = [
+                "Female Student: I think extending library hours is a great idea.",
+                "Male Student: Really? I'm not so sure about that.",
+                "Female Student: Yes, it would help students who study late at night.",
+                "Male Student: But what about the costs and staffing?"
+            ];
+
+            let currentLine = 0;
+
+            function speakNextLine() {
+                if (currentLine >= conversation.length) {
+                    addTestResult("✅ Conversation Audio Test", "All lines completed", "success");
+                    return;
+                }
+
+                const line = conversation[currentLine];
+                const isFemale = line.includes('Female');
+                const voice = isFemale ? femaleVoice : maleVoice;
+                const cleanText = line.replace(/^(Female|Male) Student: /, '');
+
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.voice = voice;
+                utterance.rate = 0.85;
+                utterance.pitch = isFemale ? 1.1 : 0.8;
+                utterance.volume = 0.9;
+
+                utterance.onend = () => {
+                    currentLine++;
+                    setTimeout(speakNextLine, 500);
+                };
+
+                utterance.onerror = (event) => {
+                    addTestResult("❌ Conversation Audio Test", `Error on line ${currentLine + 1}: ${event.error}`, "error");
+                    currentLine++;
+                    setTimeout(speakNextLine, 500);
+                };
+
+                speechSynthesis.speak(utterance);
+            }
+
+            addTestResult("🔊 Conversation Audio Test", "Starting conversation", "info");
+            speakNextLine();
+        }
+
+        function checkBrowserInfo() {
+            const userAgent = navigator.userAgent;
+            const browserInfo = {
+                userAgent: userAgent,
+                speechSynthesis: !!speechSynthesis,
+                voicesLoaded: voicesLoaded,
+                voicesCount: speechSynthesis ? speechSynthesis.getVoices().length : 0,
+                protocol: window.location.protocol,
+                hostname: window.location.hostname,
+                pathname: window.location.pathname
+            };
+
+            let infoText = "Browser Information:\n\n";
+            infoText += `User Agent: ${browserInfo.userAgent}\n`;
+            infoText += `Speech Synthesis: ${browserInfo.speechSynthesis ? 'Supported' : 'Not Supported'}\n`;
+            infoText += `Voices Loaded: ${browserInfo.voicesLoaded ? 'Yes' : 'No'}\n`;
+            infoText += `Voices Count: ${browserInfo.voicesCount}\n`;
+            infoText += `Protocol: ${browserInfo.protocol}\n`;
+            infoText += `Hostname: ${browserInfo.hostname}\n`;
+            infoText += `Pathname: ${browserInfo.pathname}`;
+
+            addTestResult("🌐 Browser Info", "Check console for details", "info");
+            console.log("Browser Information:", browserInfo);
+            alert(infoText);
+        }
+
+        function addTestResult(test, result, type) {
+            const timestamp = new Date().toLocaleTimeString();
+            testResults.push({ test, result, type, timestamp });
+            
+            const resultsElement = document.getElementById('test-results');
+            if (resultsElement) {
+                let html = '';
+                testResults.forEach((item, index) => {
+                    const statusClass = `status-${item.type}`;
+                    html += `<div class="status-indicator ${statusClass} mb-2">`;
+                    html += `<strong>${item.test}</strong> - ${item.result} <span class="text-xs">(${item.timestamp})</span>`;
+                    html += '</div>';
+                });
+                resultsElement.innerHTML = html;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - UTERNITY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/auth-api.js"></script>
+    <script src="/js/auth-guard.js"></script>
+    <script src="/js/auth-register.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .auth-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .form-group input.error { border-color: #ef4444; }
+        .field-error { color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem; }
+        .password-strength { height: 4px; transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center p-4">
+    <div class="auth-card w-full max-w-md p-8 rounded-xl">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+            <p class="text-gray-600">Join UTERNITY today</p>
+        </div>
+
+        <form id="registerForm" class="space-y-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                    <input type="text" id="firstName" name="firstName" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="First name">
+                </div>
+                <div class="form-group">
+                    <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="Last name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <input type="email" id="email" name="email" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    placeholder="Enter your email">
+            </div>
+
+            <div class="form-group relative">
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div class="relative">
+                    <input type="password" id="password" name="password" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="Create a password">
+                    <button type="button" class="password-toggle absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">👁️</button>
+                </div>
+                <div class="password-strength-meter mt-2">
+                    <div class="password-strength bg-gray-200 rounded-full"></div>
+                    <p class="password-strength-text text-xs text-gray-500 mt-1">Password strength: <span>weak</span></p>
+                </div>
+            </div>
+
+            <div class="form-group relative">
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                <div class="relative">
+                    <input type="password" id="confirmPassword" name="confirmPassword" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="Confirm your password">
+                    <button type="button" class="password-toggle absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">👁️</button>
+                </div>
+            </div>
+
+            <div class="flex items-start">
+                <input type="checkbox" id="termsAccept" class="h-4 w-4 text-purple-600 rounded border-gray-300 mt-1">
+                <label for="termsAccept" class="ml-2 text-sm text-gray-600">
+                    I agree to the <a href="/terms" class="text-purple-600 hover:text-purple-500">Terms of Service</a> and 
+                    <a href="/privacy" class="text-purple-600 hover:text-purple-500">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                Create Account
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-600">
+                Already have an account? 
+                <a href="/pages/auth/login.html" class="text-purple-600 hover:text-purple-500 font-medium">Sign in</a>
+            </p>
+        </div>
+
+        <div id="message" class="mt-4"></div>
+    </div>
+</body>
+</html> 

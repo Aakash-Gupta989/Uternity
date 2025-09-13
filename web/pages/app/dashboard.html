@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTERNITY - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: white;
+        }
+        
+        /* Header Navigation Styles */
+        .header-container { 
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); 
+            padding: 1rem 0; 
+            margin-bottom: 2rem; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header-nav { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 1rem; 
+        }
+        .nav-link { 
+            padding: 0.5rem 1rem; 
+            border-radius: 0.5rem; 
+            transition: background-color 0.3s;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        .nav-link:hover { 
+            background-color: rgba(255,255,255,0.1); 
+        }
+        
+        .dashboard-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1);
+        }
+        .progress-bar {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+    </style>
+                        <path d="M4 16L12 20L20 16" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="text-2xl font-bold text-white">UTERNITY</span>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="chat.html" class="nav-link">
+                    <i class="fas fa-comments mr-2"></i>
+                    Chat
+                </a>
+                <a href="sop-create.html" class="nav-link">
+                    <i class="fas fa-file-alt mr-2"></i>
+                    SOP
+                </a>
+                <a href="cost-calculator.html" class="nav-link">
+                    <i class="fas fa-calculator mr-2"></i>
+                    Cost Calculator
+                </a>
+                <a href="university-recommender.html" class="nav-link">
+                    <i class="fas fa-university mr-2"></i>
+                    Recommend
+                </a>
+                <a href="voice-dashboard.html" class="nav-link">
+                    <i class="fas fa-graduation-cap mr-2"></i>
+                    TOEFL/IELTS
+                </a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button class="flex items-center space-x-2 p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors text-white">
+                        <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
+                        <span id="user-name">Student</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        /* Tooltip for progress circle */
+        .profile-progress-circle::after {
+            content: 'Profile Completion';
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .profile-progress-circle::before {
+            content: '';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 4px solid #1f2937;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .profile-progress-circle:hover::after,
+        .profile-progress-circle:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include the shared header -->
+    <div id="header-container"></div>
+<style>
+.header-container { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 1rem 0; margin-bottom: 2rem; }
+.header-nav { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; }
+.nav-link { padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.3s; }
+.nav-link:hover { background-color: rgba(255,255,255,0.1); }
+</style>
+
+    <!-- Horizontal Progress Bar -->
+    <div id="horizontal-progress-container"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 welcome-text">Welcome back, Student!</h1>
+            <p class="text-gray-600 mt-2">Track your study abroad journey and manage your applications.</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="dashboard-card rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Applications</h3>
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-800">5</p>
+                <p class="text-sm text-gray-500 mt-1">Active applications</p>
+            </div>
+
+            <div class="dashboard-card rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Documents</h3>
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-800">12</p>
+                <p class="text-sm text-gray-500 mt-1">Uploaded documents</p>
+            </div>
+
+            <div class="dashboard-card rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Tasks</h3>
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-gray-800">8</p>
+                <p class="text-sm text-gray-500 mt-1">Pending tasks</p>
+            </div>
+        </div>
+
+        <!-- Application Progress -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Active Applications -->
+            <div class="dashboard-card rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-6">Active Applications</h3>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium text-gray-700">University of Toronto</span>
+                            <span class="text-sm text-purple-600">80%</span>
+                        </div>
+                        <div class="h-2 bg-gray-100 rounded-full">
+                            <div class="progress-bar h-2 rounded-full" style="width: 80%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium text-gray-700">University of British Columbia</span>
+                            <span class="text-sm text-purple-600">65%</span>
+                        </div>
+                        <div class="h-2 bg-gray-100 rounded-full">
+                            <div class="progress-bar h-2 rounded-full" style="width: 65%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium text-gray-700">McGill University</span>
+                            <span class="text-sm text-purple-600">45%</span>
+                        </div>
+                        <div class="h-2 bg-gray-100 rounded-full">
+                            <div class="progress-bar h-2 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Tasks -->
+            <div class="dashboard-card rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-6">Upcoming Tasks</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-800">Submit IELTS scores</p>
+                            <p class="text-sm text-gray-500">Due in 3 days</p>
+                        </div>
+                        <button class="p-2 hover:bg-white rounded-lg transition-colors">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-800">Complete SOP draft</p>
+                            <p class="text-sm text-gray-500">Due in 5 days</p>
+                        </div>
+                        <button class="p-2 hover:bg-white rounded-lg transition-colors">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-800">Request recommendation letters</p>
+                            <p class="text-sm text-gray-500">Due in 7 days</p>
+                        </div>
+                        <button class="p-2 hover:bg-white rounded-lg transition-colors">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Scripts disabled for direct access -->
+
+    <script>
+        // Debug dashboard loading
+        console.log('🏠 Dashboard: Page starting to load...');
+        console.log('📍 Dashboard: Current URL:', window.location.href);
+        console.log('🔐 Dashboard: AuthAPI available:', typeof window.authAPI !== 'undefined');
+        console.log('🔒 Dashboard: AuthGuard available:', typeof window.authGuard !== 'undefined');
+        
+        // Initialize user data in dashboard
+        async function initializeDashboard() {
+            try {
+                console.log('🚀 Initializing dashboard...');
+                
+                // Wait for auth guard to complete its check
+                if (window.authGuard && window.authGuard.checkAuth) {
+                    await window.authGuard.checkAuth();
+                }
+                
+                // Load user data if authenticated
+                if (window.authAPI && window.authAPI.isAuthenticated()) {
+                    const user = window.authAPI.getUser();
+                    console.log('👤 Dashboard user data:', user);
+                    
+                    // Update welcome message if exists
+                    const welcomeText = document.querySelector('.welcome-text');
+                    if (welcomeText && user) {
+                        const firstName = user.first_name || 'Student';
+                        welcomeText.textContent = `Welcome back, ${firstName}!`;
+                    }
+                    
+                    // Update header user data directly
+                    if (typeof window.setHeaderUserData === 'function') {
+                        console.log('🎯 Updating header with user data');
+                        window.setHeaderUserData(user);
+                    } else if (typeof window.refreshHeaderUserData === 'function') {
+                        console.log('🔄 Refreshing header user data');
+                        window.refreshHeaderUserData();
+                    }
+                } else {
+                    // Try to refresh header anyway in case of timing issues
+                    if (typeof window.refreshHeaderUserData === 'function') {
+                        console.log('🔄 No auth data, but refreshing header anyway');
+                        window.refreshHeaderUserData();
+                    }
+                }
+                
+                console.log('✅ Dashboard initialized successfully');
+            } catch (error) {
+                console.error('❌ Dashboard initialization error:', error);
+            }
+        }
+        
+        // Load header using EXACT SOP page structure
+        function loadHeaderNow() {
+            console.log('🔄 Loading header component...');
+            
+            // Always use the simple header structure (like SOP page)
+            console.log('🔄 Loading simple header...');
+            document.getElementById('header-container').innerHTML = `
+                <header class="header-container">
+                    <nav class="header-nav">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                                <svg class="w-6 h-6 text-purple-600" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 4L4 8L12 12L20 8L12 4Z" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M4 12L12 16L20 12" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M4 16L12 20L20 16" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <span class="text-2xl font-bold text-white">UTERNITY</span>
+                        </div>
+                        <div class="flex items-center space-x-6">
+                            <a href="chat.html" class="nav-link text-white">
+                                <i class="fas fa-comments mr-2"></i>
+                                Chat
+                            </a>
+                            <a href="sop-create.html" class="nav-link text-white">
+                                <i class="fas fa-file-alt mr-2"></i>
+                                SOP
+                            </a>
+                            <a href="cost-calculator.html" class="nav-link text-white">
+                                <i class="fas fa-calculator mr-2"></i>
+                                Cost Calculator
+                            </a>
+                            <a href="university-recommender.html" class="nav-link text-white">
+                                <i class="fas fa-university mr-2"></i>
+                                Recommend
+                            </a>
+                            <a href="voice-dashboard.html" class="nav-link text-white">
+                                <i class="fas fa-graduation-cap mr-2"></i>
+                                TOEFL/IELTS
+                            </a>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            
+                            <!-- User Menu -->
+                            <div class="relative user-menu">
+                                <button id="userMenuButton" class="flex items-center space-x-2 p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                        <span id="userInitial" class="text-sm font-semibold text-white">?</span>
+                                    </div>
+                                    <span id="userDisplayName" class="text-white font-medium hidden sm:block"></span>
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+                                <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 hidden" style="z-index: 9999;">
+                                    <div class="px-4 py-2 border-b border-gray-100">
+                                        <p id="userDropdownName" class="text-sm font-medium text-gray-800"></p>
+                                        <p id="userEmail" class="text-xs text-gray-500 mt-1"></p>
+                                    </div>
+                                    <a href="/profile" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                        Profile
+                                    </a>
+                                    <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                        </svg>
+                                        Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            `;
+            console.log('✅ Simple header created and should be visible!');
+            
+            // Setup dropdown functionality
+            setupHeaderDropdowns();
+        }
+
+        // Setup header dropdown functionality
+        function setupHeaderDropdowns() {
+            const userMenuButton = document.getElementById('userMenuButton');
+            const userDropdown = document.getElementById('userDropdown');
+            const logoutButton = document.getElementById('logoutButton');
+
+            if (userMenuButton && userDropdown) {
+                // Toggle dropdown on button click
+                userMenuButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (userDropdown.style.display === 'none' || userDropdown.style.display === '') {
+                        userDropdown.style.display = 'block';
+                    } else {
+                        userDropdown.style.display = 'none';
+                    }
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.style.display = 'none';
+                    }
+                });
+
+                // Prevent dropdown from closing when clicking inside it
+                userDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+
+            // Logout functionality
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to sign out?')) {
+                        localStorage.removeItem('uternity_user');
+                        localStorage.removeItem('uternity_token');
+                        window.location.href = '/pages/app/auth/login.html';
+                    }
+                });
+            }
+        }
+        
+        // Load header immediately if DOM is ready, otherwise wait
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadHeaderNow);
+        } else {
+            loadHeaderNow();
+        }
+        
+        // Load horizontal progress bar
+        function loadHorizontalProgressBar() {
+            // Inline progress bar since component loading might not work
+            document.getElementById('horizontal-progress-container').innerHTML = `
+                <div class="horizontal-progress-container">
+                    <div class="horizontal-progress-bar">
+                        <div class="progress-stages">
+                            <div class="progress-line"><div class="progress-line-fill"></div></div>
+                            <div class="progress-stage-horizontal" data-stage="research">
+                                <div class="stage-circle completed"><i class="fas fa-search"></i></div>
+                                <div class="stage-label completed">Research</div>
+                                <div class="stage-tooltip">University Research & Selection</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="testing">
+                                <div class="stage-circle in-progress"><i class="fas fa-pencil-alt"></i></div>
+                                <div class="stage-label in-progress">Testing</div>
+                                <div class="stage-tooltip">TOEFL/IELTS & GRE/GMAT</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="documents">
+                                <div class="stage-circle pending"><i class="fas fa-file-alt"></i></div>
+                                <div class="stage-label">Documents</div>
+                                <div class="stage-tooltip">Transcripts & Academic Records</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="sop">
+                                <div class="stage-circle pending"><i class="fas fa-edit"></i></div>
+                                <div class="stage-label">SOP</div>
+                                <div class="stage-tooltip">Statement of Purpose & Essays</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="recommendations">
+                                <div class="stage-circle pending"><i class="fas fa-users"></i></div>
+                                <div class="stage-label">Letters</div>
+                                <div class="stage-tooltip">Recommendation Letters</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="application">
+                                <div class="stage-circle pending"><i class="fas fa-paper-plane"></i></div>
+                                <div class="stage-label">Apply</div>
+                                <div class="stage-tooltip">Submit Applications</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="decision">
+                                <div class="stage-circle pending"><i class="fas fa-clock"></i></div>
+                                <div class="stage-label">Decision</div>
+                                <div class="stage-tooltip">Admission Results</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="financial">
+                                <div class="stage-circle pending"><i class="fas fa-dollar-sign"></i></div>
+                                <div class="stage-label">Finance</div>
+                                <div class="stage-tooltip">Scholarships & I-20</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="visa">
+                                <div class="stage-circle pending"><i class="fas fa-passport"></i></div>
+                                <div class="stage-label">Visa</div>
+                                <div class="stage-tooltip">F1 Visa & Interview</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="departure">
+                                <div class="stage-circle pending"><i class="fas fa-plane"></i></div>
+                                <div class="stage-label">Travel</div>
+                                <div class="stage-tooltip">Pre-Departure Prep</div>
+                            </div>
+                            <div class="progress-stage-horizontal" data-stage="arrival">
+                                <div class="stage-circle pending"><i class="fas fa-graduation-cap"></i></div>
+                                <div class="stage-label">Arrival</div>
+                                <div class="stage-tooltip">Campus & Orientation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                .horizontal-progress-container { background: white; border-bottom: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); padding: 1rem 0; margin-bottom: 0; }
+                .horizontal-progress-bar { max-width: 1400px; margin: 0 auto; padding: 0 2rem; position: relative; }
+                .progress-stages { display: flex; align-items: center; justify-content: space-between; position: relative; padding: 1rem 0; }
+                .progress-line { position: absolute; top: 50%; left: 0; right: 0; height: 3px; background: #e5e7eb; border-radius: 2px; z-index: 1; }
+                .progress-line-fill { height: 100%; background: linear-gradient(90deg, #10b981 0%, #059669 100%); border-radius: 2px; transition: width 0.8s ease; width: 18%; }
+                .progress-stage-horizontal { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: all 0.3s ease; padding: 0.5rem; border-radius: 12px; }
+                .progress-stage-horizontal:hover { transform: translateY(-2px); background: rgba(139, 92, 246, 0.05); }
+                .stage-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; transition: all 0.3s ease; border: 3px solid transparent; }
+                .stage-circle.completed { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+                .stage-circle.in-progress { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); animation: pulse-glow 2s infinite; }
+                .stage-circle.pending { background: #f8fafc; color: #6b7280; border-color: #e5e7eb; }
+                .stage-circle.pending:hover { background: #f1f5f9; border-color: #8b5cf6; color: #8b5cf6; }
+                @keyframes pulse-glow { 0%, 100% { box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); } 50% { box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5); } }
+                .stage-label { font-size: 0.75rem; font-weight: 600; color: #374151; text-align: center; line-height: 1.2; max-width: 80px; opacity: 0.8; transition: opacity 0.3s ease; }
+                .progress-stage-horizontal:hover .stage-label { opacity: 1; }
+                .stage-label.completed { color: #059669; }
+                .stage-label.in-progress { color: #1d4ed8; }
+                .stage-tooltip { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); background: #1f2937; color: white; padding: 0.5rem 0.75rem; border-radius: 8px; font-size: 0.75rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 10; }
+                .stage-tooltip::before { content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 4px solid #1f2937; }
+                .progress-stage-horizontal:hover .stage-tooltip { opacity: 1; bottom: -35px; }
+                @media (max-width: 1024px) { .horizontal-progress-bar { padding: 0 1rem; } .progress-stages { flex-wrap: wrap; gap: 0.5rem; justify-content: center; } .progress-line { display: none; } .stage-circle { width: 40px; height: 40px; font-size: 1rem; } .stage-label { font-size: 0.625rem; max-width: 60px; } }
+                </style>
+            `;
+            initializeProgressBarHandlers();
+        }
+
+        // Initialize progress bar click handlers
+        function initializeProgressBarHandlers() {
+            document.querySelectorAll('.progress-stage-horizontal').forEach(stage => {
+                stage.addEventListener('click', function() {
+                    const stageId = this.dataset.stage;
+                    handleStageClick(stageId);
+                });
+            });
+        }
+
+        // Handle stage clicks
+        function handleStageClick(stageId) {
+            const stageActions = {
+                'research': () => window.location.href = '/university-recommender',
+                'testing': () => window.location.href = '/voice-agent',
+                'sop': () => window.location.href = '/sop-assistant',
+                'documents': () => showStageInfo('Document Preparation', 'Prepare your academic transcripts, CV, and other required documents.'),
+                'recommendations': () => showStageInfo('Recommendation Letters', 'Request letters from professors and mentors who know your work well.'),
+                'application': () => showStageInfo('Application Submission', 'Complete and submit your university applications through their portals.'),
+                'decision': () => showStageInfo('Admission Decision', 'Wait for admission results and prepare for next steps.'),
+                'financial': () => showStageInfo('Financial Planning', 'Apply for scholarships and prepare financial documents for I-20.'),
+                'visa': () => showStageInfo('F1 Visa Process', 'Complete DS-160 form and schedule your visa interview.'),
+                'departure': () => showStageInfo('Pre-Departure', 'Arrange travel, accommodation, and prepare for your journey.'),
+                'arrival': () => showStageInfo('University Arrival', 'Complete orientation and settle into campus life.')
+            };
+
+            if (stageActions[stageId]) {
+                stageActions[stageId]();
+            }
+        }
+
+        // Show stage information modal
+        function showStageInfo(title, description) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-xl p-6 max-w-md mx-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">${title}</h3>
+                    <p class="text-gray-600 mb-4">${description}</p>
+                    <button onclick="this.closest('.fixed').remove()" 
+                            class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        Got it!
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Update profile progress indicator
+        function updateProfileProgress() {
+            const progressCircle = document.getElementById('profileProgressCircle');
+            if (!progressCircle) return;
+
+            // For dashboard, we'll use a simulated completion percentage
+            // In a real app, this would fetch from the profile API
+            const completion = 75; // You can make this dynamic
+            
+            // Update the progress ring
+            const progressRing = progressCircle.querySelector('.progress-ring-progress');
+            const progressText = progressCircle.querySelector('.progress-text');
+            
+            if (progressRing && progressText) {
+                const circumference = 2 * Math.PI * 20; // radius = 20
+                const offset = circumference - (completion / 100) * circumference;
+                
+                progressRing.style.strokeDasharray = circumference;
+                progressRing.style.strokeDashoffset = offset;
+                progressText.textContent = `${completion}%`;
+                
+                // Change color based on completion
+                if (completion >= 80) {
+                    progressRing.style.stroke = '#10b981'; // Green
+                } else if (completion >= 50) {
+                    progressRing.style.stroke = '#f59e0b'; // Yellow
+                } else {
+                    progressRing.style.stroke = '#ef4444'; // Red
+                }
+            }
+
+            // Add click handler to navigate to profile
+            progressCircle.addEventListener('click', () => {
+                window.location.href = '/profile';
+            });
+        }
+
+        // Initialize dashboard after header loads  
+        setTimeout(() => {
+            loadHorizontalProgressBar();
+            updateProfileProgress(); // Add progress indicator
+            initializeDashboard();
+        }, 500);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 2 Final Test - TOEFL Speaking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .phase-indicator {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .phase-indicator.preparation {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .phase-indicator.response {
+            background-color: #fecaca;
+            color: #dc2626;
+        }
+        
+        .record-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+        
+        .record-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+        }
+        
+        .record-btn.recording {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">TOEFL Speaking Test - Task 2 Final Test</h1>
+                <p class="text-gray-600">Testing all fixes: Reading passage display, natural male voice, question visibility</p>
+            </div>
+
+            <!-- Test Controls -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Test Controls</h2>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="startTask2Test()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Start Task 2 Test
+                    </button>
+                    <button onclick="testVoices()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                        Test Voice Selection
+                    </button>
+                    <button onclick="stopAllAudio()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                        Stop All Audio
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timer and Phase Display -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-center">
+                        <div class="timer-display text-blue-600" id="timer-display">00:00</div>
+                        <div class="text-sm text-gray-500">Time Remaining</div>
+                    </div>
+                    <div class="phase-indicator preparation" id="phase-indicator">
+                        Preparing...
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="text-gray-600 mb-2" id="record-instruction">Get ready to begin...</div>
+                    <button class="record-btn hidden" id="record-btn">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
+                            <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
+                            <path d="M12 18v4"/>
+                            <path d="M8 22h8"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Display -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div id="question-title" class="text-2xl font-bold text-gray-800 mb-4">
+                    Task 2: Reading and Listening
+                </div>
+                <div id="question-text" class="mb-6">
+                    <!-- Question content will be inserted here -->
+                </div>
+                <div id="additional-content">
+                    <!-- Additional content (reading passage, listening script) will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Voice Test Results -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Voice Test Results</h2>
+                <div id="voice-test-results" class="text-sm text-gray-600">
+                    Click "Test Voice Selection" to see available voices
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test data
+        const testContent = {
+            question_prompt: "The woman expresses her opinion about the university's plan to eliminate the bus service. State her opinion and explain the reasons she gives for holding that opinion.",
+            instructions: "You have 30 seconds to prepare your response and 60 seconds to speak.",
+            reading_passage: "University Announces Changes to Campus Transportation\n\nEffective next semester, the university will eliminate the free bus service that currently runs between the main campus and the downtown campus. The administration has decided that the bus service is too expensive to maintain and is being used by too few students to justify the cost. Instead, students will be encouraged to use the new bike-sharing program or the public transportation system. The university will provide discounted public transit passes to all students who request them.",
+            listening_script: "Female Student: I can't believe they're getting rid of the bus service! This is such a bad decision.\n\nMale Student: Really? I thought hardly anyone used it anyway.\n\nFemale Student: That's not true at all! I use it every day to get to my internship downtown, and I see the same people on there all the time. The thing is, a lot of students don't even know about it because the university doesn't advertise it well.\n\nMale Student: But they're offering discounted public transit passes instead.\n\nFemale Student: Yeah, but that's still going to cost money, and the public buses don't run as frequently as the university bus. Plus, the bike-sharing program is useless in winter when it's snowing and freezing outside. They're basically making it harder for students who don't have cars to get around, and that's not fair.",
+            metadata: {
+                title: "Campus Transportation Changes"
+            }
+        };
+
+        // Test phases
+        const testPhases = [
+            { phase: 'introduction', duration: 5000 },
+            { phase: 'reading', duration: 50000 },
+            { phase: 'listening', duration: 70000 },
+            { phase: 'preparation', duration: 30000 },
+            { phase: 'response', duration: 60000 }
+        ];
+
+        let currentPhaseIndex = 0;
+        let phaseTimer = null;
+        let countdownTimer = null;
+        let isRecording = false;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+
+        function startTask2Test() {
+            console.log("🚀 Starting Task 2 test");
+            currentPhaseIndex = 0;
+            stopAllAudio();
+            runPhase(testPhases[currentPhaseIndex]);
+        }
+
+        function runPhase(phaseData) {
+            console.log(`🔄 Running phase: ${phaseData.phase}`);
+            
+            // Update phase display
+            updatePhase(phaseData.phase);
+            
+            // Update content for current phase
+            updateContent(testContent, phaseData.phase);
+            
+            // Start countdown timer
+            startCountdownTimer(phaseData.duration);
+            
+            // Handle phase-specific actions
+            switch (phaseData.phase) {
+                case 'introduction':
+                    setTimeout(() => {
+                        playQuestionAudio(testContent.question_prompt);
+                    }, 500);
+                    break;
+                case 'listening':
+                    setTimeout(() => {
+                        playConversationAudio(testContent.listening_script);
+                    }, 1000);
+                    break;
+                case 'preparation':
+                    setTimeout(() => {
+                        playQuestionAudio(testContent.question_prompt);
+                    }, 1000);
+                    break;
+                case 'response':
+                    setTimeout(() => {
+                        startRecording();
+                    }, 2000);
+                    break;
+            }
+            
+            // Set timer for next phase
+            phaseTimer = setTimeout(() => {
+                currentPhaseIndex++;
+                if (currentPhaseIndex < testPhases.length) {
+                    runPhase(testPhases[currentPhaseIndex]);
+                } else {
+                    console.log("🏁 Test completed");
+                    stopAllAudio();
+                    document.getElementById('record-instruction').textContent = 'Test completed!';
+                }
+            }, phaseData.duration);
+        }
+
+        function startCountdownTimer(duration) {
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+            
+            let timeLeft = Math.floor(duration / 1000);
+            updateTimerDisplay(timeLeft);
+            
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay(timeLeft);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            document.getElementById('timer-display').textContent = display;
+        }
+
+        function updatePhase(phase) {
+            const phaseIndicator = document.getElementById('phase-indicator');
+            const recordButton = document.getElementById('record-btn');
+            const recordInstruction = document.getElementById('record-instruction');
+            
+            // Update phase indicator
+            phaseIndicator.className = 'phase-indicator';
+            switch (phase) {
+                case 'introduction':
+                    phaseIndicator.classList.add('preparation');
+                    phaseIndicator.textContent = 'Introduction';
+                    recordButton.style.display = 'none';
+                    recordInstruction.textContent = 'Listen to the question introduction';
+                    break;
+                case 'reading':
+                    phaseIndicator.classList.add('preparation');
+                    phaseIndicator.textContent = 'Reading Time';
+                    recordButton.style.display = 'none';
+                    recordInstruction.textContent = 'Read the passage carefully';
+                    break;
+                case 'listening':
+                    phaseIndicator.classList.add('preparation');
+                    phaseIndicator.textContent = 'Listening Time';
+                    recordButton.style.display = 'none';
+                    recordInstruction.textContent = 'Listen to the conversation carefully';
+                    break;
+                case 'preparation':
+                    phaseIndicator.classList.add('preparation');
+                    phaseIndicator.textContent = 'Preparation Time';
+                    recordButton.style.display = 'none';
+                    recordInstruction.textContent = 'Prepare your response - think about your answer';
+                    break;
+                case 'response':
+                    phaseIndicator.classList.add('response');
+                    phaseIndicator.textContent = 'Response Time';
+                    recordButton.style.display = 'flex';
+                    recordInstruction.textContent = 'Recording will start automatically...';
+                    break;
+            }
+        }
+
+        function updateContent(content, phase) {
+            const questionElement = document.getElementById('question-text');
+            const additionalContentElement = document.getElementById('additional-content');
+            
+            // Update question text based on phase
+            let questionHTML = '';
+            if (phase === 'introduction') {
+                questionHTML = `
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Instructions:</h4>
+                        <p class="text-gray-600 text-sm">${content.instructions}</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-blue-800 text-sm">🔊 Listen carefully to the instructions and question.</p>
+                    </div>
+                `;
+            } else if (phase === 'reading') {
+                questionHTML = `
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Instructions:</h4>
+                        <p class="text-gray-600 text-sm">Read the passage below. You have 50 seconds to read it silently.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p class="text-blue-800 text-sm">📖 Read the passage silently. Do not read aloud.</p>
+                    </div>
+                `;
+            } else if (phase === 'listening') {
+                questionHTML = `
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Instructions:</h4>
+                        <p class="text-gray-600 text-sm">Listen to the conversation between two students.</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <p class="text-green-800 text-sm">🔊 Listen carefully to the conversation with two different voices.</p>
+                    </div>
+                `;
+            } else if (phase === 'preparation' || phase === 'response') {
+                questionHTML = `
+                    <div class="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <h4 class="font-semibold text-yellow-900 mb-2">❓ Question:</h4>
+                        <p class="text-yellow-800 font-medium">${content.question_prompt}</p>
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-gray-900 mb-2">Instructions:</h4>
+                        <p class="text-gray-600 text-sm">${content.instructions}</p>
+                    </div>
+                `;
+            }
+            
+            questionElement.innerHTML = questionHTML;
+            
+            // Update additional content
+            let additionalHTML = '';
+            
+            if (content.reading_passage) {
+                if (phase === 'reading') {
+                    additionalHTML += `
+                        <div class="mb-6 p-4 bg-blue-50 border-2 border-blue-300 rounded-lg">
+                            <h4 class="font-bold text-blue-900 mb-3 text-lg">📖 Reading Passage</h4>
+                            <div class="text-blue-800 text-base leading-relaxed whitespace-pre-line bg-white p-4 rounded border">${content.reading_passage}</div>
+                            <p class="mt-3 text-blue-600 text-sm font-medium">📖 Read this passage silently. You have 50 seconds.</p>
+                        </div>
+                    `;
+                } else if (phase === 'preparation' || phase === 'response') {
+                    additionalHTML += `
+                        <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <h4 class="font-semibold text-blue-900 mb-2">Reading Passage (Reference):</h4>
+                            <div class="text-blue-800 text-sm whitespace-pre-line">${content.reading_passage}</div>
+                        </div>
+                    `;
+                }
+            }
+            
+            if (content.listening_script) {
+                if (phase === 'listening') {
+                    additionalHTML += `
+                        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <h4 class="font-semibold text-green-900 mb-2">🔊 Listening Phase</h4>
+                            <div class="text-green-800 text-sm">
+                                <div class="flex items-center space-x-2">
+                                    <div class="animate-pulse w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <span>Listen carefully to the conversation between two students...</span>
+                                </div>
+                                <p class="mt-2 text-green-600 text-xs">The conversation will be played with two different voices.</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (phase === 'preparation' || phase === 'response') {
+                    additionalHTML += `
+                        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <h4 class="font-semibold text-green-900 mb-2">Conversation (Reference):</h4>
+                            <div class="text-green-800 text-sm whitespace-pre-line">${content.listening_script}</div>
+                        </div>
+                    `;
+                }
+            }
+            
+            additionalContentElement.innerHTML = additionalHTML;
+        }
+
+        function playQuestionAudio(text) {
+            if (!speechSynthesis) return;
+            
+            speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.8;
+            utterance.pitch = 1.0;
+            utterance.volume = 0.9;
+            
+            console.log("🔊 Playing question:", text.substring(0, 50) + "...");
+            speechSynthesis.speak(utterance);
+        }
+
+        function playConversationAudio(conversationText) {
+            if (!speechSynthesis) return;
+            
+            speechSynthesis.cancel();
+            console.log("🔊 Playing conversation with two voices");
+            
+            const recordInstruction = document.getElementById('record-instruction');
+            if (recordInstruction) {
+                recordInstruction.textContent = '🔊 Listen carefully to the conversation...';
+            }
+            
+            const lines = conversationText.split('\n').filter(line => line.trim());
+            const voices = speechSynthesis.getVoices();
+            
+            // Find female and male voices with improved selection
+            const femaleVoice = voices.find(voice => 
+                voice.name.includes('Karen') || 
+                voice.name.includes('Samantha') ||
+                voice.name.includes('Victoria') ||
+                voice.name.includes('Susan') ||
+                (voice.name.includes('Female') && voice.lang.startsWith('en'))
+            ) || voices.find(voice => voice.lang.startsWith('en-US'));
+            
+            const maleVoice = voices.find(voice => 
+                voice.name.includes('Daniel') || 
+                voice.name.includes('Alex') ||
+                voice.name.includes('David') ||
+                voice.name.includes('Tom') ||
+                voice.name.includes('Aaron') ||
+                voice.name.includes('Fred') ||
+                voice.name.includes('Oliver') ||
+                voice.name.includes('Ricky') ||
+                (voice.name.includes('Male') && voice.lang.startsWith('en'))
+            ) || voices.find(voice => voice.lang.startsWith('en-US') && voice !== femaleVoice);
+            
+            console.log("🎭 Using voices - Female:", femaleVoice?.name, "Male:", maleVoice?.name);
+            
+            function speakNextLine(lineIndex) {
+                if (lineIndex >= lines.length) {
+                    console.log("🔊 Conversation completed");
+                    if (recordInstruction) {
+                        recordInstruction.textContent = 'Conversation completed.';
+                    }
+                    return;
+                }
+                
+                const line = lines[lineIndex].trim();
+                if (!line) {
+                    speakNextLine(lineIndex + 1);
+                    return;
+                }
+                
+                let voice = femaleVoice;
+                let speakerName = '';
+                
+                if (line.includes('Female Student:') || line.includes('Woman:')) {
+                    voice = femaleVoice;
+                    speakerName = 'Female Student';
+                } else if (line.includes('Male Student:') || line.includes('Man:')) {
+                    voice = maleVoice;
+                    speakerName = 'Male Student';
+                }
+                
+                const cleanText = line
+                    .replace(/^(Female Student:|Male Student:|Woman:|Man:)\s*/, '')
+                    .trim();
+                
+                if (!cleanText) {
+                    speakNextLine(lineIndex + 1);
+                    return;
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.voice = voice;
+                utterance.rate = 0.85;
+                utterance.pitch = voice === femaleVoice ? 1.1 : 0.8; // Lower pitch for more natural male voice
+                utterance.volume = 0.9;
+                
+                if (recordInstruction) {
+                    recordInstruction.textContent = `🔊 ${speakerName}: "${cleanText.substring(0, 50)}${cleanText.length > 50 ? '...' : ''}"`;
+                }
+                
+                utterance.onend = () => {
+                    setTimeout(() => {
+                        speakNextLine(lineIndex + 1);
+                    }, 500);
+                };
+                
+                utterance.onerror = () => {
+                    speakNextLine(lineIndex + 1);
+                };
+                
+                console.log(`🔊 Speaking as ${speakerName}:`, cleanText.substring(0, 50) + "...");
+                speechSynthesis.speak(utterance);
+            }
+            
+            speakNextLine(0);
+        }
+
+        function testVoices() {
+            const voices = speechSynthesis.getVoices();
+            const resultsDiv = document.getElementById('voice-test-results');
+            
+            const femaleVoices = voices.filter(voice => 
+                voice.name.includes('Karen') || 
+                voice.name.includes('Samantha') ||
+                voice.name.includes('Victoria') ||
+                voice.name.includes('Susan') ||
+                (voice.name.includes('Female') && voice.lang.startsWith('en'))
+            );
+            
+            const maleVoices = voices.filter(voice => 
+                voice.name.includes('Daniel') || 
+                voice.name.includes('Alex') ||
+                voice.name.includes('David') ||
+                voice.name.includes('Tom') ||
+                voice.name.includes('Aaron') ||
+                voice.name.includes('Fred') ||
+                voice.name.includes('Oliver') ||
+                voice.name.includes('Ricky') ||
+                (voice.name.includes('Male') && voice.lang.startsWith('en'))
+            );
+            
+            let html = '<h3 class="font-bold mb-2">Available Voices:</h3>';
+            html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+            
+            html += '<div><h4 class="font-semibold text-pink-600 mb-2">Female Voices:</h4><ul class="text-sm">';
+            femaleVoices.forEach(voice => {
+                html += `<li>• ${voice.name} (${voice.lang})</li>`;
+            });
+            html += '</ul></div>';
+            
+            html += '<div><h4 class="font-semibold text-blue-600 mb-2">Male Voices:</h4><ul class="text-sm">';
+            maleVoices.forEach(voice => {
+                html += `<li>• ${voice.name} (${voice.lang})</li>`;
+            });
+            html += '</ul></div>';
+            
+            html += '</div>';
+            html += `<p class="mt-4 text-sm text-gray-600">Total voices: ${voices.length}</p>`;
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function stopAllAudio() {
+            if (speechSynthesis) {
+                speechSynthesis.cancel();
+            }
+            if (phaseTimer) {
+                clearTimeout(phaseTimer);
+                phaseTimer = null;
+            }
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+            }
+            console.log("🔇 All audio stopped");
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                recordedChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const recordButton = document.getElementById('record-btn');
+                    recordButton.classList.remove('recording');
+                    document.getElementById('record-instruction').textContent = 'Recording completed';
+                    console.log("🎤 Recording stopped, chunks:", recordedChunks.length);
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                
+                const recordButton = document.getElementById('record-btn');
+                recordButton.classList.add('recording');
+                document.getElementById('record-instruction').textContent = '🎤 Recording... Speak your response now!';
+                
+                console.log("🎤 Recording started");
+            } catch (error) {
+                console.error("❌ Recording error:", error);
+                document.getElementById('record-instruction').textContent = 'Recording error - please allow microphone access';
+            }
+        }
+
+        // Initialize voices when page loads
+        window.addEventListener('load', () => {
+            // Load voices
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = testVoices;
+            }
+            setTimeout(testVoices, 1000);
+        });
+    </script>
+</body>
+</html> 

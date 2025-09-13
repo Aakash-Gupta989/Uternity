@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Speaking Test Results - UTERNITY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', 'Poppins', sans-serif;
+        }
+        
+        .card-shadow {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .score-animation {
+            animation: scoreReveal 1.5s ease-out;
+        }
+        
+        @keyframes scoreReveal {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .progress-bar {
+            animation: progressFill 2s ease-out;
+        }
+        
+        @keyframes progressFill {
+            from { width: 0%; }
+        }
+        
+        .band-excellent { background: linear-gradient(135deg, #10b981, #059669); }
+        .band-good { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .band-fair { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .band-poor { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- Header -->
+        <div class="bg-white card-shadow rounded-lg p-6 mb-6 border border-gray-100">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">IELTS Speaking Test Results</h1>
+                <p class="text-gray-600">Your AI-powered assessment results</p>
+            </div>
+        </div>
+
+        <!-- Overall Score -->
+        <div class="bg-white card-shadow rounded-lg p-8 mb-6 border border-gray-100">
+            <div class="text-center">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Overall Band Score</h2>
+                <div class="score-animation">
+                    <div class="text-8xl font-bold mb-4" id="overallBand">-</div>
+                    <div class="text-lg text-gray-600 mb-4" id="bandDescription">Calculating...</div>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+                        <div class="h-4 rounded-full progress-bar" id="overallProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Scores -->
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <!-- Fluency & Coherence -->
+            <div class="bg-white card-shadow rounded-lg p-6 border border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Fluency & Coherence</h3>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-3xl font-bold" id="fluencyScore">-</span>
+                    <span class="text-sm text-gray-500">/9.0</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+                    <div class="h-2 rounded-full progress-bar" id="fluencyProgress" style="width: 0%"></div>
+                </div>
+                <p class="text-sm text-gray-600">How smoothly and coherently you speak</p>
+            </div>
+
+            <!-- Lexical Resource -->
+            <div class="bg-white card-shadow rounded-lg p-6 border border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Lexical Resource</h3>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-3xl font-bold" id="lexicalScore">-</span>
+                    <span class="text-sm text-gray-500">/9.0</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+                    <div class="h-2 rounded-full progress-bar" id="lexicalProgress" style="width: 0%"></div>
+                </div>
+                <p class="text-sm text-gray-600">Range and accuracy of vocabulary</p>
+            </div>
+
+            <!-- Grammatical Range & Accuracy -->
+            <div class="bg-white card-shadow rounded-lg p-6 border border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Grammatical Range & Accuracy</h3>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-3xl font-bold" id="grammarScore">-</span>
+                    <span class="text-sm text-gray-500">/9.0</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+                    <div class="h-2 rounded-full progress-bar" id="grammarProgress" style="width: 0%"></div>
+                </div>
+                <p class="text-sm text-gray-600">Variety and correctness of grammar</p>
+            </div>
+
+            <!-- Pronunciation -->
+            <div class="bg-white card-shadow rounded-lg p-6 border border-gray-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Pronunciation</h3>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-3xl font-bold" id="pronunciationScore">-</span>
+                    <span class="text-sm text-gray-500">/9.0</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+                    <div class="h-2 rounded-full progress-bar" id="pronunciationProgress" style="width: 0%"></div>
+                </div>
+                <p class="text-sm text-gray-600">Clarity and naturalness of speech</p>
+            </div>
+        </div>
+
+        <!-- Feedback & Recommendations -->
+        <div class="bg-white card-shadow rounded-lg p-6 mb-6 border border-gray-100">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Recommendations for Improvement</h3>
+            <div class="space-y-3" id="feedbackList">
+                <div class="animate-pulse">
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+            <h3 class="text-lg font-semibold text-blue-800 mb-3">Assessment Summary</h3>
+            <p class="text-blue-700" id="summaryText">Generating your personalized summary...</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="bg-white card-shadow rounded-lg p-6 border border-gray-100">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="takeAnotherTest()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium 
+                               transition-all duration-200 transform hover:scale-105 active:scale-95">
+                    🎯 Take Another Test
+                </button>
+                
+                <button onclick="downloadReport()" 
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium 
+                               transition-all duration-200 transform hover:scale-105 active:scale-95">
+                    📄 Download Report
+                </button>
+                
+                <button onclick="goToDashboard()" 
+                        class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium 
+                               transition-all duration-200 transform hover:scale-105 active:scale-95">
+                    🏠 Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load and display results when page loads
+        document.addEventListener('DOMContentLoaded', loadResults);
+
+        function loadResults() {
+            try {
+                const resultData = localStorage.getItem('ielts_result');
+                if (!resultData) {
+                    showError('No test results found. Please take a test first.');
+                    return;
+                }
+
+                const result = JSON.parse(resultData);
+                if (result && result.error === 'llm_unavailable') {
+                    showError('Scoring unavailable: LLM did not return a valid result. Please try again later.');
+                    return;
+                }
+                displayResults(result);
+            } catch (error) {
+                console.error('Error loading results:', error);
+                showError('Error loading test results. Please try again.');
+            }
+        }
+
+        function displayResults(result) {
+            // Resolve overall band without hardcoded fallback
+            const resolvedOverall = resolveNumber(result.overall_band ?? result.overall ?? result.band);
+            document.getElementById('overallBand').textContent = formatScore(resolvedOverall);
+            
+            // Band description
+            document.getElementById('bandDescription').textContent = resolvedOverall != null
+                ? getBandDescription(resolvedOverall)
+                : 'Score unavailable';
+            
+            // Overall progress bar
+            const overallProgressEl = document.getElementById('overallProgress');
+            if (resolvedOverall != null) {
+                const overallProgress = (resolvedOverall / 9.0) * 100;
+                overallProgressEl.style.width = overallProgress + '%';
+                overallProgressEl.className = `h-4 rounded-full progress-bar ${getBandClass(resolvedOverall)}`;
+            } else {
+                overallProgressEl.style.width = '0%';
+                overallProgressEl.className = 'h-4 rounded-full progress-bar band-poor';
+            }
+            
+            // Subscores (robust mapping to backend keys)
+            const subscores = result.subscores || {};
+            const fluency = resolveNumber(subscores.fluency_coherence ?? result.coherence_and_fluency ?? result.fluency_coherence);
+            const lexical = resolveNumber(subscores.lexical_resource ?? result.lexical_resource);
+            const grammar = resolveNumber(subscores.grammatical_range_accuracy ?? result.grammatical_range_accuracy);
+            const pronunciation = resolveNumber(subscores.pronunciation ?? result.pronunciation ?? result.delivery);
+            
+            updateScore('fluencyScore', 'fluencyProgress', fluency);
+            updateScore('lexicalScore', 'lexicalProgress', lexical);
+            updateScore('grammarScore', 'grammarProgress', grammar);
+            updateScore('pronunciationScore', 'pronunciationProgress', pronunciation);
+            
+            // Feedback/tips
+            let tips = Array.isArray(result.feedback) ? result.feedback
+                      : Array.isArray(result.tips) ? result.tips
+                      : (typeof result.feedback === 'string' ? [result.feedback] : []);
+            displayFeedback(tips);
+            
+            // Summary fallback
+            const summary = result.summary || result.feedback_summary || '';
+            document.getElementById('summaryText').textContent = summary || 'Your speaking performance shows good potential with room for improvement.';
+        }
+
+        // Helpers
+        function resolveNumber(value) {
+            const n = Number(value);
+            return Number.isFinite(n) ? n : null;
+        }
+
+        function formatScore(score) {
+            return score == null ? '—' : score.toFixed(1);
+        }
+
+        function updateScore(scoreId, progressId, score) {
+            document.getElementById(scoreId).textContent = formatScore(score);
+            const progressEl = document.getElementById(progressId);
+            if (score == null) {
+                progressEl.style.width = '0%';
+                progressEl.className = 'h-2 rounded-full progress-bar band-poor';
+            } else {
+                const progress = (score / 9.0) * 100;
+                progressEl.style.width = progress + '%';
+                progressEl.className = `h-2 rounded-full progress-bar ${getBandClass(score)}`;
+            }
+        }
+
+        function getBandDescription(band) {
+            if (band >= 8.5) return 'Expert User';
+            if (band >= 7.5) return 'Very Good User';
+            if (band >= 6.5) return 'Competent User';
+            if (band >= 5.5) return 'Modest User';
+            if (band >= 4.5) return 'Limited User';
+            return 'Extremely Limited User';
+        }
+
+        function getBandClass(band) {
+            if (band >= 7.5) return 'band-excellent';
+            if (band >= 6.5) return 'band-good';
+            if (band >= 5.5) return 'band-fair';
+            return 'band-poor';
+        }
+
+        function displayFeedback(feedback) {
+            const feedbackList = document.getElementById('feedbackList');
+            if (!feedback || feedback.length === 0) {
+                feedbackList.innerHTML = '<p class="text-gray-600">No specific feedback available.</p>';
+                return;
+            }
+
+            feedbackList.innerHTML = feedback.map(tip => 
+                `<div class="flex items-start gap-3">
+                    <span class="text-blue-600 mt-1">💡</span>
+                    <p class="text-gray-700">${tip}</p>
+                </div>`
+            ).join('');
+        }
+
+        function showError(message) {
+            document.body.innerHTML = `
+                <div class="min-h-screen flex items-center justify-center">
+                    <div class="bg-white card-shadow rounded-lg p-8 max-w-md text-center">
+                        <div class="text-6xl mb-4">⚠️</div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Error</h2>
+                        <p class="text-gray-600 mb-6">${message}</p>
+                        <button onclick="goToDashboard()" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium">
+                            Go to Dashboard
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function takeAnotherTest() {
+            // Clear previous results
+            localStorage.removeItem('ielts_result');
+            localStorage.removeItem('ielts_conversation_id');
+            
+            // Go to test selection
+            window.location.href = '/voice';
+        }
+
+        function downloadReport() {
+            try {
+                const resultData = localStorage.getItem('ielts_result');
+                if (!resultData) return;
+
+                const result = JSON.parse(resultData);
+                const conversationId = localStorage.getItem('ielts_conversation_id') || 'unknown';
+                
+                const reportContent = generateReportContent(result, conversationId);
+                
+                const blob = new Blob([reportContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `IELTS_Speaking_Results_${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert('Error generating report. Please try again.');
+            }
+        }
+
+        function generateReportContent(result, conversationId) {
+            const timestamp = new Date().toLocaleString();
+            return `
+IELTS Speaking Test Results
+===========================
+
+Test Date: ${timestamp}
+Session ID: ${conversationId}
+
+OVERALL BAND SCORE: ${result.overall_band.toFixed(1)} / 9.0
+Assessment Level: ${getBandDescription(result.overall_band)}
+
+DETAILED SCORES:
+- Fluency & Coherence: ${result.subscores.fluency_coherence.toFixed(1)} / 9.0
+- Lexical Resource: ${result.subscores.lexical_resource.toFixed(1)} / 9.0
+- Grammatical Range & Accuracy: ${result.subscores.grammatical_range_accuracy.toFixed(1)} / 9.0
+- Pronunciation: ${result.subscores.pronunciation.toFixed(1)} / 9.0
+
+RECOMMENDATIONS FOR IMPROVEMENT:
+${result.feedback.map(tip => `• ${tip}`).join('\n')}
+
+SUMMARY:
+${result.summary}
+
+---
+Generated by UTERNITY AI-powered IELTS Assessment
+            `.trim();
+        }
+
+        function goToDashboard() {
+            window.location.href = '/voice';
+        }
+    </script>
+</body>
+</html>

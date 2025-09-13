@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEFL API Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .result {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TOEFL API Integration Test</h1>
+        <p>This page tests the TOEFL API endpoints to ensure they work correctly.</p>
+
+        <div class="step">
+            <h3>Step 1: Test Health Check</h3>
+            <button onclick="testHealthCheck()">Test Health Check</button>
+            <div id="health-result" class="result"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Start TOEFL Test</h3>
+            <button onclick="startTOEFLTest()">Start TOEFL Test</button>
+            <div id="start-result" class="result"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Get Progress (Session ID from Step 2)</h3>
+            <button onclick="getProgress()">Get Progress</button>
+            <div id="progress-result" class="result"></div>
+        </div>
+
+        <div class="step">
+            <h3>Step 4: Question Content Display</h3>
+            <div id="question-display" class="result">
+                <h4 id="question-title">Loading...</h4>
+                <p id="question-text">Loading question content...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+        const API_BASE = 'http://localhost:8000/api/v1';
+
+        async function testHealthCheck() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.textContent = 'Testing health check...';
+            
+            try {
+                const response = await axios.get(`${API_BASE}/health/`);
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Health Check Passed:\n${JSON.stringify(response.data, null, 2)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Health Check Failed:\n${error.message}`;
+            }
+        }
+
+        async function startTOEFLTest() {
+            const resultDiv = document.getElementById('start-result');
+            resultDiv.textContent = 'Starting TOEFL test...';
+            
+            try {
+                const response = await axios.post(`${API_BASE}/toefl/start`, {
+                    test_type: 'toefl',
+                    user_id: 'current_user',
+                    mode: 'full'
+                });
+                
+                currentSessionId = response.data.session.session_id;
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ TOEFL Test Started:\nSession ID: ${currentSessionId}\n\nFull Response:\n${JSON.stringify(response.data, null, 2)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Failed to Start TOEFL Test:\n${error.message}`;
+            }
+        }
+
+        async function getProgress() {
+            const resultDiv = document.getElementById('progress-result');
+            
+            if (!currentSessionId) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ No session ID available. Please start a test first.';
+                return;
+            }
+            
+            resultDiv.textContent = 'Getting progress...';
+            
+            try {
+                const response = await axios.get(`${API_BASE}/toefl/progress/${currentSessionId}`);
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ Progress Retrieved:\n${JSON.stringify(response.data, null, 2)}`;
+                
+                // Display question content
+                displayQuestionContent(response.data.progress.current_content);
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Failed to Get Progress:\n${error.message}`;
+            }
+        }
+
+        function displayQuestionContent(content) {
+            const titleElement = document.getElementById('question-title');
+            const textElement = document.getElementById('question-text');
+            
+            if (content) {
+                titleElement.textContent = content.title || 'No title';
+                textElement.textContent = content.question || content.text || 'No question content';
+                
+                console.log('Question content displayed:', content);
+            } else {
+                titleElement.textContent = 'No content available';
+                textElement.textContent = 'No question content received';
+                
+                console.log('No content to display');
+            }
+        }
+
+        // Test the complete flow on page load
+        window.addEventListener('load', function() {
+            console.log('TOEFL API Test page loaded');
+        });
+    </script>
+</body>
+</html> 

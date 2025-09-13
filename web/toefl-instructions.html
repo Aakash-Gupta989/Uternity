@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEFL iBT® Speaking Test - Official Instructions</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .exam-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+            color: white;
+            padding: 2rem 0;
+            border-bottom: 4px solid #1d4ed8;
+        }
+
+        .warning-banner {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 2px solid #991b1b;
+        }
+
+        .section-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            background: #f3f4f6;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #374151;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        .task-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .task-header {
+            background: #1f2937;
+            color: white;
+            padding: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .task-content {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .timing-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .warning-box {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #ef4444;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .success-box {
+            background: #dcfce7;
+            border: 1px solid #22c55e;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #22c55e;
+        }
+
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .score-table th,
+        .score-table td {
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .score-table th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+
+        .start-exam-section {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 2rem;
+            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.3);
+        }
+
+        .start-button {
+            background: white;
+            color: #047857;
+            padding: 1rem 3rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .requirement-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.75rem;
+            margin-top: 0.125rem;
+            flex-shrink: 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+        }
+
+        .checklist-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.75rem;
+            color: #059669;
+        }
+    </style>
+</head>
+<body>
+
+
+    <!-- Header -->
+    <div class="exam-header">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold mb-2">TOEFL iBT® Speaking Section</h1>
+                    <p class="text-xl opacity-90">Test of English as a Foreign Language - Internet-Based Test</p>
+                    <p class="text-lg opacity-75 mt-1">Duration: 17 minutes | 4 Tasks | Score Range: 0-30</p>
+                </div>
+                <div>
+                    <a href="pages/app/voice-dashboard.html" class="back-button">
+                        ← Return to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-8 max-w-6xl">
+        
+        <!-- Critical Information -->
+        <div class="section-card">
+            <div class="section-header">
+                🚨 CRITICAL TEST INFORMATION - READ CAREFULLY
+            </div>
+            <div class="section-content">
+                <div class="warning-box">
+                    <h3 class="font-bold text-red-700 mb-2">⚠️ IMPORTANT WARNINGS</h3>
+                    <ul class="list-disc list-inside space-y-1 text-red-700">
+                        <li><strong>NO PAUSING:</strong> Once started, the test cannot be paused, stopped, or restarted</li>
+                        <li><strong>STRICT TIMING:</strong> All time limits are enforced automatically - no extensions</li>
+                        <li><strong>ONE ATTEMPT:</strong> You get only ONE chance to record each response</li>
+                        <li><strong>NO TECHNICAL SUPPORT:</strong> Ensure all equipment works before starting</li>
+                        <li><strong>QUIET ENVIRONMENT:</strong> Background noise will affect your score</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3 class="font-bold text-blue-700 mb-2">📋 Test Structure Overview</h3>
+                    <p class="text-blue-700">The Speaking section consists of 4 tasks that assess your ability to communicate effectively in English in academic settings. You will be evaluated on delivery, language use, and topic development.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Breakdown -->
+        <div class="section-card">
+            <div class="section-header">
+                📚 DETAILED TASK BREAKDOWN
+            </div>
+            <div class="section-content">
+                
+                <!-- Task 1 -->
+                <div class="task-card">
+                    <div class="task-header">
+                        <span>TASK 1: Independent Speaking Task</span>
+                        <span class="text-sm">Personal Opinion</span>
+                    </div>
+                    <div class="task-content">
+                        <p class="mb-3"><strong>Description:</strong> You will be asked to express and defend a personal opinion about familiar topics based on your own ideas, opinions, and experiences.</p>
+                        
+                        <div class="timing-box">
+                            ⏱️ <strong>Timing:</strong> 15 seconds preparation + 45 seconds response
+                        </div>
+                        
+                        <p class="mb-2"><strong>What you'll do:</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>Read a question about a familiar topic</li>
+                            <li>Prepare your response (15 seconds)</li>
+                            <li>Record your spoken response (45 seconds)</li>
+                        </ul>
+                        
+                        <p class="mt-3"><strong>Example topics:</strong> Education preferences, lifestyle choices, personal experiences, opinions on social issues</p>
+                    </div>
+                </div>
+
+                <!-- Task 2 -->
+                <div class="task-card">
+                    <div class="task-header">
+                        <span>TASK 2: Integrated Speaking Task (Campus Situation)</span>
+                        <span class="text-sm">Read + Listen + Speak</span>
+                    </div>
+                    <div class="task-content">
+                        <p class="mb-3"><strong>Description:</strong> You will read a short passage about a campus-related topic, then listen to a conversation discussing the same topic, and finally speak about it.</p>
+                        
+                        <div class="timing-box">
+                            ⏱️ <strong>Timing:</strong> 50 seconds reading + ~60 seconds listening + 30 seconds preparation + 60 seconds response
+                        </div>
+                        
+                        <p class="mb-2"><strong>What you'll do:</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>Read a campus announcement, policy, or proposal (50 seconds)</li>
+                            <li>Listen to students discussing their opinions about it</li>
+                            <li>Prepare your response (30 seconds)</li>
+                            <li>Summarize the students' opinions and reasons (60 seconds)</li>
+                        </ul>
+                        
+                        <p class="mt-3"><strong>Focus:</strong> Accurately convey the students' attitudes and supporting reasons</p>
+                    </div>
+                </div>
+
+                <!-- Task 3 -->
+                <div class="task-card">
+                    <div class="task-header">
+                        <span>TASK 3: Integrated Speaking Task (Academic Course Topic)</span>
+                        <span class="text-sm">Read + Listen + Speak</span>
+                    </div>
+                    <div class="task-content">
+                        <p class="mb-3"><strong>Description:</strong> You will read a short academic passage, then listen to a professor's lecture on the same topic, and explain how the lecture relates to the reading.</p>
+                        
+                        <div class="timing-box">
+                            ⏱️ <strong>Timing:</strong> 50 seconds reading + ~60 seconds listening + 30 seconds preparation + 60 seconds response
+                        </div>
+                        
+                        <p class="mb-2"><strong>What you'll do:</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>Read an academic passage defining a concept (50 seconds)</li>
+                            <li>Listen to a professor explaining the concept with examples</li>
+                            <li>Prepare your response (30 seconds)</li>
+                            <li>Explain the concept using information from both sources (60 seconds)</li>
+                        </ul>
+                        
+                        <p class="mt-3"><strong>Academic subjects:</strong> Psychology, Biology, Business, History, Sociology, etc.</p>
+                    </div>
+                </div>
+
+                <!-- Task 4 -->
+                <div class="task-card">
+                    <div class="task-header">
+                        <span>TASK 4: Integrated Speaking Task (Academic Lecture)</span>
+                        <span class="text-sm">Listen + Speak</span>
+                    </div>
+                    <div class="task-content">
+                        <p class="mb-3"><strong>Description:</strong> You will listen to part of an academic lecture and then summarize the important information from the lecture.</p>
+                        
+                        <div class="timing-box">
+                            ⏱️ <strong>Timing:</strong> ~90 seconds listening + 20 seconds preparation + 60 seconds response
+                        </div>
+                        
+                        <p class="mb-2"><strong>What you'll do:</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>Listen to an academic lecture excerpt</li>
+                            <li>Take notes while listening</li>
+                            <li>Prepare your response (20 seconds)</li>
+                            <li>Summarize the main points and supporting details (60 seconds)</li>
+                        </ul>
+                        
+                        <p class="mt-3"><strong>Focus:</strong> Demonstrate understanding of academic content and ability to organize information clearly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scoring Criteria -->
+        <div class="section-card">
+            <div class="section-header">
+                📊 OFFICIAL SCORING CRITERIA
+            </div>
+            <div class="section-content">
+                <p class="mb-4">Each response is evaluated by certified ETS raters on three key dimensions:</p>
+                
+                <table class="score-table">
+                    <thead>
+                        <tr>
+                            <th>Criterion</th>
+                            <th>Score Range</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Delivery</strong></td>
+                            <td>0-4</td>
+                            <td>Pronunciation, fluency, pace, and clarity of speech</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Language Use</strong></td>
+                            <td>0-4</td>
+                            <td>Grammar accuracy, vocabulary range, and sentence complexity</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Topic Development</strong></td>
+                            <td>0-4</td>
+                            <td>Content relevance, idea progression, and coherence</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <h3 class="font-bold text-blue-700 mb-2">🎯 Score Conversion</h3>
+                    <p class="text-blue-700">Your raw scores (0-4 for each task) are converted to a scaled score of 0-30 for the Speaking section. This scaled score is what appears on your official TOEFL score report.</p>
+                </div>
+
+                <div class="success-box">
+                    <h3 class="font-bold text-green-700 mb-2">💡 Scoring Tips</h3>
+                    <ul class="list-disc list-inside text-green-700 space-y-1">
+                        <li>Speak clearly and at a natural pace</li>
+                        <li>Use varied vocabulary and sentence structures</li>
+                        <li>Stay on topic and organize your ideas logically</li>
+                        <li>Use all the time given - don't finish too early</li>
+                        <li>Practice connecting ideas with transition words</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        
+
+        
+
+                 <!-- Start Exam Section -->
+         <div class="start-exam-section">
+             <button onclick="startTOEFLExam()" class="start-button">
+                 START TOEFL SPEAKING TEST
+             </button>
+         </div>
+    </div>
+
+    <script>
+        function startTOEFLExam() {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const testSet = urlParams.get('test_set');
+            const section = urlParams.get('section');
+            const retake = urlParams.get('retake');
+            const modular = urlParams.get('modular');
+            
+            let confirmMessage = "⚠️ FINAL CONFIRMATION ⚠️\n\n";
+            
+            if (modular === 'true') {
+                // Modular test messaging
+                const sectionNames = {
+                    independent: 'Independent Speaking (Task 1)',
+                    conversation: 'Campus Situation (Task 2)', 
+                    lecture: 'Academic Course/Lecture (Task 3/4)'
+                };
+                const sectionName = sectionNames[section] || 'Individual Task';
+                confirmMessage += `You are about to start a ${sectionName} practice session.\n\n`;
+                confirmMessage += `📝 Content: Randomly selected from ${testSet ? testSet.replace('_', ' ').toUpperCase() : 'test library'}\n`;
+                confirmMessage += `🎯 Focus: Single task practice\n\n`;
+            } else if (testSet) {
+                confirmMessage += `You are about to start TOEFL Test Set ${testSet}.\n\n`;
+            } else {
+                confirmMessage += "You are about to start the official TOEFL iBT Speaking Test.\n\n";
+            }
+            
+            confirmMessage += "• The test cannot be paused or restarted\n" +
+                "• All timing is strictly enforced\n" +
+                "• Technical issues will not result in retakes\n\n" +
+                "Are you absolutely ready to begin?";
+            
+            // Add confirmation dialog for extra security
+            const confirmed = confirm(confirmMessage);
+            
+            if (confirmed) {
+                // Show loading message
+                const button = document.querySelector('.start-button');
+                if (modular === 'true') {
+                    button.innerHTML = '⏳ Starting Practice...';
+                } else {
+                    button.innerHTML = '⏳ Starting Test...';
+                }
+                button.disabled = true;
+                
+                // Build URL with parameters
+                let testUrl = 'toefl-test-working.html?';
+                const params = [];
+                
+                if (testSet) params.push(`test_set=${encodeURIComponent(testSet)}`);
+                if (section) params.push(`section=${encodeURIComponent(section)}`);
+                if (retake) params.push(`retake=${encodeURIComponent(retake)}`);
+                if (modular) params.push(`modular=${encodeURIComponent(modular)}`);
+                
+                testUrl += params.join('&');
+                
+                // Redirect to test after brief delay
+                setTimeout(() => {
+                    window.location.href = testUrl;
+                }, 1500);
+            }
+        }
+
+        // Add dramatic entrance animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate sections on scroll
+            const sections = document.querySelectorAll('.section-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            sections.forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'all 0.6s ease';
+                observer.observe(section);
+            });
+
+            // Add pulse effect to start button
+            const startButton = document.querySelector('.start-button');
+            setInterval(() => {
+                startButton.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    startButton.style.transform = 'scale(1)';
+                }, 200);
+            }, 3000);
+        });
+    </script>
+</body>
+</html> 

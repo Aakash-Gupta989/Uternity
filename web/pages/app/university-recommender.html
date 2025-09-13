@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTERNITY - University Recommender</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        /* Smooth page transitions */
+        .page-transition {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-transition.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Smooth navigation transitions */
+        .nav-link {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Page content fade-in animation */
+        .main-container {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Header Styles - ADDED FOR CONSISTENCY */
+        .header-container {
+            position: relative;
+            z-index: 50;
+            padding: 1rem;
+            margin-bottom: 0;
+        }
+        .header-nav {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            border-radius: 24px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 10px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+        }
+        .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+        .nav-link i {
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover i {
+            transform: scale(1.1);
+        }
+        .nav-link.active i {
+            transform: scale(1.1);
+        }
+        
+        .form-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            border: 1px solid #e2e8f0;
+            box-shadow: 
+                0 10px 25px -5px rgba(0, 0, 0, 0.08),
+                0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .form-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 20px 40px rgba(139, 92, 246, 0.12),
+                0 15px 20px -5px rgba(0, 0, 0, 0.08);
+        }
+        
+        .input-field {
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .select-card {
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .select-card:hover {
+            border-color: #8b5cf6;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+        }
+        
+        .select-card.selected {
+            border-color: #8b5cf6;
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            color: white;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            transition: width 0.3s ease;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            margin-top: 3rem;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .results-subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* ULTRA SIMPLIFIED RECOMMENDATION CARDS */
+        .simple-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+
+        .simple-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* LLM provider toggle (works without Tailwind peer/after) */
+        .toggle-surface {
+            width: 48px;
+            height: 24px;
+            background: #e9d5ff; /* purple-200 */
+            border-radius: 9999px;
+            position: relative;
+            transition: background-color 0.2s ease;
+        }
+        .toggle-surface .knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 9999px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease;
+        }
+        .toggle-surface.on { background: #7c3aed; /* purple-600 */ }
+        .toggle-surface.on .knob { transform: translateX(24px); }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <div id="header-container"></div>
+
+    <!-- Main Content -->
+    <main class="px-6" style="padding-top: 36px;">
+        <div class="max-w-4xl mx-auto">
+                        <!-- New Minimalistic Header -->
+            <div class="mb-8 animate-fade-in-up">
+                <div class="text-center space-y-6">
+                    <!-- Main Title with Typography -->
+                    <div class="space-y-3">
+                        <h1 class="text-5xl font-black tracking-tight">
+                            <span class="bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+                                University
+                            </span>
+                            <span class="bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-clip-text text-transparent ml-3">Recommendation</span>
+                        </h1>
+                        <div class="flex items-center justify-center space-x-2 text-sm text-gray-500">
+                            <div class="w-1 h-1 bg-purple-400 rounded-full"></div>
+                            <span>Find your perfect academic match with AI-powered insights</span>
+                            <div class="w-1 h-1 bg-cyan-400 rounded-full"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Interactive Progress Indicator -->
+                    <div class="flex items-center justify-center space-x-4 mt-8">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+                            <span class="text-xs font-medium text-gray-600">Profile</span>
+                        </div>
+                        <div class="w-8 h-0.5 bg-gray-300"></div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                            <span class="text-xs font-medium text-gray-400">Experience</span>
+                        </div>
+                        <div class="w-8 h-0.5 bg-gray-300"></div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                            <span class="text-xs font-medium text-gray-400">Preferences</span>
+                        </div>
+                        <div class="w-8 h-0.5 bg-gray-300"></div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                            <span class="text-xs font-medium text-gray-400">Results</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <form id="universityForm" class="space-y-8">
+                
+                <!-- Section 0: Resume/Document Upload -->
+                <div class="form-card rounded-xl p-8 animate-fade-in-up">
+                    <div class="section-header p-4 rounded-lg mb-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800 mb-1">📄 Upload Your Resume/Documents</h2>
+                                <p class="text-gray-600">Upload your resume, CV, or transcripts to auto-fill your profile (optional)</p>
+                            </div>
+                            <!-- Small LLM Toggle (moved here per request) -->
+                            <div class="flex items-center space-x-3">
+                                <span class="text-sm font-semibold text-gray-700">Groq</span>
+                                <button type="button" aria-label="Toggle LLM provider" class="toggle-surface" id="llmToggleBtn" onclick="toggleLLMProviderBtn()">
+                                    <span class="knob"></span>
+                                </button>
+                                <span class="text-sm font-semibold text-gray-700">Gemini</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- File Upload Area -->
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-400 transition-colors duration-300" id="uploadArea">
+                            <div class="space-y-4">
+                                <div class="mx-auto w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-lg font-semibold text-gray-700">Drop your files here or click to browse</p>
+                                    <p class="text-sm text-gray-500">Supported formats: PDF, DOC, DOCX, TXT (Max 10MB)</p>
+                                </div>
+                                <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" multiple class="hidden">
+                                <button type="button" onclick="document.getElementById('fileInput').click()" class="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 transition-colors">
+                                    Choose Files
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Upload Status -->
+                        <div id="uploadStatus" class="hidden">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div class="flex items-center">
+                                    <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
+                                    <span class="text-blue-700 font-medium">Processing your document...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Upload Results -->
+                        <div id="uploadResults" class="hidden">
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-green-700 font-medium">Document processed successfully!</span>
+                                </div>
+                                <p class="text-green-600 text-sm">Your profile has been auto-filled with extracted information. Please review and update as needed.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Uploaded Files List -->
+                        <div id="uploadedFiles" class="hidden">
+                            <h3 class="text-lg font-semibold text-gray-700 mb-3">Uploaded Files:</h3>
+                            <div id="filesList" class="space-y-2"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="fillDummyData()" class="submit-btn text-white px-6 py-3 rounded-full font-semibold flex items-center gap-2">
+                            <i class="fas fa-magic"></i>
+                            Fill Dummy Data
+                        </button>
+                        <button type="button" onclick="skipToAcademicSection()" class="submit-btn text-white px-6 py-3 rounded-full font-semibold">
+                            Continue to Academic Background →
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Removed large LLM Provider Toggle Section per request -->
+                
+                <!-- Section 1: Academic Background -->
+                <div id="section1" class="form-card rounded-xl p-8 animate-fade-in-up hidden">
+                    <div class="section-header p-4 rounded-lg mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">📚 Academic Background</h2>
+                        <p class="text-gray-600">Tell us about your current academic status</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Degree to Pursue</label>
+                            <select name="degree" class="input-field w-full px-4 py-3 rounded-lg">
+                                <option value="">Select Degree</option>
+                                <option value="bachelors">Bachelor's</option>
+                                <option value="masters">Master's</option>
+                                <option value="phd">PhD</option>
+                                <option value="postdoc">Post-Doc</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Intake Semester</label>
+                            <select name="intake" class="input-field w-full px-4 py-3 rounded-lg">
+                                <option value="">Select Semester</option>
+                                <option value="fall2024">Fall 2024</option>
+                                <option value="spring2025">Spring 2025</option>
+                                <option value="fall2025">Fall 2025</option>
+                                <option value="spring2026">Spring 2026</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Current University Name</label>
+                            <input type="text" name="currentUniversity" placeholder="e.g., University of California" class="input-field w-full px-4 py-3 rounded-lg">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Current University Tier</label>
+                            <select name="universityTier" class="input-field w-full px-4 py-3 rounded-lg">
+                                <option value="">Select Tier</option>
+                                <option value="tier1">Tier 1 (Top 50)</option>
+                                <option value="tier2">Tier 2 (51-100)</option>
+                                <option value="tier3">Tier 3 (101-200)</option>
+                                <option value="tier4">Tier 4 (200+)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">GPA/Percentage</label>
+                            <input type="text" name="gpa" placeholder="e.g., 3.8/4.0 or 85%" class="input-field w-full px-4 py-3 rounded-lg">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Course/Field of Study</label>
+                            <input type="text" name="course" placeholder="e.g., Computer Science" class="input-field w-full px-4 py-3 rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end mt-6">
+                        <button type="button" onclick="nextSection()" class="submit-btn text-white px-6 py-3 rounded-full font-semibold">
+                            Next: Experience & Achievements →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 2: Experience & Test Scores -->
+                <div id="section2" class="form-card rounded-xl p-8 animate-fade-in-up hidden">
+                    <div class="section-header p-4 rounded-lg mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">🏆 Experience & Test Scores</h2>
+                        <p class="text-gray-600">Share your achievements and test scores</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Relevant Work Experience (years)</label>
+                            <textarea name="workExperience" placeholder="Describe your relevant work experience (e.g., 2 years as Software Engineer at XYZ Company)" class="input-field w-full px-4 py-3 rounded-lg h-24 resize-none"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Research Papers Published</label>
+                            <textarea name="researchPapers" placeholder="List your published research papers (e.g., 'Machine Learning in Healthcare' - IEEE Conference 2023)" class="input-field w-full px-4 py-3 rounded-lg h-24 resize-none"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Certifications</label>
+                            <textarea name="certifications" placeholder="List your relevant certifications (AWS, Google Cloud, etc.)" class="input-field w-full px-4 py-3 rounded-lg h-24 resize-none"></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">GRE Quant</label>
+                                <input type="number" name="greQuant" placeholder="e.g., 165" max="170" class="input-field w-full px-4 py-3 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">GRE Verbal</label>
+                                <input type="number" name="greVerbal" placeholder="e.g., 155" max="170" class="input-field w-full px-4 py-3 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">GRE AWA</label>
+                                <input type="number" name="greAwa" placeholder="e.g., 4.5" max="6" step="0.5" class="input-field w-full px-4 py-3 rounded-lg">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">TOEFL Score</label>
+                                <input type="number" name="toefl" placeholder="e.g., 110" max="120" class="input-field w-full px-4 py-3 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Extracurriculars</label>
+                                <textarea name="extracurriculars" placeholder="Leadership roles, volunteer work, etc." class="input-field w-full px-4 py-3 rounded-lg h-20 resize-none"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="prevSection()" class="bg-gray-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors">
+                            ← Back
+                        </button>
+                        <button type="button" onclick="nextSection()" class="submit-btn text-white px-6 py-3 rounded-full font-semibold">
+                            Next: Preferences →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 3: Student Preferences -->
+                <div id="section3" class="form-card rounded-xl p-8 animate-fade-in-up hidden">
+                    <div class="section-header p-4 rounded-lg mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">🎯 Your Preferences</h2>
+                        <p class="text-gray-600">Tell us what you're looking for in a university</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Preferred Locations</label>
+                            <select name="preferredLocation" class="input-field w-full px-4 py-3 rounded-lg">
+                                <option value="Any">United States (No specific preference)</option>
+                                <option value="West Coast">West Coast (CA, WA, OR)</option>
+                                <option value="East Coast">East Coast (NY, MA, CT, etc.)</option>
+                                <option value="Midwest">Midwest (IL, MI, OH, etc.)</option>
+                                <option value="South">South (TX, FL, GA, etc.)</option>
+                                <option value="Southwest">Southwest (AZ, NV, NM, etc.)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">University Type</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="select-card p-4 rounded-lg" onclick="toggleSelection(this, 'universityType', 'Public')">
+                                    <span class="text-2xl">🏛️</span>
+                                    <h3 class="font-semibold mt-2">Public</h3>
+                                    <p class="text-sm text-gray-600">State universities, lower tuition</p>
+                                </div>
+                                <div class="select-card p-4 rounded-lg" onclick="toggleSelection(this, 'universityType', 'Private')">
+                                    <span class="text-2xl">🎓</span>
+                                    <h3 class="font-semibold mt-2">Private</h3>
+                                    <p class="text-sm text-gray-600">Private institutions, smaller classes</p>
+                                </div>
+                                <div class="select-card p-4 rounded-lg" onclick="toggleSelection(this, 'universityType', 'Any')">
+                                    <span class="text-2xl">🤝</span>
+                                    <h3 class="font-semibold mt-2">Any</h3>
+                                    <p class="text-sm text-gray-600">No preference</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Maximum Tuition Fee (per year)</label>
+                                <select name="tuitionFee" class="input-field w-full px-4 py-3 rounded-lg">
+                                    <option value="">No preference</option>
+                                    <option value="30000">Under $30,000</option>
+                                    <option value="50000">Under $50,000</option>
+                                    <option value="70000">Under $70,000</option>
+                                    <option value="unlimited">No limit</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Maximum Living Cost (per year)</label>
+                                <select name="livingCost" class="input-field w-full px-4 py-3 rounded-lg">
+                                    <option value="">No preference</option>
+                                    <option value="15000">Under $15,000</option>
+                                    <option value="20000">Under $20,000</option>
+                                    <option value="25000">Under $25,000</option>
+                                    <option value="unlimited">No limit</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="prevSection()" class="bg-gray-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors">
+                            ← Back
+                        </button>
+                        <button type="button" onclick="nextSection()" class="submit-btn text-white px-6 py-3 rounded-full font-semibold">
+                            Next: Final Details →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 4: Additional Requirements -->
+                <div id="section4" class="form-card rounded-xl p-8 animate-fade-in-up hidden">
+                    <div class="section-header p-4 rounded-lg mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">✨ Final Details</h2>
+                        <p class="text-gray-600">Last few questions to perfect your recommendations</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Full-time Work Opportunity Important?</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'fullTimeOpportunity', 'very')">
+                                    <span class="text-2xl">💼</span>
+                                    <p class="font-semibold">Very Important</p>
+                                </div>
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'fullTimeOpportunity', 'somewhat')">
+                                    <span class="text-2xl">📝</span>
+                                    <p class="font-semibold">Somewhat Important</p>
+                                </div>
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'fullTimeOpportunity', 'not')">
+                                    <span class="text-2xl">🎓</span>
+                                    <p class="font-semibold">Not Important</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Scholarship Importance</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'scholarship', 'essential')">
+                                    <span class="text-2xl">💰</span>
+                                    <p class="font-semibold">Essential</p>
+                                </div>
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'scholarship', 'preferred')">
+                                    <span class="text-2xl">💵</span>
+                                    <p class="font-semibold">Preferred</p>
+                                </div>
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'scholarship', 'optional')">
+                                    <span class="text-2xl">💳</span>
+                                    <p class="font-semibold">Optional</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">GRE Requirement Preference</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'greRequired', 'no')">
+                                    <span class="text-2xl">🚫</span>
+                                    <p class="font-semibold">No GRE Required</p>
+                                </div>
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'greRequired', 'optional')">
+                                    <span class="text-2xl">📝</span>
+                                    <p class="font-semibold">GRE Optional</p>
+                                </div>
+                                <div class="select-card p-4 rounded-lg text-center" onclick="toggleSelection(this, 'greRequired', 'either')">
+                                    <span class="text-2xl">🤷</span>
+                                    <p class="font-semibold">Either is Fine</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Specific Course/Program Acronym</label>
+                            <input type="text" name="courseAcronym" placeholder="e.g., MSCS, MBA, MS-DS" class="input-field w-full px-4 py-3 rounded-lg">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Additional Requirements or Preferences</label>
+                            <textarea name="additionalRequirements" placeholder="Any other specific requirements or preferences..." class="input-field w-full px-4 py-3 rounded-lg h-24 resize-none"></textarea>
+                        </div>
+                    </div>
+                    
+
+
+
+
+                    <div class="flex justify-between mt-6">
+                        <button type="button" onclick="prevSection()" class="bg-gray-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-600 transition-colors">
+                            ← Back
+                        </button>
+                        <button type="submit" class="submit-btn text-white px-6 py-3 rounded-full font-semibold">
+                            🎯 Get My Recommendations
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // ===== SMART PROFILE SYNC FUNCTIONALITY =====
+        
+        // Field mapping between University Recommender and Profile forms
+        const FIELD_MAPPING = {
+            // University Recommender → Profile
+            recommenderToProfile: {
+                'gpa': 'gpa',
+                'course': 'fieldOfStudy',
+                'greQuant': 'testScores', // Will be combined
+                'greVerbal': 'testScores', // Will be combined  
+                'greAwa': 'testScores', // Will be combined
+                'toefl': 'testScores', // Will be combined
+                'workExperience': 'goals', // Will be adapted
+                'additionalRequirements': 'bio'
+            },
+            // Profile → University Recommender
+            profileToRecommender: {
+                'gpa': 'gpa',
+                'fieldOfStudy': 'course',
+                'testScores': ['greQuant', 'greVerbal', 'greAwa', 'toefl'], // Will be parsed
+                'goals': 'workExperience', // Will be adapted
+                'bio': 'additionalRequirements'
+            }
+        };
+
+        // Automatic sync to Profile (called on form submission)
+        async function autoSyncToProfile() {
+            try {
+                // Check if we should auto-sync (one-time only)
+                const hasAutoSynced = localStorage.getItem('uternity_auto_synced_to_profile');
+                if (hasAutoSynced === 'true') {
+                    console.log('Auto-sync already completed, skipping...');
+                    return;
+                }
+
+                // Check if profile is incomplete (< 30% complete)
+                const profileCompletion = await getProfileCompletion();
+                if (profileCompletion >= 30) {
+                    console.log('Profile already has data, skipping auto-sync...');
+                    return;
+                }
+
+                const recommenderData = collectRecommenderFormData();
+                const profileData = mapRecommenderToProfile(recommenderData);
+                
+                // Save to profile via API (silently)
+                const response = await fetch('/api/auth/users/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                if (response.ok) {
+                    // Mark as synced (one-time only)
+                    localStorage.setItem('uternity_auto_synced_to_profile', 'true');
+                    
+                    // Show subtle notification
+                    showNotification('✨ Your profile has been updated with this information', 'success');
+                    
+                    console.log('Auto-sync to profile completed successfully');
+                } else {
+                    console.log('Auto-sync failed, but continuing with recommendations...');
+                }
+
+            } catch (error) {
+                console.error('Auto-sync error (non-critical):', error);
+                // Don't show error to user - this is background operation
+            }
+        }
+
+        // Get current profile completion percentage
+        async function getProfileCompletion() {
+            try {
+                const response = await fetch('/api/auth/users/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const profileData = await response.json();
+                    return calculateCompletionFromData(profileData);
+                }
+            } catch (error) {
+                console.error('Error checking profile completion:', error);
+            }
+            return 0; // Default to 0% if error
+        }
+
+        // Calculate completion percentage from profile data
+        function calculateCompletionFromData(profileData) {
+            const fields = ['first_name', 'last_name', 'email', 'gpa', 'field_of_study', 'test_scores', 'goals'];
+            let filledFields = 0;
+            
+            fields.forEach(field => {
+                if (profileData[field] && profileData[field].toString().trim() !== '') {
+                    filledFields++;
+                }
+            });
+            
+            return Math.round((filledFields / fields.length) * 100);
+        }
+
+
+
+        // Collect data from University Recommender form
+        function collectRecommenderFormData() {
+            const formData = {};
+            const form = document.querySelector('form');
+            const formElements = form.querySelectorAll('input, select, textarea');
+            
+            formElements.forEach(element => {
+                if (element.name && element.value) {
+                    formData[element.name] = element.value;
+                }
+            });
+            
+            return formData;
+        }
+
+        // Map University Recommender data to Profile format
+        function mapRecommenderToProfile(recommenderData) {
+            const profileData = {};
+            
+            // Direct mappings
+            if (recommenderData.gpa) profileData.gpa = recommenderData.gpa;
+            if (recommenderData.course) profileData.field_of_study = recommenderData.course;
+            
+            // Combine test scores
+            const testScores = [];
+            if (recommenderData.greQuant) testScores.push(`GRE Quant: ${recommenderData.greQuant}`);
+            if (recommenderData.greVerbal) testScores.push(`GRE Verbal: ${recommenderData.greVerbal}`);
+            if (recommenderData.greAwa) testScores.push(`GRE AWA: ${recommenderData.greAwa}`);
+            if (recommenderData.toefl) testScores.push(`TOEFL: ${recommenderData.toefl}`);
+            if (testScores.length > 0) profileData.test_scores = testScores.join(', ');
+            
+            // Adapt work experience to goals
+            if (recommenderData.workExperience) {
+                profileData.goals = `Career Goals: ${recommenderData.workExperience}`;
+            }
+            
+            // Use additional requirements as bio
+            if (recommenderData.additionalRequirements) {
+                profileData.bio = recommenderData.additionalRequirements;
+            }
+            
+            return profileData;
+        }
+
+        // Map Profile data to University Recommender format
+        function mapProfileToRecommender(profileData) {
+            const recommenderData = {};
+            
+            // Direct mappings
+            if (profileData.gpa) recommenderData.gpa = profileData.gpa;
+            if (profileData.field_of_study) recommenderData.course = profileData.field_of_study;
+            if (profileData.bio) recommenderData.additionalRequirements = profileData.bio;
+            
+            // Parse test scores if available
+            if (profileData.test_scores) {
+                const testScoreText = profileData.test_scores.toLowerCase();
+                
+                // Extract GRE scores
+                const greQuantMatch = testScoreText.match(/gre quant[:\s]*(\d+)/);
+                const greVerbalMatch = testScoreText.match(/gre verbal[:\s]*(\d+)/);
+                const greAwaMatch = testScoreText.match(/gre awa[:\s]*(\d+\.?\d*)/);
+                const toeflMatch = testScoreText.match(/toefl[:\s]*(\d+)/);
+                
+                if (greQuantMatch) recommenderData.greQuant = greQuantMatch[1];
+                if (greVerbalMatch) recommenderData.greVerbal = greVerbalMatch[1];
+                if (greAwaMatch) recommenderData.greAwa = greAwaMatch[1];
+                if (toeflMatch) recommenderData.toefl = toeflMatch[1];
+            }
+            
+            return recommenderData;
+        }
+
+        // Fill University Recommender form with data
+        function fillRecommenderForm(data) {
+            Object.keys(data).forEach(fieldName => {
+                const element = document.querySelector(`[name="${fieldName}"]`);
+                if (element && data[fieldName]) {
+                    element.value = data[fieldName];
+                    
+                    // Trigger change event for any listeners
+                    element.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        // Show notification to user
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transform transition-all duration-300 translate-x-full`;
+            
+            // Set color based on type
+            if (type === 'success') {
+                notification.classList.add('bg-green-500');
+            } else if (type === 'error') {
+                notification.classList.add('bg-red-500');
+            } else {
+                notification.classList.add('bg-blue-500');
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize sync functionality when page loads
+
+
+        // ===== END SMART PROFILE SYNC FUNCTIONALITY =====
+
+        // TEMPORARY TEST FUNCTION - Remove after testing
+        function fillTestData() {
+            // Basic Information
+            document.querySelector('select[name="degree"]').value = "masters";
+            document.querySelector('select[name="intake"]').value = "fall2025";
+            document.querySelector('input[name="currentUniversity"]').value = "University of California, Berkeley";
+            document.querySelector('select[name="universityTier"]').value = "top50";
+            document.querySelector('input[name="gpa"]').value = "3.7";
+            document.querySelector('input[name="course"]').value = "Computer Science";
+            
+            // Experience
+            document.querySelector('textarea[name="workExperience"]').value = "2 years as Software Engineer at Google, working on machine learning algorithms and backend systems. Led a team of 3 developers.";
+            document.querySelector('textarea[name="researchPapers"]').value = "Published 'Deep Learning Applications in Computer Vision' at IEEE CVPR 2023. Co-authored 'Efficient Neural Networks' in Nature Machine Intelligence.";
+            document.querySelector('textarea[name="certifications"]').value = "AWS Solutions Architect Professional, Google Cloud ML Engineer, Stanford CS229 Machine Learning Certificate";
+            
+            // Test Scores
+            document.querySelector('input[name="greQuant"]').value = "165";
+            document.querySelector('input[name="greVerbal"]').value = "158";
+            document.querySelector('input[name="greAwa"]').value = "4.5";
+            document.querySelector('input[name="toefl"]').value = "108";
+            
+            // Activities
+            document.querySelector('textarea[name="extracurriculars"]').value = "President of Computer Science Club, organized 5 hackathons with 500+ participants. Volunteer coding instructor for underprivileged students.";
+            
+            // Preferences  
+            document.querySelector('select[name="preferredLocation"]').value = "united-states";
+            document.querySelector('select[name="tuitionFee"]').value = "40000-60000";
+            document.querySelector('select[name="livingCost"]').value = "15000-25000";
+            
+            // Toggle Selection Cards (simulate clicks)
+            setTimeout(() => {
+                // University Type - either
+                const universityTypeCard = document.querySelector('[onclick*="universityType"][onclick*="either"]');
+                if (universityTypeCard) universityTypeCard.click();
+                
+                // Full Time Opportunity - very important
+                const fullTimeCard = document.querySelector('[onclick*="fullTimeOpportunity"][onclick*="very"]');
+                if (fullTimeCard) fullTimeCard.click();
+                
+                // Scholarship - preferred
+                const scholarshipCard = document.querySelector('[onclick*="scholarship"][onclick*="preferred"]');
+                if (scholarshipCard) scholarshipCard.click();
+                
+                // GRE Required - optional  
+                const greCard = document.querySelector('[onclick*="greRequired"][onclick*="optional"]');
+                if (greCard) greCard.click();
+            }, 200);
+            
+            // Additional
+            document.querySelector('input[name="courseAcronym"]').value = "MSCS";
+            document.querySelector('textarea[name="additionalRequirements"]').value = "Looking for universities with strong AI/ML research programs and industry connections. Prefer urban locations with tech company proximity.";
+            
+            // Auto-advance through all sections to show all fields
+            setTimeout(() => {
+                nextStep(); // Go to step 2
+                setTimeout(() => {
+                    nextStep(); // Go to step 3
+                    setTimeout(() => {
+                        nextStep(); // Go to step 4
+                    }, 100);
+                }, 100);
+            }, 100);
+            
+            alert("✅ Test data filled! Form has been advanced to final step. You can now submit or modify any fields.");
+        }
+
+        // Load header using EXACT SOP page structure - FIXED VERSION
+        function loadHeaderNow() {
+            console.log('🔄 Loading header component for recommender page...');
+            
+            const headerContainer = document.getElementById('header-container');
+            if (!headerContainer) {
+                console.error('❌ Header container not found in recommender!');
+                return;
+            }
+            
+            // Always use the simple header structure (like SOP page)
+            console.log('🔄 Loading simple header for recommender...');
+            headerContainer.innerHTML = `
+                <header class="header-container">
+                    <nav class="header-nav">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                                <svg class="w-6 h-6 text-purple-600" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 4L4 8L12 12L20 8L12 4Z" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M4 12L12 16L20 12" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M4 16L12 20L20 16" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <span class="text-2xl font-bold text-white">UTERNITY</span>
+                        </div>
+                        <div class="flex items-center space-x-6">
+                            <a href="chat.html" class="nav-link text-white">
+                                <i class="fas fa-comments mr-2"></i>
+                                Chat
+                            </a>
+                            <a href="sop-create.html" class="nav-link text-white">
+                                <i class="fas fa-file-alt mr-2"></i>
+                                SOP
+                            </a>
+                            <a href="cost-calculator.html" class="nav-link text-white">
+                                <i class="fas fa-calculator mr-2"></i>
+                                Cost Calculator
+                            </a>
+                            <a href="university-recommender.html" class="nav-link text-white active">
+                                <i class="fas fa-university mr-2"></i>
+                                Recommend
+                            </a>
+                            <a href="voice-dashboard.html" class="nav-link text-white">
+                                <i class="fas fa-graduation-cap mr-2"></i>
+                                TOEFL/IELTS
+                            </a>
+                        </div>
+                        <div class="flex items-center space-x-4">
+
+                            <!-- User Menu -->
+                            <div class="relative user-menu">
+                                <button id="userMenuButton" class="flex items-center space-x-2 p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                        <span id="userInitial" class="text-sm font-semibold text-white">?</span>
+                                    </div>
+                                    <span id="userDisplayName" class="text-white font-medium hidden sm:block"></span>
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+                                <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 hidden" style="z-index: 9999;">
+                                    <div class="px-4 py-2 border-b border-gray-100">
+                                        <p id="userDropdownName" class="text-sm font-medium text-gray-800"></p>
+                                        <p id="userEmail" class="text-xs text-gray-500 mt-1"></p>
+                                    </div>
+                                    <a href="/profile" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                        Profile
+                                    </a>
+                                    <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013 3v1"/>
+                                        </svg>
+                                        Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            `;
+            console.log('✅ RECOMMENDER HEADER created and should be visible - VERSION 3.0 (WITH ICONS)!');
+            
+            // Setup dropdown functionality
+            setupHeaderDropdowns();
+            // Populate user initial/name
+            try { populateHeaderUserInfo(); } catch (e) { console.warn(e); }
+        }
+
+        // Setup header dropdown functionality
+        function setupHeaderDropdowns() {
+            const userMenuButton = document.getElementById('userMenuButton');
+            const userDropdown = document.getElementById('userDropdown');
+            const logoutButton = document.getElementById('logoutButton');
+
+            if (userMenuButton && userDropdown) {
+                // Toggle dropdown on button click
+                userMenuButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (userDropdown.style.display === 'none' || userDropdown.style.display === '') {
+                        userDropdown.style.display = 'block';
+                    } else {
+                        userDropdown.style.display = 'none';
+                    }
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.style.display = 'none';
+                    }
+                });
+
+                // Prevent dropdown from closing when clicking inside it
+                userDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+
+            // Logout functionality - UPDATED TO CLEAR ALL AUTH DATA
+            if (logoutButton) {
+                logoutButton.addEventListener('click', async function() {
+                    if (confirm('Are you sure you want to sign out?')) {
+                        console.log('🚪 Starting logout process from university recommender page');
+                        try {
+                            // Try to call our auth service logout endpoint
+                            const accessToken = localStorage.getItem('uternity_access_token') || localStorage.getItem('access_token');
+                            if (accessToken) {
+                                try {
+                                    await fetch('http://localhost:8001/auth/logout', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Authorization': `Bearer ${accessToken}`,
+                                            'Content-Type': 'application/json'
+                                        }
+                                    });
+                                    console.log('✅ Auth service logout successful from university recommender page');
+                                } catch (error) {
+                                    console.warn('⚠️ Auth service logout failed from university recommender page, continuing with local cleanup:', error);
+                                }
+                            }
+
+                            // Clear all authentication and session data
+                            const keys = [
+                                'access_token','refresh_token','session_id','user_data',
+                                'uternity_user','uternity_access_token','uternity_refresh_token',
+                                'uternity_current_session_id','uternity_token'
+                            ];
+                            keys.forEach(k => localStorage.removeItem(k));
+                            
+                            console.log('✅ All local storage cleared from university recommender page');
+                            window.location.href = '/auth/login';
+                        } catch (error) {
+                            console.error('❌ Logout failed from university recommender page:', error);
+                            // Even if logout fails, clear local data and redirect
+                            localStorage.clear();
+                            window.location.href = '/auth/login';
+                        }
+                    }
+                });
+            }
+        }
+
+        // Populate user initial and names from localStorage
+        function populateHeaderUserInfo() {
+            try {
+                const raw = localStorage.getItem('uternity_user') || localStorage.getItem('user_data');
+                let user = {};
+                if (raw) { try { user = JSON.parse(raw); } catch { user = {}; } }
+                const name = user.name || user.full_name || user.fullName || user.username || '';
+                const email = user.email || user.user_email || '';
+                function initials(n, e){
+                    if (n && n.trim()){ const parts=n.trim().split(/\s+/).filter(Boolean); const f=parts[0]?.[0]||''; const l=parts.length>1?parts[parts.length-1][0]:''; return ((f+l)||'?').toUpperCase(); }
+                    if (e && e.trim()){ const u=(e.split('@')[0]||''); const t=u.split(/[^a-zA-Z]+/).filter(Boolean); const f=t[0]?.[0]||''; const l=t.length>1?t[t.length-1][0]:''; return ((f+l)||u[0]||'?').toUpperCase(); }
+                    return '?';
+                }
+                const init = initials(name, email);
+                const elInitial = document.getElementById('userInitial');
+                const elDisplay = document.getElementById('userDisplayName');
+                const elDropName = document.getElementById('userDropdownName');
+                const elEmail = document.getElementById('userEmail');
+                if (elInitial) elInitial.textContent = init;
+                if (elDisplay) { elDisplay.textContent = ''; elDisplay.style.display = 'none'; }
+                if (elDropName) elDropName.textContent = name || '';
+                if (elEmail) elEmail.textContent = email || '';
+            } catch (e) { console.warn('populateHeaderUserInfo failed:', e); }
+        }
+        
+        // ============================================================================
+        // SMOOTH PAGE TRANSITIONS
+        // ============================================================================
+
+        // Add smooth transitions to navigation links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add transition class to all navigation links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Only apply transition for internal links
+                    if (link.href && !link.href.includes('#')) {
+                        e.preventDefault();
+                        
+                        // Add fade-out effect to current page
+                        document.body.style.opacity = '0';
+                        document.body.style.transform = 'translateY(-20px)';
+                        document.body.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        
+                        // Navigate after transition
+                        setTimeout(() => {
+                            window.location.href = link.href;
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Load header immediately if DOM is ready, otherwise wait
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add page load animation
+                document.body.classList.add('page-transition');
+                setTimeout(() => {
+                    document.body.classList.add('loaded');
+                }, 100);
+                loadHeaderNow();
+            });
+        } else {
+            // Add page load animation
+            document.body.classList.add('page-transition');
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 100);
+            loadHeaderNow();
+        }
+
+        let currentSectionIndex = 0; // Start with upload section
+        const totalSections = 4;
+        const selectedValues = {};
+
+        // File Upload Functionality
+        function skipToAcademicSection() {
+            document.querySelector('.form-card').classList.add('hidden');
+            document.getElementById('section1').classList.remove('hidden');
+            currentSectionIndex = 1;
+            updateProgress();
+        }
+
+        function fillDummyData() {
+            console.log('🎯 Filling all sections with dummy data...');
+            
+            // Helper function to safely set value
+            function safeSetValue(selector, value) {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.value = value;
+                }
+            }
+            
+            // === SECTION 1: ACADEMIC BACKGROUND ===
+            safeSetValue('input[name="gpa"]', '3.8');
+            safeSetValue('input[name="course"]', 'Computer Science');
+            safeSetValue('select[name="degree"]', 'masters');
+            safeSetValue('select[name="intake"]', 'fall2025');
+            safeSetValue('input[name="currentUniversity"]', 'University of California, Berkeley');
+            safeSetValue('select[name="universityTier"]', 'tier1');
+            
+            // === SECTION 2: EXPERIENCE & TEST SCORES ===
+            safeSetValue('textarea[name="workExperience"]', '2 years as Software Engineer at Google, focusing on machine learning and data infrastructure. Led a team of 5 developers in building scalable ML pipelines.');
+            safeSetValue('textarea[name="researchPapers"]', '"Deep Learning Applications in Computer Vision" - IEEE Conference 2023, "Scalable Machine Learning Systems" - ICML 2024');
+            safeSetValue('textarea[name="certifications"]', 'AWS Certified Solutions Architect, Google Cloud Professional ML Engineer, Microsoft Azure AI Engineer');
+            safeSetValue('input[name="greQuant"]', '168');
+            safeSetValue('input[name="greVerbal"]', '162');
+            safeSetValue('input[name="greAwa"]', '4.5');
+            safeSetValue('input[name="toefl"]', '112');
+            safeSetValue('textarea[name="extracurriculars"]', 'President of Computer Science Club, Volunteer coding instructor for underprivileged students, Marathon runner, Chess club member');
+            
+            // === SECTION 3: PREFERENCES ===
+            safeSetValue('select[name="preferredLocation"]', 'california');
+            safeSetValue('textarea[name="projects"]', 'Built a recommendation system using collaborative filtering that increased user engagement by 25%. Developed a mobile app with 10K+ downloads. Open source contributor to TensorFlow.');
+            safeSetValue('textarea[name="researchInterests"]', 'Machine Learning, Artificial Intelligence, Computer Vision, Natural Language Processing, Deep Learning, Data Science');
+            safeSetValue('select[name="budget"]', 'high');
+            
+            // Apply visual feedback to filled fields
+            const allInputs = document.querySelectorAll('input, textarea, select');
+            allInputs.forEach(input => {
+                if (input.value && input.value.trim() !== '') {
+                    input.style.backgroundColor = '#f0fdf4'; // Light green background
+                    input.style.borderColor = '#16a34a'; // Green border
+                    input.style.transition = 'all 0.3s ease';
+                }
+            });
+            
+            // Show success message with details
+            alert('🎉 All sections filled with comprehensive dummy data!\n\n✅ Academic Background\n✅ Experience & Test Scores\n✅ Preferences\n\nYou can now navigate through all sections and submit the form.');
+            
+            console.log('✅ Dummy data filling completed for all sections!');
+        }
+
+        // Handle file upload
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const uploadResults = document.getElementById('uploadResults');
+            const uploadedFiles = document.getElementById('uploadedFiles');
+            const filesList = document.getElementById('filesList');
+
+            // Test backend connectivity on page load
+            testBackendConnection();
+
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('border-purple-400', 'bg-purple-50');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('border-purple-400', 'bg-purple-50');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('border-purple-400', 'bg-purple-50');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+            });
+
+            function handleFiles(files) {
+                if (files.length === 0) return;
+
+                // Show upload status
+                uploadStatus.classList.remove('hidden');
+                uploadResults.classList.add('hidden');
+
+                // Process each file
+                Array.from(files).forEach(file => {
+                    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+                        return;
+                    }
+
+                    // Add file to list
+                    addFileToList(file);
+
+                    // Convert to base64 and send to API
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const base64Content = e.target.result.split(',')[1]; // Remove data:type;base64, prefix
+                        uploadToAPI(base64Content, file.name);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function addFileToList(file) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                fileItem.innerHTML = `
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-gray-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700">${file.name}</span>
+                    </div>
+                    <span class="text-xs text-gray-500">${formatFileSize(file.size)}</span>
+                `;
+                filesList.appendChild(fileItem);
+                uploadedFiles.classList.remove('hidden');
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            async function uploadToAPI(base64Content, filename) {
+                try {
+                    console.log('🚀 Starting upload for:', filename);
+                    
+                    // Get file extension for file_type
+                    const fileExtension = filename.split('.').pop().toLowerCase();
+                    
+                    console.log('📡 Making request to backend...');
+                    const response = await fetch('/chat/resume/upload', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            content: base64Content,
+                            filename: filename,
+                            file_type: fileExtension
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log('✅ Upload successful:', result);
+                    console.log('📋 Extracted data structure:', JSON.stringify(result, null, 2));
+                    
+                    // Hide upload status, show success
+                    uploadStatus.classList.add('hidden');
+                    uploadResults.classList.remove('hidden');
+
+                    // Auto-fill form fields with extracted data
+                    autoFillForm(result);
+
+                } catch (error) {
+                    console.error('❌ Upload failed:', error);
+                    console.error('Error details:', error.message);
+                    uploadStatus.classList.add('hidden');
+                    
+                    // Show error message
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'bg-red-50 border border-red-200 rounded-lg p-4';
+                    errorDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            <span class="text-red-700 font-medium">Upload failed. Please try again or continue manually.</span>
+                        </div>
+                    `;
+                    uploadResults.appendChild(errorDiv);
+                    uploadResults.classList.remove('hidden');
+                }
+            }
+
+            async function testBackendConnection() {
+                try {
+                    console.log('🔍 Testing backend connection...');
+                    const response = await fetch('/health');
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('✅ Backend connected:', result);
+                    } else {
+                        console.error('❌ Backend health check failed:', response.status);
+                    }
+                } catch (error) {
+                    console.error('❌ Backend connection failed:', error.message);
+                    
+                    // Show warning message to user
+                    const warningDiv = document.createElement('div');
+                    warningDiv.className = 'bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4';
+                    warningDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                            <span class="text-yellow-700 font-medium">Backend server not available. Resume upload feature will not work. Please continue manually.</span>
+                        </div>
+                    `;
+                    
+                    const uploadArea = document.getElementById('uploadArea');
+                    uploadArea.parentNode.insertBefore(warningDiv, uploadArea);
+                }
+            }
+
+            function autoFillForm(responseData) {
+                console.log('🔄 Starting auto-fill with response:', responseData);
+                
+                // Extract the actual data from the response structure
+                const extractedData = responseData.extracted_data || responseData;
+                console.log('📋 Using extracted data:', extractedData);
+                console.log('📋 Full structure:', JSON.stringify(extractedData, null, 2));
+                
+                let fieldsUpdated = 0;
+                
+                // Helper function to style auto-filled fields
+                function styleAutoFilledField(field) {
+                    field.style.backgroundColor = '#f0fdf4'; // Light green background
+                    field.style.borderColor = '#16a34a'; // Green border
+                    field.style.transition = 'all 0.3s ease';
+                }
+                
+                // Auto-fill personal info
+                if (extractedData.personal_info?.email) {
+                    console.log('📧 Email found:', extractedData.personal_info.email);
+                    // Could add email field if needed
+                }
+
+                // Auto-fill academic info - FIXED: Use correct structure
+                if (extractedData.academic_background?.gpa) {
+                    const gpaField = document.querySelector('input[name="gpa"]');
+                    if (gpaField) {
+                        gpaField.value = extractedData.academic_background.gpa;
+                        styleAutoFilledField(gpaField);
+                        fieldsUpdated++;
+                        console.log('✅ GPA filled:', extractedData.academic_background.gpa);
+                    } else {
+                        console.log('❌ GPA field not found');
+                    }
+                }
+
+                // Auto-fill GRE scores - FIXED: Use correct structure
+                if (extractedData.academic_background?.gre_quant) {
+                    const greQuantField = document.querySelector('input[name="greQuant"]');
+                    if (greQuantField) {
+                        greQuantField.value = extractedData.academic_background.gre_quant;
+                        styleAutoFilledField(greQuantField);
+                        fieldsUpdated++;
+                        console.log('✅ GRE Quant filled:', extractedData.academic_background.gre_quant);
+                    } else {
+                        console.log('❌ GRE Quant field not found');
+                    }
+                }
+
+                if (extractedData.academic_background?.gre_verbal) {
+                    const greVerbalField = document.querySelector('input[name="greVerbal"]');
+                    if (greVerbalField) {
+                        greVerbalField.value = extractedData.academic_background.gre_verbal;
+                        styleAutoFilledField(greVerbalField);
+                        fieldsUpdated++;
+                        console.log('✅ GRE Verbal filled:', extractedData.academic_background.gre_verbal);
+                    } else {
+                        console.log('❌ GRE Verbal field not found');
+                    }
+                }
+
+                if (extractedData.academic_background?.gre_awa) {
+                    const greAwaField = document.querySelector('input[name="greAwa"]');
+                    if (greAwaField) {
+                        greAwaField.value = extractedData.academic_background.gre_awa;
+                        styleAutoFilledField(greAwaField);
+                        fieldsUpdated++;
+                        console.log('✅ GRE AWA filled:', extractedData.academic_background.gre_awa);
+                    } else {
+                        console.log('❌ GRE AWA field not found');
+                    }
+                }
+
+                if (extractedData.academic_background?.toefl) {
+                    const toeflField = document.querySelector('input[name="toefl"]');
+                    if (toeflField) {
+                        toeflField.value = extractedData.academic_background.toefl;
+                        styleAutoFilledField(toeflField);
+                        fieldsUpdated++;
+                        console.log('✅ TOEFL filled:', extractedData.academic_background.toefl);
+                    } else {
+                        console.log('❌ TOEFL field not found');
+                    }
+                }
+
+                // Auto-fill field of study - FIXED: Use correct field name
+                if (extractedData.field_of_interest) {
+                    const courseField = document.querySelector('input[name="course"]');
+                    if (courseField) {
+                        courseField.value = extractedData.field_of_interest;
+                        styleAutoFilledField(courseField);
+                        fieldsUpdated++;
+                        console.log('✅ Course field filled:', extractedData.field_of_interest);
+                    } else {
+                        console.log('❌ Course field not found');
+                    }
+                }
+
+                // Auto-fill degree level - FIXED: Use correct field name
+                if (extractedData.academic_level) {
+                    const degreeField = document.querySelector('select[name="degree"]');
+                    if (degreeField) {
+                        const degreeMap = {
+                            'bachelors': 'bachelors',
+                            'masters': 'masters',
+                            'phd': 'phd',
+                            'undergraduate': 'bachelors',
+                            'graduate': 'masters'
+                        };
+                        const mappedValue = degreeMap[extractedData.academic_level.toLowerCase()] || 'masters';
+                        degreeField.value = mappedValue;
+                        styleAutoFilledField(degreeField);
+                        fieldsUpdated++;
+                        console.log('✅ Degree filled:', mappedValue);
+                    } else {
+                        console.log('❌ Degree field not found');
+                    }
+                }
+
+                // Auto-fill experience fields - FIXED: Use correct nested structure
+                if (extractedData.work_experience?.summary) {
+                    const workExpField = document.querySelector('textarea[name="workExperience"]');
+                    if (workExpField) {
+                        workExpField.value = extractedData.work_experience.summary;
+                        styleAutoFilledField(workExpField);
+                        fieldsUpdated++;
+                        console.log('✅ Work experience filled');
+                    } else {
+                        console.log('❌ Work experience field not found');
+                    }
+                }
+
+                // FIXED: Use correct nested structure for research
+                if (extractedData.research_experience?.summary) {
+                    const researchField = document.querySelector('textarea[name="researchPapers"]');
+                    if (researchField) {
+                        researchField.value = extractedData.research_experience.summary;
+                        styleAutoFilledField(researchField);
+                        fieldsUpdated++;
+                        console.log('✅ Research papers filled');
+                    } else {
+                        console.log('❌ Research papers field not found');
+                    }
+                }
+
+                // FIXED: Use correct nested structure for certifications
+                if (extractedData.certifications?.summary) {
+                    const certField = document.querySelector('textarea[name="certifications"]');
+                    if (certField) {
+                        certField.value = extractedData.certifications.summary;
+                        styleAutoFilledField(certField);
+                        fieldsUpdated++;
+                        console.log('✅ Certifications filled');
+                    } else {
+                        console.log('❌ Certifications field not found');
+                    }
+                }
+
+                // FIXED: Use correct nested structure for extracurriculars
+                if (extractedData.extracurriculars?.summary) {
+                    const extraField = document.querySelector('textarea[name="extracurriculars"]');
+                    if (extraField) {
+                        extraField.value = extractedData.extracurriculars.summary;
+                        styleAutoFilledField(extraField);
+                        fieldsUpdated++;
+                        console.log('✅ Extracurriculars filled');
+                    } else {
+                        console.log('❌ Extracurriculars field not found');
+                    }
+                }
+
+                // BONUS: Auto-fill projects if field exists
+                if (extractedData.projects?.summary) {
+                    const projectsField = document.querySelector('textarea[name="projects"]');
+                    if (projectsField) {
+                        projectsField.value = extractedData.projects.summary;
+                        styleAutoFilledField(projectsField);
+                        fieldsUpdated++;
+                        console.log('✅ Projects filled');
+                    } else {
+                        console.log('❌ Projects field not found (this is normal if field doesn\'t exist)');
+                    }
+                }
+
+                console.log(`🎯 Auto-fill completed: ${fieldsUpdated} fields updated`);
+                
+                // Show success message with number of fields filled
+                const successDiv = document.createElement('div');
+                successDiv.className = 'bg-green-50 border border-green-200 rounded-lg p-4 mt-4';
+                successDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span class="text-green-700 font-medium">Resume processed successfully! ${fieldsUpdated} fields auto-filled.</span>
+                    </div>
+                    <div class="mt-2 text-sm text-green-600">
+                        <strong>Extracted:</strong> ${extractedData.personal_info?.name || 'Name'}, 
+                        GPA: ${extractedData.academic_background?.gpa || 'N/A'}, 
+                        Field: ${extractedData.field_of_interest || 'N/A'}
+                    </div>
+                `;
+                
+                const uploadResults = document.getElementById('uploadResults');
+                uploadResults.appendChild(successDiv);
+            }
+        });
+
+        function nextSection() {
+            if (currentSectionIndex < totalSections) {
+                document.getElementById(`section${currentSectionIndex}`).classList.add('hidden');
+                currentSectionIndex++;
+                document.getElementById(`section${currentSectionIndex}`).classList.remove('hidden');
+                updateProgress();
+            }
+        }
+
+        function prevSection() {
+            if (currentSectionIndex > 1) {
+                document.getElementById(`section${currentSectionIndex}`).classList.add('hidden');
+                currentSectionIndex--;
+                document.getElementById(`section${currentSectionIndex}`).classList.remove('hidden');
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            // Adjust for the upload section (section 0)
+            const adjustedStep = Math.max(1, currentSectionIndex);
+            const progress = (adjustedStep / totalSections) * 100;
+            
+            // Check if progress bar exists before updating
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // Check if current step element exists before updating
+            const currentStep = document.getElementById('currentStep');
+            if (currentStep) {
+                currentStep.textContent = adjustedStep;
+            }
+        }
+
+        function toggleSelection(element, type, value) {
+            // Remove selection from siblings
+            const siblings = element.parentElement.children;
+            for (let sibling of siblings) {
+                sibling.classList.remove('selected');
+            }
+            
+            // Add selection to clicked element
+            element.classList.add('selected');
+            
+            // Store selection
+            if (!selectedValues[type]) {
+                selectedValues[type] = [];
+            }
+            
+            if (type === 'location') {
+                if (!selectedValues[type].includes(value)) {
+                    selectedValues[type].push(value);
+                }
+            } else {
+                selectedValues[type] = value;
+            }
+        }
+
+
+
+        // Form submission
+        document.getElementById('universityForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            console.log('🎯 Form submission triggered!');
+            
+            // Automatic sync to profile (background operation)
+            await autoSyncToProfile();
+            
+            // Collect all form data
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Get form fields
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            // Add selected values
+            Object.assign(data, selectedValues);
+            
+            console.log('📊 Collected form data:', data);
+            
+            // Persist selected LLM provider with the rest of the form data
+            data.llmProvider = getCurrentLLMProvider();
+
+            // Store in localStorage for loading page to consume
+            localStorage.setItem('universityRecommenderData', JSON.stringify(data));
+            localStorage.setItem('llm_provider', data.llmProvider);
+
+            // Map frontend fields to backend payload
+            const payload = {
+                gpa: parseFloat(data.gpa || '0'),
+                course: data.course || 'Computer Science',
+                degree: data.degree || 'masters',
+                currentUniversity: data.currentUniversity || '',
+                universityTier: (data.universityTier || 'top50').toLowerCase(),
+                intake: data.intake || 'fall2025',
+                greQuant: parseInt(data.greQuant || '155'),
+                greVerbal: parseInt(data.greVerbal || '150'),
+                greAwa: parseFloat(data.greAwa || '4.0'),
+                toefl: parseInt(data.toefl || '95'),
+                workExperience: data.workExperience || '',
+                researchPapers: data.researchPapers || '',
+                certifications: data.certifications || '',
+                extracurriculars: data.extracurriculars || '',
+                preferredLocation: data.preferredLocation || 'Any',
+                universityType: data.universityType || 'Any',
+                tuitionFee: data.tuitionFee || '',
+                livingCost: data.livingCost || '',
+                fullTimeOpportunity: data.fullTimeOpportunity || 'somewhat',
+                scholarship: data.scholarship || 'preferred',
+                greRequired: data.greRequired || 'either',
+                courseAcronym: data.courseAcronym || '',
+                additionalRequirements: data.additionalRequirements || '',
+                llmProvider: data.llmProvider
+            };
+
+            console.log('🚀 Sending payload to backend:', payload);
+
+            // Clear any previous cached results to avoid instant render
+            localStorage.removeItem('api_recommendations_response');
+            // Redirect to dedicated loading page which will call the API then forward
+            console.log('🔄 Redirecting to loading page...');
+            const resultsUrl = '/university-recommendations-loading.html';
+            window.location.href = resultsUrl;
+        });
+
+        // Initialize progress
+        updateProgress();
+
+        function showRecommendationsDirectly() {
+            console.log("🎯 Showing recommendations directly");
+            const recommendations = [
+                { name: "Stanford University", location: "Stanford, CA", matchScore: "95%", ranking: "#2", tuition: "$56K" },
+                { name: "MIT", location: "Cambridge, MA", matchScore: "92%", ranking: "#1", tuition: "$53K" },
+                { name: "UC Berkeley", location: "Berkeley, CA", matchScore: "88%", ranking: "#3", tuition: "$45K" }
+            ];
+            displayRecommendations(recommendations);
+        }
+        
+        function displayRecommendations(recommendations) {
+            const container = document.getElementById("recommendations-container") || document.body;
+            container.innerHTML = `<div class="recommendations-results"><h2>University Recommendations</h2>${recommendations.map(r => `<div class="recommendation-card"><h3>${r.name}</h3><p>${r.location} - ${r.matchScore} match</p></div>`).join("")}</div>`;
+        }
+        function generateRecommendations() {
+            // Mock recommendation data
+            const recommendations = [
+                {
+                    name: "Stanford University",
+                    location: "Stanford, CA",
+                    matchScore: "95%",
+                    ranking: "#2",
+                    tuition: "$56K"
+                },
+                {
+                    name: "MIT",
+                    location: "Cambridge, MA",
+                    matchScore: "92%",
+                    ranking: "#1",
+                    tuition: "$58K"
+                },
+                {
+                    name: "UC Berkeley",
+                    location: "Berkeley, CA",
+                    matchScore: "88%",
+                    ranking: "#4",
+                    tuition: "$44K"
+                },
+                {
+                    name: "Carnegie Mellon",
+                    location: "Pittsburgh, PA",
+                    matchScore: "85%",
+                    ranking: "#22",
+                    tuition: "$58K"
+                },
+                {
+                    name: "Georgia Tech",
+                    location: "Atlanta, GA",
+                    matchScore: "82%",
+                    ranking: "#35",
+                    tuition: "$31K"
+                }
+            ];
+
+            // Populate recommendations
+            const recommendationsGrid = document.getElementById('recommendations-grid');
+            recommendationsGrid.innerHTML = '';
+
+            recommendations.forEach((university, index) => {
+                const card = document.createElement('div');
+                card.className = 'simple-card';
+                card.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 1rem; font-weight: 700; color: #1f2937; margin-bottom: 0.25rem;">
+                                <i class="fas fa-graduation-cap" style="margin-right: 0.5rem; color: #8b5cf6;"></i>
+                                ${university.name}
+                            </div>
+                            <div style="color: #6b7280; font-size: 0.875rem;">
+                                <i class="fas fa-map-marker-alt" style="margin-right: 0.25rem;"></i>
+                                ${university.location}
+                            </div>
+                        </div>
+                        <div style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;">
+                            ${university.matchScore}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 16px; height: 16px; background: #fef3c7; color: #d97706; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <span style="font-size: 0.875rem; color: #374151;">${university.ranking}</span>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <div style="width: 16px; height: 16px; background: #dbeafe; color: #2563eb; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <span style="font-size: 0.875rem; color: #374151;">${university.tuition}/year</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button style="flex: 1; padding: 0.5rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer; background: #667eea; color: white; border: none; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" onclick="viewUniversityDetails('${university.name}')">
+                            <i class="fas fa-eye"></i>
+                            Details
+                        </button>
+                        <button style="flex: 1; padding: 0.5rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer; background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" onclick="compareUniversity('${university.name}')">
+                            <i class="fas fa-calculator"></i>
+                            Cost Calculator
+                        </button>
+                    </div>
+                `;
+                recommendationsGrid.appendChild(card);
+            });
+
+            // Show results section
+            document.getElementById('results-section').classList.add('show');
+            
+            // Scroll to results
+            document.getElementById('results-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        function viewUniversityDetails(universityName) {
+            console.log(`🎓 Viewing details for ${universityName}...`);
+            alert(`Detailed information for ${universityName} would be displayed here. This could include program details, admission requirements, campus life, and more.`);
+        }
+
+        function compareUniversity(universityName) {
+            console.log(`⚖️ Adding ${universityName} to comparison...`);
+            alert(`${universityName} has been added to your comparison list. You can view comparisons on the Compare page.`);
+        }
+
+        // LLM Provider Toggle Functions (button-based)
+        function setProviderUI(provider) {
+            const btn = document.getElementById('llmToggleBtn');
+            if (!btn) return;
+            if (provider === 'gemini') {
+                btn.classList.add('on');
+            } else {
+                btn.classList.remove('on');
+            }
+        }
+
+        function toggleLLMProviderBtn() {
+            const current = localStorage.getItem('llm_provider') || 'groq';
+            const next = current === 'groq' ? 'gemini' : 'groq';
+            localStorage.setItem('llm_provider', next);
+            setProviderUI(next);
+            console.log('🤖 Provider set to', next);
+        }
+
+        function getCurrentLLMProvider() {
+            return localStorage.getItem('llm_provider') || 'groq';
+        }
+
+        // Initialize provider on page load
+        // Form submission handler
+        function submitUniversityForm(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            console.log('🎯 Collecting form data for university recommendations...');
+            
+            // Collect all form data
+            const formData = collectFormData();
+            
+            // Validate required fields
+            if (!validateFormData(formData)) {
+                alert('Please fill in all required fields before submitting.');
+                return;
+            }
+            
+            // Store form data in localStorage for the loading page
+            localStorage.setItem('universityRecommenderData', JSON.stringify(formData));
+            
+            // Navigate to loading page
+            console.log('🚀 Navigating to loading page...');
+            // Show recommendations directly instead of redirecting
+            showRecommendationsDirectly();
+        }
+        
+        // Collect all form data from all sections
+        function collectFormData() {
+            const formData = {};
+            
+            // Get all form elements
+            const form = document.getElementById('universityForm');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                if (input.name && input.value) {
+                    formData[input.name] = input.value;
+                }
+            });
+            
+            // Add selected values from card selections
+            Object.keys(selectedValues).forEach(key => {
+                if (selectedValues[key] && selectedValues[key].length > 0) {
+                    formData[key] = selectedValues[key][0]; // Take first selected value
+                }
+            });
+            
+            console.log('📋 Collected form data:', formData);
+            return formData;
+        }
+        
+        // Basic form validation
+        function validateFormData(formData) {
+            const requiredFields = ['degree', 'course', 'gpa'];
+            
+            for (const field of requiredFields) {
+                if (!formData[field] || formData[field].trim() === '') {
+                    console.error(`❌ Missing required field: ${field}`);
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const saved = localStorage.getItem('llm_provider') || 'groq';
+            setProviderUI(saved);
+        });
+    </script>
+</body>
+</html> 

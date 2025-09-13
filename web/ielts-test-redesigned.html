@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Speaking Test - UTERNITY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', 'Poppins', sans-serif;
+        }
+        
+        .card-shadow {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .conversation-bubble {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .recording {
+            animation: recordingPulse 1.5s ease-in-out infinite;
+        }
+        
+        .listening {
+            animation: listeningPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes recordingPulse {
+            0%, 100% { transform: scale(1); background-color: #ef4444; }
+            50% { transform: scale(1.1); background-color: #dc2626; }
+        }
+        
+        @keyframes listeningPulse {
+            0%, 100% { transform: scale(1); background-color: #10b981; }
+            50% { transform: scale(1.05); background-color: #059669; }
+        }
+        
+        /* Voice Circle Animations */
+        .speaking-circle {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+        }
+        
+        .listening-circle {
+            animation: listening-pulse 1.5s ease-in-out infinite;
+        }
+        
+        .recording-circle {
+            animation: recording-pulse 1s ease-in-out infinite;
+            background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        }
+        
+        @keyframes listening-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            }
+            50% { 
+                transform: scale(1.02);
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+            }
+        }
+        
+        @keyframes recording-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+            }
+            50% { 
+                transform: scale(1.03);
+                box-shadow: 0 0 50px rgba(239, 68, 68, 0.9);
+            }
+        }
+        
+        /* Voice wave animations removed - using outer ring only */
+        
+        /* Outer Ring Animations */
+        .ring-speaking {
+            animation: ring-expand 2s ease-in-out infinite;
+            border-color: #3b82f6;
+        }
+        
+        .ring-listening {
+            animation: ring-expand 1.5s ease-in-out infinite;
+            border-color: #10b981;
+        }
+        
+        .ring-recording {
+            animation: ring-expand 1s ease-in-out infinite;
+            border-color: #ef4444;
+        }
+        
+        @keyframes ring-expand {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 0.6;
+            }
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 16px;
+            background: #f3f4f6;
+            border-radius: 20px;
+            margin: 8px 0;
+        }
+        
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #6b7280;
+            border-radius: 50%;
+            animation: typingDots 1.4s infinite;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingDots {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        .voice-wave {
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(to top, #3b82f6, #1d4ed8);
+            margin: 0 1px;
+            border-radius: 2px;
+            animation: waveAnimation 1.5s infinite;
+        }
+        
+        .voice-wave:nth-child(2) { animation-delay: 0.1s; }
+        .voice-wave:nth-child(3) { animation-delay: 0.2s; }
+        .voice-wave:nth-child(4) { animation-delay: 0.3s; }
+        .voice-wave:nth-child(5) { animation-delay: 0.4s; }
+        
+        @keyframes waveAnimation {
+            0%, 100% { height: 20px; }
+            50% { height: 40px; }
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- Header -->
+        <div class="bg-white card-shadow rounded-lg p-6 mb-6 border border-gray-100">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">IELTS Speaking Test</h1>
+                    <p class="text-gray-600 mt-1">AI-powered examiner simulation</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-3xl font-bold text-gray-900" id="timeDisplay">14:00</div>
+                    <div class="text-sm text-gray-500">Time Remaining</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Progress -->
+        <div class="bg-white card-shadow rounded-lg p-6 mb-6 border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900" id="currentPart">Part 1: Introduction & Interview</h2>
+                <div class="text-sm text-gray-500" id="currentStage">Getting Started</div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-500" 
+                     id="progressBar" style="width: 5%"></div>
+            </div>
+            
+            <!-- Part Indicators -->
+            <div class="flex justify-between text-sm">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-blue-600" id="part1Indicator"></div>
+                    <span class="text-gray-700">Part 1</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-gray-300" id="part2Indicator"></div>
+                    <span class="text-gray-700">Part 2</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-gray-300" id="part3Indicator"></div>
+                    <span class="text-gray-700">Part 3</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Voice Interface -->
+        <div class="bg-white card-shadow rounded-lg border border-gray-100 mb-6">
+            <div class="p-8 text-center">
+                <!-- 3D Speaking Circle -->
+                <div class="relative mx-auto mb-6" style="width: 200px; height: 200px;">
+                    <!-- Outer Ring Animation -->
+                    <div class="absolute inset-0 rounded-full border-4 border-blue-200" id="outerRing"></div>
+                    <div class="absolute inset-2 rounded-full border-2 border-blue-300 opacity-60" id="middleRing"></div>
+                    
+                    <!-- Main Circle -->
+                    <div class="absolute inset-4 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-2xl transition-all duration-300" id="speakingCircle">
+                        <!-- Inner Glow -->
+                        <div class="absolute inset-2 rounded-full bg-gradient-to-tr from-blue-400 to-blue-600 opacity-50"></div>
+                        
+                        <!-- Part 2 Preparation Timer (hidden by default) -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white hidden" id="part2PrepTimerDisplay">
+                            <div class="text-2xl font-bold mb-1" id="prepTimerMinSec">1:00</div>
+                            <div class="text-xs opacity-80">PREP TIME</div>
+                        </div>
+                        
+                        <!-- Part 2 Speaking Timer (hidden by default) -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white hidden" id="part2SpeakTimerDisplay">
+                            <div class="text-2xl font-bold mb-1" id="speakTimerMinSec">2:00</div>
+                            <div class="text-xs opacity-80">SPEAKING</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Status display removed per user request -->
+            </div>
+        </div>
+
+        
+
+        <!-- Voice Status & Controls -->
+        <div class="bg-white card-shadow rounded-lg p-6 mb-6 border border-gray-100">
+            <div class="flex items-center justify-between">
+                <!-- Voice Status -->
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 rounded-full bg-gray-400 hidden" id="readyDot"></div>
+                        <div class="w-4 h-4 rounded-full bg-green-500 hidden listening" id="listeningDot"></div>
+                        <div class="w-4 h-4 rounded-full bg-red-500 hidden recording" id="recordingDot"></div>
+                        <span class="text-sm font-medium text-gray-700" id="statusText">Ready to start</span>
+                    </div>
+                    
+                    <!-- Voice Activity Indicator -->
+                    <div class="flex items-center gap-1 hidden" id="voiceActivity">
+                        <div class="voice-wave"></div>
+                        <div class="voice-wave"></div>
+                        <div class="voice-wave"></div>
+                        <div class="voice-wave"></div>
+                        <div class="voice-wave"></div>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="flex gap-3">
+                    <button id="startBtn" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium 
+                                   transition-all duration-200 transform hover:scale-105 active:scale-95">
+                        🎯 Start Test
+                    </button>
+                    
+                    <button id="endBtn" 
+                            class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium 
+                                   transition-all duration-200 transform hover:scale-105 active:scale-95 hidden">
+                        ⏹️ End Test
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-800">
+            <div class="flex items-center gap-2 text-sm">
+                <span class="text-blue-600">💡</span>
+                <span id="instructionText">The test will automatically detect when you start and stop speaking. Speak clearly and naturally.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let mediaRecorder;
+        let audioStream;
+        let speechSynthesis = window.speechSynthesis;
+        let isRecording = false;
+        let isListening = false;
+        let isTestActive = false;
+        let isSpeaking = false;
+        let conversationId = `ielts_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        let testStartTime = null;
+        let timerInterval = null;
+        let currentPart = 1;
+        let currentStage = 'greeting';
+        let silenceTimer = null;
+        let voiceDetected = false;
+        let part2PrepTimer = null;
+        let part2SpeakTimer = null;
+        let isInPart2Prep = false;
+        let isInPart2Speaking = false;
+        
+        // Use relative base so it works via gateway/prod domains too
+        const API_BASE = '/api/v1';
+        const SILENCE_THRESHOLD = 2000; // allow longer natural pauses before stopping
+        const MIN_SPEECH_MS = 2500; // ensure user can complete thoughts before auto-stop
+        const START_THRESHOLD = 0.02;   // start recording above this RMS
+        const STOP_THRESHOLD  = 0.012;  // consider silence below this RMS
+
+        // DOM elements
+        const startBtn = document.getElementById('startBtn');
+        const endBtn = document.getElementById('endBtn');
+        
+        // Debug element selection
+        console.log('DOM elements found:', {
+            startBtn: !!startBtn,
+            endBtn: !!endBtn
+        });
+        // conversationArea removed in redesign - using live transcript instead
+        const typingIndicator = document.getElementById('typingIndicator');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const currentPartEl = document.getElementById('currentPart');
+        const currentStageEl = document.getElementById('currentStage');
+        const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('statusText');
+        const recordingDot = document.getElementById('recordingDot');
+        const readyDot = document.getElementById('readyDot');
+        const listeningDot = document.getElementById('listeningDot');
+        const voiceActivity = document.getElementById('voiceActivity');
+        const instructionText = document.getElementById('instructionText');
+        const part2TimerCard = document.getElementById('part2TimerCard');
+        const timerTitle = document.getElementById('timerTitle');
+        const timerDisplayEl = document.getElementById('timerDisplay');
+        const timerProgress = document.getElementById('timerProgress');
+        const timerInstruction = document.getElementById('timerInstruction');
+        
+        // Voice Circle Elements
+        const speakingCircle = document.getElementById('speakingCircle');
+        const outerRing = document.getElementById('outerRing');
+        const middleRing = document.getElementById('middleRing');
+        const part2PrepTimerDisplay = document.getElementById('part2PrepTimerDisplay');
+        const prepTimerMinSec = document.getElementById('prepTimerMinSec');
+        const part2SpeakTimerDisplay = document.getElementById('part2SpeakTimerDisplay');
+        const speakTimerMinSec = document.getElementById('speakTimerMinSec');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🎯 DOM loaded, initializing IELTS test...');
+            try {
+                await initializeAudio();
+                setupEventListeners();
+                enableAudioContext();
+                console.log('✅ IELTS test initialized successfully');
+            } catch (error) {
+                console.error('❌ Failed to initialize:', error);
+                console.log('Initialization failed. Please refresh the page and allow microphone access.');
+            }
+        });
+
+        function enableAudioContext() {
+            // Enable audio context on first user interaction
+            document.addEventListener('click', () => {
+                if (speechSynthesis.paused) {
+                    speechSynthesis.resume();
+                }
+            }, { once: true });
+        }
+
+        async function initializeAudio() {
+            try {
+                console.log('🎤 Requesting microphone access...');
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                console.log('✅ Microphone access granted');
+                
+                // Use audio/webm for better compatibility
+                const options = { mimeType: 'audio/webm' };
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    options.mimeType = 'audio/mp4';
+                    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                        options.mimeType = '';
+                    }
+                }
+                console.log('🎬 MediaRecorder setup with:', options.mimeType);
+                
+                mediaRecorder = new MediaRecorder(audioStream, options);
+                let audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
+                    audioChunks = [];
+                    await processAudio(audioBlob);
+                };
+                
+                statusText.textContent = 'Microphone ready';
+                readyDot.classList.remove('hidden');
+                
+                console.log('🔊 Setting up voice activity detection...');
+                // Set up voice activity detection
+                setupVoiceActivityDetection();
+                console.log('✅ Audio initialization complete');
+                
+            } catch (error) {
+                console.error('❌ Audio initialization failed:', error);
+                statusText.textContent = 'Microphone access required - please allow microphone access and refresh';
+                startBtn.disabled = true;
+                startBtn.textContent = 'Microphone Required';
+            }
+        }
+
+        function setupVoiceActivityDetection() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(audioStream);
+            // Use time-domain data for more reliable voice detection (RMS)
+            analyser.fftSize = 512;
+            const bufferLength = analyser.fftSize;
+            const timeDomainData = new Uint8Array(bufferLength);
+            
+            microphone.connect(analyser);
+            analyser.smoothingTimeConstant = 0.8;
+            
+            let recordingStartTs = 0;
+            let lastSpeechTs = 0; // last time energy exceeded START_THRESHOLD
+
+            function detectVoice() {
+                // Compute RMS from time-domain signal
+                analyser.getByteTimeDomainData(timeDomainData);
+                let sumSquares = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    const centered = (timeDomainData[i] - 128) / 128; // normalize to [-1, 1]
+                    sumSquares += centered * centered;
+                }
+                const rms = Math.sqrt(sumSquares / bufferLength); // typical speaking ~0.02–0.2
+                
+                if (isListening && !isRecording && !isSpeaking && !isInPart2Prep) {
+                    if (rms > START_THRESHOLD) {
+                        if (!voiceDetected) {
+                            voiceDetected = true;
+                            recordingStartTs = performance.now();
+                            lastSpeechTs = recordingStartTs;
+                            startRecording();
+                        }
+                        lastSpeechTs = performance.now();
+                        clearTimeout(silenceTimer);
+                    }
+                } else if (isRecording && !isInPart2Prep) {
+                    // Update last speech time whenever energy is above start threshold
+                    if (rms > START_THRESHOLD) {
+                        lastSpeechTs = performance.now();
+                        clearTimeout(silenceTimer);
+                    }
+
+                    // Two ways to consider stopping:
+                    // 1) Energy falls below STOP_THRESHOLD and stays silent long enough
+                    // 2) No significant speech energy for SILENCE_THRESHOLD
+                    const nowTs = performance.now();
+                    const spokenForMs = nowTs - recordingStartTs;
+                    const noRecentSpeechMs = nowTs - lastSpeechTs;
+
+                    // Path 1: explicit low-energy silence window
+                    if (rms < STOP_THRESHOLD) {
+                        clearTimeout(silenceTimer);
+                        silenceTimer = setTimeout(() => {
+                            if (isRecording && (performance.now() - recordingStartTs) >= MIN_SPEECH_MS) {
+                                stopRecording();
+                                voiceDetected = false;
+                            }
+                        }, SILENCE_THRESHOLD);
+                    }
+
+                    // Path 2: energy hasn’t exceeded START_THRESHOLD for a while
+                    if (noRecentSpeechMs >= SILENCE_THRESHOLD && spokenForMs >= MIN_SPEECH_MS) {
+                        clearTimeout(silenceTimer);
+                        stopRecording();
+                        voiceDetected = false;
+                    }
+                }
+                
+                requestAnimationFrame(detectVoice);
+            }
+            
+            detectVoice();
+        }
+
+        function setupEventListeners() {
+            startBtn.addEventListener('click', async () => {
+                console.log('🎯 Start button clicked!');
+                await unlockAudioAndVoices();
+                await startTest();
+            });
+            endBtn.addEventListener('click', endTest);
+        }
+
+        // Ensure audio playback/voices are unlocked on first user gesture
+        async function unlockAudioAndVoices() {
+            try {
+                // Resume AudioContext (Safari/Edge policies)
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if (ctx.state === 'suspended') {
+                    await ctx.resume();
+                }
+                // Short, silent beep to satisfy autoplay policies
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                g.gain.value = 0.0001;
+                o.connect(g).connect(ctx.destination);
+                o.start();
+                o.stop(ctx.currentTime + 0.05);
+            } catch {}
+
+            try {
+                // Nudge speechSynthesis engine
+                speechSynthesis.cancel();
+                speechSynthesis.resume();
+            } catch {}
+        }
+
+        // Load voices reliably before first speak
+        function ensureVoices(timeoutMs = 1500) {
+            return new Promise((resolve) => {
+                const voices = speechSynthesis.getVoices();
+                if (voices && voices.length) return resolve(voices);
+                let done = false;
+                const handler = () => {
+                    if (!done) {
+                        done = true;
+                        resolve(speechSynthesis.getVoices());
+                        speechSynthesis.removeEventListener('voiceschanged', handler);
+                    }
+                };
+                speechSynthesis.addEventListener('voiceschanged', handler);
+                setTimeout(() => {
+                    if (!done) {
+                        done = true;
+                        resolve(speechSynthesis.getVoices());
+                        speechSynthesis.removeEventListener('voiceschanged', handler);
+                    }
+                }, timeoutMs);
+            });
+        }
+
+        async function startTest() {
+            try {
+                console.log('🚀 Starting IELTS test...');
+                
+                isTestActive = true;
+                testStartTime = Date.now();
+                
+                // Update UI
+                startBtn.classList.add('hidden');
+                endBtn.classList.remove('hidden');
+                readyDot.classList.add('hidden');
+                
+                // Update circle state
+                updateCircleState('ready');
+                
+                // Unlock audio context for browser autoplay policies
+                await unlockAudioAndVoices();
+                
+                // Start timer
+                timerInterval = setInterval(updateTimer, 1000);
+                
+                // Initialize conversation properly - let backend start with greeting
+                console.log('📞 Sending start message to backend...');
+                await sendMessage('start');
+                
+            } catch (error) {
+                console.error('❌ Error starting test:', error);
+                isTestActive = false;
+                startBtn.classList.remove('hidden');
+                endBtn.classList.add('hidden');
+            }
+        }
+
+        function endTest() {
+            isTestActive = false;
+            isListening = false;
+            isRecording = false;
+            clearInterval(timerInterval);
+            clearTimeout(silenceTimer);
+            
+            // Stop any ongoing speech
+            speechSynthesis.cancel();
+            
+            // Update UI
+            startBtn.classList.remove('hidden');
+            endBtn.classList.add('hidden');
+            recordingDot.classList.add('hidden');
+            listeningDot.classList.add('hidden');
+            readyDot.classList.remove('hidden');
+            voiceActivity.classList.add('hidden');
+            
+            addMessage('System', 'Test completed. Thank you for participating!', 'system');
+            statusText.textContent = 'Test completed';
+        }
+
+        function startListening() {
+            if (!isTestActive || isSpeaking) return;
+            
+            // Reset VAD state for a fresh listen window
+            voiceDetected = false;
+            clearTimeout(silenceTimer);
+            isListening = true;
+            
+            // Update circle UI
+            updateCircleState('listening');
+            
+            listeningDot.classList.remove('hidden');
+            statusText.textContent = 'Listening... Start speaking';
+            instructionText.textContent = 'I\'m listening. Please start speaking your response.';
+        }
+
+        function startRecording() {
+            if (!isTestActive || isRecording || isSpeaking) return;
+            
+            isRecording = true;
+            isListening = false;
+            mediaRecorder.start();
+            
+            // Update circle UI
+            updateCircleState('recording');
+            
+            // Update UI
+            listeningDot.classList.add('hidden');
+            recordingDot.classList.remove('hidden');
+            voiceActivity.classList.remove('hidden');
+            statusText.textContent = 'Recording your response...';
+            instructionText.textContent = 'Recording... Speak naturally. We\'ll stop automatically when you pause.';
+        }
+
+        function stopRecording() {
+            if (!isRecording) return;
+            
+            isRecording = false;
+            mediaRecorder.stop();
+            
+            // Update UI
+            recordingDot.classList.add('hidden');
+            voiceActivity.classList.add('hidden');
+            statusText.textContent = 'Processing your response...';
+            instructionText.textContent = 'Processing your response...';
+        }
+
+        async function speakText(text) {
+            return new Promise((resolve) => {
+                console.log('🗣️ Starting to speak:', text.substring(0, 50) + '...');
+                
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
+                isSpeaking = true;
+                currentSpeechText = text;
+                
+                // Update circle UI
+                updateCircleState('speaking');
+                
+                statusText.textContent = 'Dr. Sarah is speaking...';
+                instructionText.textContent = 'Dr. Sarah is speaking. Please listen carefully.';
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                // Optimized for international students
+                utterance.rate = 0.85;   // slower for non-native speakers
+                utterance.pitch = 1.0;   // neutral pitch
+                utterance.volume = 0.9;  // clear volume
+                
+                console.log('🔊 Speech synthesis settings:', {
+                    rate: utterance.rate,
+                    pitch: utterance.pitch,
+                    volume: utterance.volume,
+                    voice: utterance.voice
+                });
+                
+                // Choose a voice after ensuring voices are loaded
+                ensureVoices().then((voices) => {
+                    const preferred = (voices || []).find(v => /samantha|victoria|serena|allison|female/i.test(v.name) || v.gender === 'female')
+                        || (voices || []).find(v => /en-US|en-GB|English/i.test(v.lang || ''))
+                        || (voices || [])[0];
+                    if (preferred) utterance.voice = preferred;
+                    try { speechSynthesis.resume(); } catch {}
+                    speechSynthesis.speak(utterance);
+                });
+
+                utterance.onend = () => {
+                    isSpeaking = false;
+                    currentSpeechText = '';
+                    
+                    // Update circle to ready state
+                    updateCircleState('ready');
+                    
+                    // Start listening for user response after a brief pause
+                    setTimeout(() => {
+                        if (isTestActive && !isInPart2Prep) {
+                            startListening();
+                        }
+                    }, 500);
+                    resolve();
+                };
+                
+                utterance.onerror = () => {
+                    isSpeaking = false;
+                    resolve();
+                };
+            });
+        }
+
+        async function processAudio(audioBlob) {
+            showTypingIndicator(true);
+            
+            try {
+                // First transcribe the audio
+                const transcript = await transcribeAudio(audioBlob);
+                
+                if (transcript && transcript.trim()) {
+                    // Add user message
+                    addMessage('You', transcript, 'user');
+                    
+                    // Get AI response
+                    await sendMessage(transcript);
+                } else {
+                    console.log('No speech detected. Please try again.');
+                    statusText.textContent = 'No speech detected. Listening again...';
+                    setTimeout(() => startListening(), 1000);
+                }
+                
+            } catch (error) {
+                console.error('Audio processing failed:', error);
+                statusText.textContent = 'Processing failed. Listening again...';
+                setTimeout(() => startListening(), 1000);
+            } finally {
+                showTypingIndicator(false);
+            }
+        }
+
+        async function transcribeAudio(audioBlob) {
+            const formData = new FormData();
+            
+            // Use appropriate file extension based on mime type
+            let fileName = 'recording.webm';
+            if (audioBlob.type.includes('mp4')) {
+                fileName = 'recording.mp4';
+            } else if (audioBlob.type.includes('wav')) {
+                fileName = 'recording.wav';
+            }
+            
+            formData.append('audio', audioBlob, fileName);
+            formData.append('task', currentPart.toString());
+
+            const response = await fetch(`${API_BASE}/transcribe`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                return data.text;
+            } else {
+                console.error('Transcription failed:', data.message);
+                addMessage('System', data.message || 'Speech recognition failed. Please try again.', 'system');
+                return null;
+            }
+        }
+
+        async function sendMessage(message) {
+            showTypingIndicator(true);
+            
+            try {
+                const response = await fetch(`${API_BASE}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        conversation_id: conversationId
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // Update test progress
+                    updateTestProgress(data.part, data.stage);
+                    
+                    // Add examiner response to UI
+                    addMessage('Dr. Sarah', data.response, 'examiner');
+                    
+                    // If we are transitioning to Part 3, hide Part 2 timers BEFORE speaking
+                    if (data.part === 3 || data.stage === 'part3' || data.stage === 'conclusion') {
+                        hidePart2Timers();
+                    }
+                    
+                    // Speak the response
+                    await speakText(data.response);
+
+                    // Handle Part 2 – start preparation timer reliably
+                    // Some backends set stage to part2_speaking immediately after sending the intro message.
+                    if (
+                        data.part === 2 &&
+                        (data.stage === 'part2_intro' || data.stage === 'part2_speaking') &&
+                        !isInPart2Prep &&
+                        !isInPart2Speaking
+                    ) {
+                        startPart2PrepTimer();
+                    }
+
+                    // Timers already hidden above before speaking when entering Part 3
+                    
+                    // If test concluded and final band present, redirect to results
+                    if (data.stage === 'conclusion' && data.final_result) {
+                        // Store results for the results page
+                        localStorage.setItem('ielts_result', JSON.stringify(data.final_result));
+                        localStorage.setItem('ielts_conversation_id', conversationId);
+                        
+                        // Show brief completion message then redirect
+                        addMessage('System', 'Test completed! Redirecting to results...', 'system');
+                        setTimeout(() => {
+                            window.location.href = '/ielts-results.html';
+                        }, 2000);
+                    }
+                    
+                } else {
+                    throw new Error(data.response || 'Communication failed');
+                }
+                
+            } catch (error) {
+                console.error('Message sending failed:', error);
+                addMessage('System', 'Communication error. Please try again.', 'system');
+                statusText.textContent = 'Communication error';
+                setTimeout(() => startListening(), 2000);
+            } finally {
+                showTypingIndicator(false);
+            }
+        }
+
+        function addMessage(sender, message, type) {
+            // Since we're using the live transcription UI, we'll just log messages
+            // and optionally update the transcript for important system messages
+            console.log(`💬 ${sender}: ${message}`);
+            
+            // System messages just logged to console now
+            if (type === 'system' && (message.includes('error') || message.includes('failed'))) {
+                console.log('System message:', message);
+            }
+        }
+
+        function showTypingIndicator(_) { /* removed per request */ }
+
+        function updateTestProgress(part, stage) {
+            currentPart = part;
+            currentStage = stage;
+            
+            // Update part display
+            const partNames = {
+                1: 'Part 1: Introduction & Interview',
+                2: 'Part 2: Long Turn', 
+                3: 'Part 3: Discussion'
+            };
+            
+            const stageNames = {
+                'greeting': 'Initial Greeting',
+                'part1': 'Personal Questions',
+                'part2_intro': 'Topic Introduction',
+                'part2_speaking': 'Long Turn Speaking',
+                'part3': 'Abstract Discussion',
+                'conclusion': 'Test Complete'
+            };
+            
+            currentPartEl.textContent = partNames[part] || `Part ${part}`;
+            currentStageEl.textContent = stageNames[stage] || stage;
+            
+            // Update progress bar
+            const progress = part === 1 ? 25 : part === 2 ? 60 : 90;
+            progressBar.style.width = progress + '%';
+            
+            // Update part indicators
+            const indicators = ['part1Indicator', 'part2Indicator', 'part3Indicator'];
+            indicators.forEach((id, index) => {
+                const indicator = document.getElementById(id);
+                if (index + 1 <= part) {
+                    indicator.className = 'w-3 h-3 rounded-full bg-blue-600';
+                } else {
+                    indicator.className = 'w-3 h-3 rounded-full bg-gray-300';
+                }
+            });
+        }
+
+        function updateTimer() {
+            if (!testStartTime) return;
+            
+            const elapsed = Math.floor((Date.now() - testStartTime) / 1000);
+            const remaining = Math.max(0, 840 - elapsed); // 14 minutes total
+            
+            const minutes = Math.floor(remaining / 60);
+            const seconds = remaining % 60;
+            
+            timeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (remaining === 0) {
+                endTest();
+            }
+        }
+
+        // Part 2 Timer Functions
+        function startPart2PrepTimer() {
+            isInPart2Prep = true;
+            isListening = false;
+            isRecording = false;
+            clearTimeout(silenceTimer);
+            
+            // Update circle UI for preparation
+            updateCircleState('ready');
+            
+            // Show timer inside circle only
+            part2PrepTimerDisplay.classList.remove('hidden');
+            
+            let timeLeft = 60; // 1 minute
+            updateCircleTimer(timeLeft, true); // true = prep timer
+            
+            part2PrepTimer = setInterval(() => {
+                timeLeft--;
+                updateCircleTimer(timeLeft, true);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(part2PrepTimer);
+                    endPart2PrepTimer();
+                }
+            }, 1000);
+        }
+        
+        async function endPart2PrepTimer() {
+            isInPart2Prep = false;
+            
+            // Hide prep timer, show speaking timer
+            part2PrepTimerDisplay.classList.add('hidden');
+            part2SpeakTimerDisplay.classList.remove('hidden');
+
+            // Announce start and then begin speaking timer
+            try {
+                await speakText('Your preparation time is over. Please begin your response now. You have up to two minutes.');
+            } catch {}
+            
+            // Start speaking timer; listening will be started by speakText onend
+            startPart2SpeakingTimer();
+        }
+        
+        function startPart2SpeakingTimer() {
+            isInPart2Speaking = true;
+            let timeLeft = 120; // 2 minutes
+            updateCircleTimer(timeLeft, false); // false = speaking timer
+            
+            part2SpeakTimer = setInterval(() => {
+                timeLeft--;
+                updateCircleTimer(timeLeft, false);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(part2SpeakTimer);
+                    endPart2SpeakingTimer();
+                }
+            }, 1000);
+        }
+        
+        function endPart2SpeakingTimer() {
+            isInPart2Speaking = false;
+            
+            // Hide all Part 2 timers
+            part2SpeakTimerDisplay.classList.add('hidden');
+            
+            if (isRecording) {
+                stopRecording();
+            }
+            
+            // Send a message to transition to Part 3
+            setTimeout(() => {
+                addMessage('System', 'Time is up for Part 2.', 'system');
+                sendMessage('That\'s all for my Part 2 response.');
+            }, 1000);
+        }
+
+        // Hide and reset all Part 2 timers (used when backend jumps to Part 3)
+        function hidePart2Timers() {
+            try { clearInterval(part2PrepTimer); } catch {}
+            try { clearInterval(part2SpeakTimer); } catch {}
+            part2PrepTimer = null;
+            part2SpeakTimer = null;
+            isInPart2Prep = false;
+            isInPart2Speaking = false;
+            part2PrepTimerDisplay.classList.add('hidden');
+            part2SpeakTimerDisplay.classList.add('hidden');
+        }
+        
+        // Banner timer removed
+        
+        function updateCircleTimer(timeLeft, isPrep) {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (isPrep) {
+                prepTimerMinSec.textContent = timeString;
+                // Change color when time is running out during prep
+                if (timeLeft <= 10) {
+                    prepTimerMinSec.className = 'text-2xl font-bold mb-1 text-red-200';
+                } else if (timeLeft <= 30) {
+                    prepTimerMinSec.className = 'text-2xl font-bold mb-1 text-yellow-200';
+                } else {
+                    prepTimerMinSec.className = 'text-2xl font-bold mb-1';
+                }
+            } else {
+                speakTimerMinSec.textContent = timeString;
+                // Change color when time is running out during speaking
+                if (timeLeft <= 10) {
+                    speakTimerMinSec.className = 'text-2xl font-bold mb-1 text-red-200';
+                } else if (timeLeft <= 30) {
+                    speakTimerMinSec.className = 'text-2xl font-bold mb-1 text-yellow-200';
+                } else {
+                    speakTimerMinSec.className = 'text-2xl font-bold mb-1';
+                }
+            }
+        }
+
+        // Voice Circle State Management
+        function updateCircleState(state) {
+            // Remove all state classes
+            speakingCircle.classList.remove('speaking-circle', 'listening-circle', 'recording-circle');
+            outerRing.classList.remove('ring-speaking', 'ring-listening', 'ring-recording');
+            
+            switch(state) {
+                case 'speaking':
+                    speakingCircle.classList.add('speaking-circle');
+                    outerRing.classList.add('ring-speaking');
+                    break;
+                case 'listening':
+                    speakingCircle.classList.add('listening-circle');
+                    outerRing.classList.add('ring-listening');
+                    break;
+                case 'recording':
+                    speakingCircle.classList.add('recording-circle');
+                    outerRing.classList.add('ring-recording');
+                    break;
+                case 'ready':
+                default:
+                    // Just visual states, no text
+                    break;
+            }
+        }
+        
+        let currentSpeechText = '';
+
+        // Wait for voices to load
+        speechSynthesis.onvoiceschanged = () => {
+            console.log('Voices loaded:', speechSynthesis.getVoices().length);
+        };
+    </script>
+</body>
+</html>

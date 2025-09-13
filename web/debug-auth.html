@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Debug - UTERNITY</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: white;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+        .debug-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .status-good { color: #4ade80; }
+        .status-bad { color: #f87171; }
+        .status-warning { color: #fbbf24; }
+        button {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            margin: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔍 UTERNITY Authentication Debug</h1>
+        
+        <div class="debug-section">
+            <h2>🔐 Authentication Status</h2>
+            <div id="authStatus">Loading...</div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>💾 LocalStorage Data</h2>
+            <div id="localStorageData">Loading...</div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>👤 Current User Data</h2>
+            <div id="userData">Loading...</div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>🎯 Test Actions</h2>
+            <button onclick="testLogin()">Test Login</button>
+            <button onclick="testLogout()">Test Logout</button>
+            <button onclick="clearStorage()">Clear Storage</button>
+            <button onclick="refreshData()">Refresh Data</button>
+            <button onclick="testDropdown()">Test Dropdown</button>
+        </div>
+        
+        <div class="debug-section">
+            <h2>📊 Real-time Console Logs</h2>
+            <div id="consoleLogs"></div>
+        </div>
+    </div>
+
+    <!-- Auth Scripts -->
+    <script src="js/auth-api.js"></script>
+    <script src="js/auth-guard.js"></script>
+
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToLogs('LOG', args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToLogs('ERROR', args.join(' '));
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToLogs('WARN', args.join(' '));
+        };
+        
+        function addToLogs(type, message) {
+            const logsContainer = document.getElementById('consoleLogs');
+            const logElement = document.createElement('div');
+            logElement.style.color = type === 'ERROR' ? '#f87171' : type === 'WARN' ? '#fbbf24' : '#4ade80';
+            logElement.textContent = `[${type}] ${message}`;
+            logsContainer.appendChild(logElement);
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
+
+        function updateAuthStatus() {
+            const authStatusEl = document.getElementById('authStatus');
+            const localStorageEl = document.getElementById('localStorageData');
+            const userDataEl = document.getElementById('userData');
+            
+            // Check auth API availability
+            let statusHtml = '';
+            if (typeof window.authAPI !== 'undefined' && window.authAPI) {
+                statusHtml += '<p class="status-good">✅ AuthAPI: Available</p>';
+                
+                if (window.authAPI.isAuthenticated()) {
+                    statusHtml += '<p class="status-good">✅ Authenticated: Yes</p>';
+                    const user = window.authAPI.getUser();
+                    if (user) {
+                        statusHtml += '<p class="status-good">✅ User Data: Available</p>';
+                    } else {
+                        statusHtml += '<p class="status-warning">⚠️ User Data: Missing</p>';
+                    }
+                } else {
+                    statusHtml += '<p class="status-bad">❌ Authenticated: No</p>';
+                }
+            } else {
+                statusHtml += '<p class="status-bad">❌ AuthAPI: Not Available</p>';
+            }
+            
+            authStatusEl.innerHTML = statusHtml;
+            
+            // Check localStorage
+            const accessToken = localStorage.getItem('uternity_access_token');
+            const refreshToken = localStorage.getItem('uternity_refresh_token');
+            const userJson = localStorage.getItem('uternity_user');
+            
+            let storageHtml = '';
+            storageHtml += `<p class="${accessToken ? 'status-good' : 'status-bad'}">Access Token: ${accessToken ? '✅ Present' : '❌ Missing'}</p>`;
+            storageHtml += `<p class="${refreshToken ? 'status-good' : 'status-bad'}">Refresh Token: ${refreshToken ? '✅ Present' : '❌ Missing'}</p>`;
+            storageHtml += `<p class="${userJson ? 'status-good' : 'status-bad'}">User Data: ${userJson ? '✅ Present' : '❌ Missing'}</p>`;
+            
+            if (userJson) {
+                try {
+                    const userData = JSON.parse(userJson);
+                    storageHtml += '<pre>' + JSON.stringify(userData, null, 2) + '</pre>';
+                } catch (e) {
+                    storageHtml += '<p class="status-bad">❌ User data is corrupted</p>';
+                }
+            }
+            
+            localStorageEl.innerHTML = storageHtml;
+            
+            // Current user from API
+            let userHtml = '';
+            if (typeof window.authAPI !== 'undefined' && window.authAPI && window.authAPI.isAuthenticated()) {
+                const user = window.authAPI.getUser();
+                if (user) {
+                    userHtml = '<pre>' + JSON.stringify(user, null, 2) + '</pre>';
+                } else {
+                    userHtml = '<p class="status-warning">⚠️ No user data in memory</p>';
+                }
+            } else {
+                userHtml = '<p class="status-bad">❌ Not authenticated</p>';
+            }
+            
+            userDataEl.innerHTML = userHtml;
+        }
+
+        async function testLogin() {
+            console.log('🧪 Testing login with testfix@example.com');
+            try {
+                if (window.authAPI) {
+                    const result = await window.authAPI.login({
+                        email: 'testfix@example.com',
+                        password: 'Password123!'
+                    });
+                    console.log('✅ Login successful:', result);
+                    setTimeout(updateAuthStatus, 1000);
+                } else {
+                    console.error('❌ AuthAPI not available');
+                }
+            } catch (error) {
+                console.error('❌ Login failed:', error);
+            }
+        }
+
+        async function testLogout() {
+            console.log('🧪 Testing logout');
+            try {
+                if (window.authAPI) {
+                    await window.authAPI.logout();
+                    console.log('✅ Logout successful');
+                    setTimeout(updateAuthStatus, 1000);
+                } else {
+                    console.error('❌ AuthAPI not available');
+                }
+            } catch (error) {
+                console.error('❌ Logout failed:', error);
+            }
+        }
+
+        function clearStorage() {
+            console.log('🧪 Clearing localStorage');
+            localStorage.removeItem('uternity_access_token');
+            localStorage.removeItem('uternity_refresh_token');
+            localStorage.removeItem('uternity_user');
+            updateAuthStatus();
+        }
+
+        function refreshData() {
+            console.log('🧪 Refreshing data');
+            updateAuthStatus();
+        }
+
+        function testDropdown() {
+            console.log('🧪 Testing dropdown functionality');
+            // Try to find dropdown elements
+            const userMenuButton = document.getElementById('userMenuButton');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            console.log('UserMenuButton found:', !!userMenuButton);
+            console.log('UserDropdown found:', !!userDropdown);
+            
+            if (userMenuButton) {
+                console.log('🔽 Simulating dropdown click');
+                userMenuButton.click();
+            } else {
+                console.log('❌ No dropdown elements found (they are in header component)');
+            }
+        }
+
+        // Initialize
+        setTimeout(() => {
+            console.log('🚀 Debug page initialized');
+            updateAuthStatus();
+            
+            // Try to refresh every 5 seconds
+            setInterval(updateAuthStatus, 5000);
+        }, 1000);
+    </script>
+</body>
+</html> 

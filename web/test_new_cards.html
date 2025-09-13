@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test New Cards</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        .simple-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+        .simple-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <h1>Testing New Simplified Cards</h1>
+    <div id="test-cards"></div>
+    
+    <script>
+        // Test the new simplified card structure
+        const testCard = document.createElement('div');
+        testCard.className = 'simple-card';
+        testCard.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                <div style="flex: 1;">
+                    <div style="font-size: 1rem; font-weight: 700; color: #1f2937; margin-bottom: 0.25rem;">
+                        <i class="fas fa-graduation-cap" style="margin-right: 0.5rem; color: #8b5cf6;"></i>
+                        Stanford University
+                    </div>
+                    <div style="color: #6b7280; font-size: 0.875rem;">
+                        <i class="fas fa-map-marker-alt" style="margin-right: 0.25rem;"></i>
+                        Stanford, CA
+                    </div>
+                </div>
+                <div style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 600;">
+                    95%
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="width: 16px; height: 16px; background: #fef3c7; color: #d97706; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <span style="font-size: 0.875rem; color: #374151;">#2</span>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="width: 16px; height: 16px; background: #dbeafe; color: #2563eb; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <span style="font-size: 0.875rem; color: #374151;">$56K/year</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+                <button style="flex: 1; padding: 0.5rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer; background: #667eea; color: white; border: none; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                    <i class="fas fa-eye"></i>
+                    Details
+                </button>
+                <button style="flex: 1; padding: 0.5rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer; background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                    <i class="fas fa-balance-scale"></i>
+                    Compare
+                </button>
+            </div>
+        `;
+        
+        document.getElementById('test-cards').appendChild(testCard);
+        
+        // Redirect to the actual page
+        setTimeout(() => {
+            window.location.href = 'http://localhost:3004/pages/app/university-recommender.html?v=' + Date.now();
+        }, 2000);
+    </script>
+</body>
+</html> 

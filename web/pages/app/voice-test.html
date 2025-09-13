@@ -1,0 +1,2028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Test - UTERNITY</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 
+                0 10px 25px -5px rgba(0, 0, 0, 0.08),
+                0 8px 10px -6px rgba(0, 0, 0, 0.05),
+                0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-container {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 
+                0 10px 25px -5px rgba(0, 0, 0, 0.08),
+                0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 24px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .progress-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .progress-bar {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #8b5cf6 0%, #06b6d4 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 
+                0 10px 25px -5px rgba(0, 0, 0, 0.08),
+                0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+        }
+
+        .record-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
+        }
+
+        .record-button.recording {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            animation: pulse 2s infinite;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .record-button.paused {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .phase-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .phase-indicator.preparation {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #d97706;
+            border: 1px solid #fbbf24;
+        }
+
+        .phase-indicator.response {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #16a34a;
+            border: 1px solid #22c55e;
+        }
+
+        .results-section {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 
+                0 10px 25px -5px rgba(0, 0, 0, 0.08),
+                0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            padding: 32px;
+            margin-top: 32px;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 auto 24px;
+            box-shadow: 
+                0 12px 30px rgba(16, 185, 129, 0.4),
+                0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-item {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-item:hover {
+            border-color: #8b5cf6;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+        }
+
+        .audio-player {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            color: #4b5563;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .task-navigation {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .improvement-tip {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 1px solid #3b82f6;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .improvement-tip h4 {
+            color: #1e40af;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .improvement-tip p {
+            color: #1e3a8a;
+            margin: 0;
+        }
+        
+        .completion-message {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f0f8ff;
+            border-radius: 12px;
+            border: 2px solid #4CAF50;
+        }
+        
+        .completion-message h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .completion-message p {
+            margin: 15px 0;
+            color: #555;
+            font-size: 16px;
+        }
+        
+        .phase-intro {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .phase-prep {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .phase-response {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+        
+        .phase-default {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header will be loaded here -->
+    <div id="header-container"></div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8" style="padding-top: 36px;">
+        <!-- Test Interface -->
+        <div id="test-interface" class="max-w-4xl mx-auto">
+            <!-- Test Header Card -->
+            <div class="dashboard-card p-8 text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2" id="test-title">TOEFL Speaking Test</h1>
+                <p class="text-lg text-gray-600" id="test-subtitle">Complete all 4 tasks to receive your score</p>
+                <div id="session-info" class="mt-4 text-sm text-gray-500" style="display: none;">
+                    <p>Session: <span id="session-id-display">Loading...</span></p>
+                </div>
+            </div>
+
+            <!-- Timer and Progress Card -->
+            <div class="progress-container">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Test Progress</h3>
+                    <span class="text-sm text-gray-600" id="task-counter">Task 1 of 4</span>
+                </div>
+                <div class="timer-display" id="timer">15:00</div>
+                
+                <!-- Voice Test Button -->
+                <div class="mb-4 text-center">
+                    <button onclick="testVoices()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors mr-2">
+                        🔊 Test Audio
+                    </button>
+                    <button onclick="checkAudioSettings()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        🔍 Check Settings
+                    </button>
+                    <p class="text-xs text-gray-600 mt-1">Click to test if audio narration is working</p>
+                    <div id="voice-status" class="mt-2 text-xs">
+                        <span class="text-gray-500">Voice Status: </span>
+                        <span id="voice-status-text" class="font-medium">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Task Navigation -->
+            <div class="task-navigation">
+                <div>
+                    <span class="phase-indicator preparation" id="phase-indicator">Preparation Time</span>
+                </div>
+                <div class="text-sm text-gray-600">
+                    <span id="current-phase-time">15 seconds</span> remaining
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="question-card">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4" id="question-title">Task 1: Independent Speaking</h3>
+                    <div class="text-gray-700 leading-relaxed" id="question-text">
+                        Loading question content...
+                    </div>
+                </div>
+
+                <!-- Additional Content Area (for reading passages, listening audio, etc.) -->
+                <div id="additional-content" class="mb-6"></div>
+
+                <!-- Recording Controls -->
+                <div class="text-center">
+                    <button class="record-button" id="record-btn" style="display: none;">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
+                            <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
+                            <path d="M12 18v4"/>
+                            <path d="M8 22h8"/>
+                        </svg>
+                    </button>
+                    <p class="text-sm text-gray-600 mt-4" id="record-instruction">Preparing test...</p>
+                </div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="control-buttons">
+                <button class="btn btn-secondary" id="pause-btn" style="display: none;">Pause Test</button>
+                <button class="btn btn-secondary" id="skip-btn" style="display: none;">End Test</button>
+                <div id="test-status" class="text-center text-sm text-gray-600 mt-4">
+                    <p>Test will automatically progress through all 4 tasks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="results-section hidden">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">Test Results</h2>
+                <p class="text-lg text-gray-600 text-center">Here's how you performed on your speaking test</p>
+            </div>
+
+            <!-- Overall Score -->
+            <div class="text-center mb-8">
+                <div class="score-circle" id="overall-score">24/30</div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Overall Score</h3>
+                <p class="text-gray-600" id="score-description">Good performance! You're on track for your target score.</p>
+            </div>
+
+            <!-- Detailed Scores -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-purple-600 mb-2">8.5</div>
+                    <div class="text-sm font-medium text-gray-700">Fluency & Coherence</div>
+                </div>
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-blue-600 mb-2">7.8</div>
+                    <div class="text-sm font-medium text-gray-700">Pronunciation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-green-600 mb-2" id="overall-score">--</div>
+                    <div class="text-sm font-medium text-gray-700">Vocabulary</div>
+                </div>
+                <div class="stat-card">
+                    <div class="text-2xl font-bold text-yellow-600 mb-2">8.0</div>
+                    <div class="text-sm font-medium text-gray-700">Grammar</div>
+                </div>
+            </div>
+
+            <!-- Task-by-Task Results -->
+            <div class="dashboard-card p-6 mb-6">
+                <h4 class="text-xl font-bold text-gray-900 mb-4">Task Performance</h4>
+                <div id="task-results">
+                    <!-- Task results will be populated here -->
+                </div>
+            </div>
+
+            <!-- Feedback and Improvements -->
+            <div class="dashboard-card p-6 mb-6">
+                <h4 class="text-xl font-bold text-gray-900 mb-4">Detailed Feedback</h4>
+                <div id="feedback-content">
+                    <div class="feedback-item">
+                        <h5 class="font-semibold text-gray-900 mb-2">Strengths</h5>
+                        <p class="text-gray-700">Your responses showed good organization and clear main ideas. You used appropriate vocabulary and maintained good fluency throughout most tasks.</p>
+                    </div>
+                    <div class="feedback-item">
+                        <h5 class="font-semibold text-gray-900 mb-2">Areas for Improvement</h5>
+                        <p class="text-gray-700">Focus on pronunciation clarity, especially with consonant clusters. Practice varying your intonation to sound more natural.</p>
+                    </div>
+                </div>
+
+                <div class="improvement-tip">
+                    <h4>💡 Next Steps</h4>
+                    <p>Practice individual pronunciation exercises and try recording yourself daily to track improvement. Focus on Task 2 campus situations for better integrated speaking skills.</p>
+                </div>
+            </div>
+
+            <!-- Audio Recordings -->
+            <div class="dashboard-card p-6">
+                <h4 class="text-xl font-bold text-gray-900 mb-4">Your Recordings</h4>
+                <div id="audio-recordings">
+                    <!-- Audio players will be populated here -->
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="control-buttons">
+                <button class="btn btn-primary" onclick="retakeTest()">Retake Test</button>
+                <button class="btn btn-secondary" onclick="goToDashboard()">Back to Dashboard</button>
+                <button class="btn btn-secondary" onclick="downloadResults()">Download Results</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import API service -->
+    <script type="module" src="../../js/services/api.js"></script>
+    
+    <script type="module">
+        import api from '../../js/services/api.js';
+        
+        // Global variables
+        let currentSessionId = null;
+        let currentTest = {
+            sessionData: null,
+            isRecording: false,
+            audioStream: null,
+            mediaRecorder: null,
+            recordedChunks: [],
+            currentPhase: null,
+            timeRemaining: 0,
+            timerInterval: null
+        };
+        let progressPollingInterval = null;
+        let websocket = null;
+        let speechSynthesis = window.speechSynthesis;
+        let voicesLoaded = false;
+        
+        // Initialize test when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeVoices();
+            initializeTest();
+        });
+        
+        // Initialize voices properly
+        function initializeVoices() {
+            console.log("🎭 Initializing speech synthesis voices...");
+            
+            // Update status display
+            updateVoiceStatus("Initializing...");
+            
+            if (!speechSynthesis) {
+                console.error("❌ Speech synthesis not supported in this browser");
+                updateVoiceStatus("Not supported", "error");
+                return;
+            }
+            
+            // Check if voices are already loaded
+            let voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                console.log("✅ Voices already loaded:", voices.length);
+                voicesLoaded = true;
+                updateVoiceStatus(`Ready (${voices.length} voices)`, "success");
+                return;
+            }
+            
+            // Wait for voices to load
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = function() {
+                    voices = speechSynthesis.getVoices();
+                    console.log("✅ Voices loaded via onvoiceschanged:", voices.length);
+                    voicesLoaded = true;
+                    
+                    // Log available voices for debugging
+                    voices.forEach((voice, index) => {
+                        console.log(`🎭 Voice ${index + 1}: ${voice.name} (${voice.lang}) - ${voice.default ? 'DEFAULT' : ''}`);
+                    });
+                    
+                    updateVoiceStatus(`Ready (${voices.length} voices)`, "success");
+                };
+            } else {
+                // Fallback for browsers without onvoiceschanged
+                console.warn("⚠️ onvoiceschanged not supported, trying to load voices directly");
+                voicesLoaded = true;
+                updateVoiceStatus("Ready (fallback)", "warning");
+            }
+        }
+        
+        // Update voice status display
+        function updateVoiceStatus(status, type = "info") {
+            const statusElement = document.getElementById('voice-status-text');
+            if (statusElement) {
+                statusElement.textContent = status;
+                
+                // Remove existing classes
+                statusElement.classList.remove('text-green-600', 'text-red-600', 'text-yellow-600', 'text-gray-600');
+                
+                // Add appropriate color class
+                switch(type) {
+                    case "success":
+                        statusElement.classList.add('text-green-600');
+                        break;
+                    case "error":
+                        statusElement.classList.add('text-red-600');
+                        break;
+                    case "warning":
+                        statusElement.classList.add('text-yellow-600');
+                        break;
+                    default:
+                        statusElement.classList.add('text-gray-600');
+                }
+            }
+        }
+        
+        function showError(message) {
+            console.error("❌ Error:", message);
+            const errorDiv = document.getElementById('error-message');
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            } else {
+                // Fallback to alert if error div doesn't exist
+                alert(`Error: ${message}`);
+            }
+        }
+        
+        function hideError() {
+            const errorDiv = document.getElementById('error-message');
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+            }
+        }
+        
+        async function initializeTest() {
+            console.log("🎯 Initializing TOEFL test");
+            hideError(); // Clear any previous errors
+            try {
+                await startNewTest();
+                console.log("✅ Test initialized successfully");
+            } catch (error) {
+                console.error("❌ Error in initializeTest:", error);
+                showError("Failed to initialize test: " + error.message);
+            }
+        }
+        
+        async function startNewTest() {
+            console.log("🚀 Starting new test - Demo Mode (No Session)");
+            try {
+                // Skip session creation and start directly with demo content
+                console.log("✅ Starting demo test without session management");
+                
+                // Initialize demo test data
+                currentTest = {
+                    currentTask: 1,
+                    currentPhase: 'introduction',
+                    timeRemaining: 45,
+                    isRecording: false,
+                    demoMode: true,
+                    totalTasks: 4
+                };
+                
+                // Start demo test immediately
+                await startDemoTest();
+                console.log("📊 Demo test started");
+            } catch (error) {
+                console.error("❌ Error in startNewTest:", error);
+                throw error;
+            }
+        }
+        
+        async function startDemoTest() {
+            console.log("🎯 Starting demo TOEFL test");
+            
+            // Demo content for Task 1 - Independent Speaking
+            const demoContent = {
+                metadata: {
+                    title: "Task 1: Independent Speaking",
+                    description: "Express your opinion on a topic"
+                },
+                question_prompt: "Some people prefer to study in a quiet environment, while others prefer to study with background music or in a more lively setting. Which do you prefer and why? Use specific reasons and examples to support your answer.",
+                instructions: "You will have 15 seconds to prepare your response and 45 seconds to speak. Give your opinion and support it with specific reasons and examples."
+            };
+            
+            // Update UI with demo content
+            updateTaskInfo({
+                task_number: 1,
+                task_name: "Independent Speaking",
+                total_tasks: 4
+            });
+            
+            // Show the question
+            updateContent(demoContent, 'introduction');
+            
+            // Start the introduction phase
+            currentTest.currentPhase = 'introduction';
+            updatePhaseDisplay('introduction');
+            
+            // Play introduction audio
+            const introText = "This is Task 1, Independent Speaking. You will have 15 seconds to prepare your response and 45 seconds to speak. Here is your question:";
+            playTaskIntroduction(introText);
+            
+            // Auto-progress through phases
+            setTimeout(() => {
+                // Stop any current speech and play the question
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+                setTimeout(() => {
+                    console.log("🔊 Now reading the question aloud...");
+                    playQuestionAudio(demoContent.question_prompt);
+                    setTimeout(() => {
+                        startPreparationPhase();
+                    }, 12000); // Give more time for question to be read (longer question)
+                }, 1000);
+            }, 5000); // Give time for introduction
+        }
+        
+        function startPreparationPhase() {
+            console.log("📝 Starting preparation phase");
+            currentTest.currentPhase = 'preparation';
+            currentTest.timeRemaining = 15; // 15 seconds for preparation
+            updatePhaseDisplay('preparation');
+            
+            // Update content for preparation phase
+            const demoContent = {
+                metadata: {
+                    title: "Task 1: Independent Speaking",
+                    description: "Express your opinion on a topic"
+                },
+                question_prompt: "Some people prefer to study in a quiet environment, while others prefer to study with background music or in a more lively setting. Which do you prefer and why? Use specific reasons and examples to support your answer.",
+                instructions: "You will have 15 seconds to prepare your response and 45 seconds to speak. Give your opinion and support it with specific reasons and examples."
+            };
+            
+            updateContent(demoContent, 'preparation');
+            
+            // Play preparation instruction
+            const prepInstruction = "You now have 15 seconds to prepare your response. Think about your answer.";
+            playTaskIntroduction(prepInstruction);
+            
+            // Start countdown timer
+            startDemoTimer(15, () => {
+                startResponsePhase();
+            });
+        }
+        
+        function startResponsePhase() {
+            console.log("🎤 Starting response phase");
+            currentTest.currentPhase = 'response';
+            currentTest.timeRemaining = 45; // 45 seconds for response
+            updatePhaseDisplay('response');
+            
+            // Update content for response phase
+            const demoContent = {
+                metadata: {
+                    title: "Task 1: Independent Speaking",
+                    description: "Express your opinion on a topic"
+                },
+                question_prompt: "Some people prefer to study in a quiet environment, while others prefer to study with background music or in a more lively setting. Which do you prefer and why? Use specific reasons and examples to support your answer.",
+                instructions: "You will have 15 seconds to prepare your response and 45 seconds to speak. Give your opinion and support it with specific reasons and examples."
+            };
+            
+            updateContent(demoContent, 'response');
+            
+            // Show record button and update phase
+            updatePhase('response');
+            
+            // Play response instruction
+            const responseInstruction = "Begin speaking after the beep. You have 45 seconds to record your response.";
+            playTaskIntroduction(responseInstruction);
+            
+            // Start recording after a brief delay
+            setTimeout(async () => {
+                await startRecording();
+                
+                // Start countdown timer
+                startDemoTimer(45, () => {
+                    endTask();
+                });
+            }, 3000); // 3 seconds delay for instruction
+        }
+        
+        function startDemoTimer(duration, callback) {
+            let timeLeft = duration;
+            currentTest.timeRemaining = timeLeft;
+            updateTimerDisplay(timeLeft);
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                currentTest.timeRemaining = timeLeft;
+                updateTimerDisplay(timeLeft);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    callback();
+                }
+            }, 1000);
+        }
+        
+        function endTask() {
+            console.log("🏁 Task completed");
+            if (currentTest.isRecording) {
+                stopRecording();
+            }
+            
+            // Progress to next task or show completion
+            if (currentTest.currentTask < 4) {
+                setTimeout(() => {
+                    proceedToNextTask();
+                }, 2000); // 2 second pause between tasks
+            } else {
+                showFinalCompletion();
+            }
+        }
+        
+        function proceedToNextTask() {
+            currentTest.currentTask++;
+            console.log(`🎯 Starting Task ${currentTest.currentTask}`);
+            
+            // Update task info
+            updateTaskInfo({
+                task_number: currentTest.currentTask,
+                task_name: getTaskName(currentTest.currentTask),
+                total_tasks: 4
+            });
+            
+            // Start the appropriate task
+            switch(currentTest.currentTask) {
+                case 2:
+                    startTask2();
+                    break;
+                case 3:
+                    startTask3();
+                    break;
+                case 4:
+                    startTask4();
+                    break;
+                default:
+                    showFinalCompletion();
+            }
+        }
+        
+        function getTaskName(taskNumber) {
+            const taskNames = {
+                1: "Independent Speaking",
+                2: "Campus Situation",
+                3: "Academic Course",
+                4: "Academic Lecture"
+            };
+            return taskNames[taskNumber] || "Speaking Task";
+        }
+        
+        function startTask2() {
+            console.log("🎯 Starting Task 2: Campus Situation");
+            
+            const task2Content = {
+                metadata: {
+                    title: "Task 2: Campus Situation",
+                    description: "Integrated Speaking - Campus Situation"
+                },
+                question_prompt: "The university is planning to extend library hours until midnight during exam week. The woman expresses her opinion about this plan. State her opinion and explain the reasons she gives for holding that opinion.",
+                instructions: "You will have 30 seconds to prepare and 60 seconds to speak."
+            };
+            
+            updateContent(task2Content, 'introduction');
+            currentTest.currentPhase = 'introduction';
+            updatePhaseDisplay('introduction');
+            
+            const introText = "This is Task 2, Campus Situation. You will hear a conversation between two students. You will have 30 seconds to prepare and 60 seconds to speak.";
+            playTaskIntroduction(introText);
+            
+            setTimeout(() => {
+                playQuestionAudio(task2Content.question_prompt);
+                setTimeout(() => {
+                    startPreparationPhase2();
+                }, 8000);
+            }, 5000);
+        }
+        
+        function startTask3() {
+            console.log("🎯 Starting Task 3: Academic Course");
+            
+            const task3Content = {
+                metadata: {
+                    title: "Task 3: Academic Course",
+                    description: "Integrated Speaking - Academic Course"
+                },
+                question_prompt: "Using the example from the lecture, explain the concept of cognitive dissonance and how it affects decision-making.",
+                instructions: "You will have 30 seconds to prepare and 60 seconds to speak."
+            };
+            
+            updateContent(task3Content, 'introduction');
+            currentTest.currentPhase = 'introduction';
+            updatePhaseDisplay('introduction');
+            
+            const introText = "This is Task 3, Academic Course. You will read a passage and listen to a lecture. You will have 30 seconds to prepare and 60 seconds to speak.";
+            playTaskIntroduction(introText);
+            
+            setTimeout(() => {
+                playQuestionAudio(task3Content.question_prompt);
+                setTimeout(() => {
+                    startPreparationPhase3();
+                }, 8000);
+            }, 5000);
+        }
+        
+        function startTask4() {
+            console.log("🎯 Starting Task 4: Academic Lecture");
+            
+            const task4Content = {
+                metadata: {
+                    title: "Task 4: Academic Lecture",
+                    description: "Integrated Speaking - Academic Lecture"
+                },
+                question_prompt: "Using the examples from the lecture, explain the two types of symbiotic relationships and how they benefit the organisms involved.",
+                instructions: "You will have 30 seconds to prepare and 60 seconds to speak."
+            };
+            
+            updateContent(task4Content, 'introduction');
+            currentTest.currentPhase = 'introduction';
+            updatePhaseDisplay('introduction');
+            
+            const introText = "This is Task 4, Academic Lecture. You will listen to part of a lecture. You will have 30 seconds to prepare and 60 seconds to speak.";
+            playTaskIntroduction(introText);
+            
+            setTimeout(() => {
+                playQuestionAudio(task4Content.question_prompt);
+                setTimeout(() => {
+                    startPreparationPhase4();
+                }, 8000);
+            }, 5000);
+        }
+        
+        function startPreparationPhase2() {
+            startGenericPreparationPhase(30, 2, () => startResponsePhase2());
+        }
+        
+        function startPreparationPhase3() {
+            startGenericPreparationPhase(30, 3, () => startResponsePhase3());
+        }
+        
+        function startPreparationPhase4() {
+            startGenericPreparationPhase(30, 4, () => startResponsePhase4());
+        }
+        
+        function startGenericPreparationPhase(duration, taskNumber, callback) {
+            console.log(`📝 Starting preparation phase for Task ${taskNumber}`);
+            currentTest.currentPhase = 'preparation';
+            currentTest.timeRemaining = duration;
+            updatePhaseDisplay('preparation');
+            
+            const prepInstruction = `You now have ${duration} seconds to prepare your response. Think about your answer.`;
+            playTaskIntroduction(prepInstruction);
+            
+            startDemoTimer(duration, callback);
+        }
+        
+        function startResponsePhase2() {
+            startGenericResponsePhase(60, 2);
+        }
+        
+        function startResponsePhase3() {
+            startGenericResponsePhase(60, 3);
+        }
+        
+        function startResponsePhase4() {
+            startGenericResponsePhase(60, 4);
+        }
+        
+        function startGenericResponsePhase(duration, taskNumber) {
+            console.log(`🎤 Starting response phase for Task ${taskNumber}`);
+            currentTest.currentPhase = 'response';
+            currentTest.timeRemaining = duration;
+            updatePhaseDisplay('response');
+            
+            updatePhase('response');
+            
+            const responseInstruction = `Begin speaking after the beep. You have ${duration} seconds to record your response.`;
+            playTaskIntroduction(responseInstruction);
+            
+            setTimeout(async () => {
+                await startRecording();
+                startDemoTimer(duration, () => {
+                    endTask();
+                });
+            }, 3000);
+        }
+        
+        function showFinalCompletion() {
+            const questionContainer = document.getElementById('question-container');
+            if (questionContainer) {
+                questionContainer.innerHTML = `
+                    <div class="completion-message">
+                        <h2>🎉 All Tasks Completed!</h2>
+                        <p>Congratulations! You have completed all 4 TOEFL Speaking tasks.</p>
+                        <p>Task 1: Independent Speaking ✅</p>
+                        <p>Task 2: Campus Situation ✅</p>
+                        <p>Task 3: Academic Course ✅</p>
+                        <p>Task 4: Academic Lecture ✅</p>
+                                                 <button onclick="resetAndStartTest()" class="btn-primary">Take Test Again</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function showCompletionMessage() {
+            // This function is kept for backward compatibility but now calls showFinalCompletion
+            showFinalCompletion();
+        }
+        
+        function resetAndStartTest() {
+            // Reset test state
+            currentTest = {
+                currentTask: 1,
+                currentPhase: 'introduction',
+                timeRemaining: 45,
+                isRecording: false,
+                demoMode: true,
+                totalTasks: 4
+            };
+            
+            // Stop any ongoing speech
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            
+            // Reset UI and start fresh
+            startDemoTest();
+        }
+
+        async function startRecording() {
+            console.log("🎤 Starting recording...");
+            if (!currentTest.mediaRecorder) {
+                const initialized = await initializeRecording();
+                if (!initialized) return;
+            }
+            
+            const recordButton = document.getElementById('record-btn');
+            const recordInstructionElement = document.getElementById('record-instruction');
+            
+            if (!currentTest.isRecording) {
+                currentTest.recordedChunks = [];
+                currentTest.mediaRecorder.start();
+                currentTest.isRecording = true;
+                
+                if (recordButton) {
+                    recordButton.classList.add('recording');
+                    recordButton.innerHTML = `
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <rect x="6" y="6" width="12" height="12" rx="2"/>
+                        </svg>
+                    `;
+                }
+                
+                if (recordInstructionElement) {
+                    recordInstructionElement.textContent = '🎤 Recording... Speak your response now!';
+                }
+                
+                console.log("🎤 Recording started successfully");
+            }
+        }
+
+        function stopRecording() {
+            console.log("🎤 Stopping recording...");
+            if (currentTest.mediaRecorder && currentTest.isRecording) {
+                currentTest.mediaRecorder.stop();
+                currentTest.isRecording = false;
+                console.log("🎤 Recording stopped");
+            }
+        }
+        
+        function updatePhaseDisplay(phase) {
+            console.log("🔄 Updating phase display:", phase);
+            const phaseIndicator = document.getElementById('phase-indicator');
+            if (phaseIndicator) {
+                let phaseText = '';
+                let phaseClass = '';
+                
+                switch(phase) {
+                    case 'introduction':
+                        phaseText = 'Reading Instructions';
+                        phaseClass = 'phase-intro';
+                        break;
+                    case 'preparation':
+                        phaseText = 'Preparation Time';
+                        phaseClass = 'phase-prep';
+                        break;
+                    case 'response':
+                        phaseText = 'Recording Response';
+                        phaseClass = 'phase-response';
+                        break;
+                    default:
+                        phaseText = 'Test in Progress';
+                        phaseClass = 'phase-default';
+                }
+                
+                phaseIndicator.textContent = phaseText;
+                phaseIndicator.className = `phase-indicator ${phaseClass}`;
+            }
+        }
+        
+        function updateTaskInfo(taskInfo) {
+            console.log("📋 Updating task info:", taskInfo);
+            try {
+                // Update task title
+                const questionTitleElement = document.getElementById('question-title');
+                if (questionTitleElement && taskInfo.task_name) {
+                    questionTitleElement.textContent = `Task ${taskInfo.task_number}: ${taskInfo.task_name}`;
+                }
+                
+                // Update task counter
+                const taskCounterElement = document.getElementById('task-counter');
+                if (taskCounterElement && taskInfo.task_number) {
+                    taskCounterElement.textContent = `Task ${taskInfo.task_number} of ${taskInfo.total_tasks || 4}`;
+                }
+                
+                // Update page title for context
+                const testTitleElement = document.getElementById('test-title');
+                if (testTitleElement && taskInfo.task_name) {
+                    testTitleElement.textContent = `TOEFL Speaking Test - ${taskInfo.task_name}`;
+                }
+                
+                console.log("✅ Task info updated successfully");
+            } catch (error) {
+                console.error("❌ Error updating task info:", error);
+            }
+        }
+
+        function updateTestProgress(progressData) {
+            console.log("🔄 Updating test progress UI");
+            try {
+                const { progress, task_info, content } = progressData;
+                
+                // Update task info
+                if (task_info) {
+                    console.log("📋 Updating task info:", task_info);
+                    updateTaskInfo(task_info);
+                }
+                
+                // Update content
+                if (content) {
+                    console.log("📝 Updating content display");
+                    updateContent(content, progress?.current_phase);
+                } else {
+                    console.warn("⚠️ No content to display");
+                }
+                
+                // Update phase
+                if (progress?.current_phase) {
+                    console.log("🔄 Updating phase:", progress.current_phase);
+                    updatePhase(progress.current_phase, task_info?.task_type);
+                }
+                
+                // Handle automatic audio for introduction phases
+                if (progress?.current_phase === 'introduction' && content?.question_prompt && currentTest.currentPhase !== 'introduction') {
+                    console.log("🔊 Starting task introduction");
+                    setTimeout(() => {
+                        if (task_info?.task_type === 'task_1_independent') {
+                            playTaskIntroduction("Task 1 starts now. In this task, you will express your opinion on a topic. You will have 15 seconds to prepare and 45 seconds to speak.");
+                        } else if (task_info?.task_type === 'task_2_reading_listening') {
+                            playTaskIntroduction("Task 2 starts now. In this task, you will read a passage and listen to a conversation between two students. Then you will answer a question about the woman's opinion.");
+                        } else if (task_info?.task_type === 'task_3_academic') {
+                            playTaskIntroduction("Task 3 starts now. In this task, you will read a passage and listen to a lecture. Then you will answer a question about the lecture content.");
+                        } else if (task_info?.task_type === 'task_4_lecture') {
+                            playTaskIntroduction("Task 4 starts now. In this task, you will listen to a lecture and then answer a question about the lecture content.");
+                        } else {
+                            playQuestionAudio(content.question_prompt);
+                        }
+                    }, 500);
+                }
+                
+                // Handle reading phase for Task 2 - give reading instruction
+                if (progress?.current_phase === 'reading' && task_info?.task_type === 'task_2_reading_listening' && currentTest.currentPhase !== 'reading') {
+                    console.log("🔊 Starting reading phase instruction");
+                    setTimeout(() => {
+                        playTaskIntroduction("Now you will read a passage. Read the passage silently by yourself. You have 50 seconds to read.");
+                    }, 500);
+                }
+                
+                // Handle automatic audio for listening phases (Task 2 conversation with two voices)
+                if (progress?.current_phase === 'listening' && content?.listening_script && currentTest.currentPhase !== 'listening') {
+                    console.log("🔊 Starting listening phase");
+                    setTimeout(() => {
+                        if (task_info?.task_type === 'task_2_reading_listening') {
+                            playTaskIntroduction("Now you will listen to a conversation between two students. Listen carefully.");
+                        }
+                    }, 500);
+                    setTimeout(() => {
+                        playConversationAudio(content.listening_script, task_info?.task_type);
+                    }, 3000); // Delay to ensure instruction is heard first
+                }
+                
+                // Handle preparation phase - read the question for ALL tasks
+                if (progress?.current_phase === 'preparation' && content?.question_prompt && currentTest.currentPhase !== 'preparation') {
+                    console.log("🔊 Reading question for preparation phase");
+                    setTimeout(() => {
+                        if (task_info?.task_type === 'task_1_independent') {
+                            // Task 1 - direct question reading
+                            playQuestionAudio(content.question_prompt);
+                        } else if (task_info?.task_type === 'task_2_reading_listening') {
+                            playTaskIntroduction("Now here is the question you need to answer:");
+                            setTimeout(() => {
+                                playQuestionAudio(content.question_prompt);
+                            }, 2000);
+                        } else {
+                            // Task 3 and 4 - also read the question
+                            playTaskIntroduction("Now here is the question you need to answer:");
+                            setTimeout(() => {
+                                playQuestionAudio(content.question_prompt);
+                            }, 2000);
+                        }
+                    }, 500);
+                }
+                
+                // Handle automatic recording start after preparation
+                if (progress?.current_phase === 'response' && currentTest.currentPhase !== 'response') {
+                    console.log("🎤 Auto-starting recording for response phase");
+                    setTimeout(() => {
+                        autoStartRecording();
+                    }, 1000); // Small delay to ensure UI is updated
+                }
+                
+                // Update current phase tracking
+                currentTest.currentPhase = progress?.current_phase;
+                
+            } catch (error) {
+                console.error("❌ Error updating test progress:", error);
+            }
+        }
+        
+        function startPhaseTimer(phase, timing) {
+            // Clear existing timer
+            if (currentTest.timerInterval) {
+                clearInterval(currentTest.timerInterval);
+            }
+            
+            // Get duration for current phase
+            let duration = 0;
+            switch (phase) {
+                case 'introduction':
+                    duration = timing.introduction;
+                    break;
+                case 'reading':
+                    duration = timing.reading;
+                    break;
+                case 'listening':
+                    duration = timing.listening;
+                    break;
+                case 'preparation':
+                    duration = timing.preparation;
+                    break;
+                case 'response':
+                    duration = timing.response;
+                    break;
+                default:
+                    duration = 0;
+            }
+            
+            if (duration > 0) {
+                console.log(`⏰ Starting local timer for ${phase}: ${duration} seconds`);
+                currentTest.timeRemaining = duration;
+                updateTimerDisplay(duration);
+                
+                // Note: We primarily rely on WebSocket timer updates from backend
+                // This is a fallback local timer
+                currentTest.timerInterval = setInterval(() => {
+                    if (currentTest.timeRemaining > 0) {
+                        currentTest.timeRemaining--;
+                        updateTimerDisplay(currentTest.timeRemaining);
+                    } else {
+                        clearInterval(currentTest.timerInterval);
+                        console.log(`⏰ Local timer finished for phase: ${phase}`);
+                    }
+                }, 1000);
+            }
+        }
+        
+        function updateTimerDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            const timeString = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timer');
+            if (timerElement) {
+                timerElement.textContent = timeString;
+            }
+            
+            const phaseTimeElement = document.getElementById('current-phase-time');
+            if (phaseTimeElement) {
+                phaseTimeElement.textContent = `${seconds} seconds remaining`;
+            }
+        }
+        
+        function playTaskIntroduction(text) {
+            if (!speechSynthesis) {
+                console.warn("⚠️ Speech synthesis not supported");
+                return;
+            }
+            
+            if (!voicesLoaded) {
+                console.warn("⚠️ Voices not yet loaded, waiting...");
+                setTimeout(() => playTaskIntroduction(text), 100);
+                return;
+            }
+            
+            // Stop any current speech
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.85; // Slightly slower for instructions
+            utterance.pitch = 1.0;
+            utterance.volume = 0.9;
+            
+            // Try to use a professional voice for instructions
+            const voices = speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice => 
+                voice.name.includes('Karen') || 
+                voice.name.includes('Samantha') ||
+                voice.name.includes('Daniel') ||
+                voice.lang.startsWith('en-US')
+            );
+            
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+                console.log("🎭 Using voice:", preferredVoice.name);
+            } else {
+                console.warn("⚠️ No preferred voice found, using default");
+            }
+            
+            console.log("🔊 Playing task instruction:", text.substring(0, 50) + "...");
+            
+            // Add error handling
+            utterance.onerror = (event) => {
+                console.error("🔊 Speech synthesis error:", event.error);
+                updateVoiceStatus(`Error: ${event.error}`, "error");
+            };
+            
+            utterance.onstart = () => {
+                console.log("🔊 Task instruction started");
+                updateVoiceStatus("Speaking...", "info");
+            };
+            
+            utterance.onend = () => {
+                console.log("🔊 Task instruction completed");
+                updateVoiceStatus(`Ready (${speechSynthesis.getVoices().length} voices)`, "success");
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        function playQuestionAudio(text) {
+            if (!speechSynthesis) {
+                console.warn("⚠️ Speech synthesis not supported");
+                return;
+            }
+            
+            if (!voicesLoaded) {
+                console.warn("⚠️ Voices not yet loaded, waiting...");
+                setTimeout(() => playQuestionAudio(text), 100);
+                return;
+            }
+            
+            // Stop any current speech
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9; // Slightly slower for clarity
+            utterance.pitch = 1.0;
+            utterance.volume = 0.8;
+            
+            // Try to use a professional voice
+            const voices = speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice => 
+                voice.name.includes('Karen') || 
+                voice.name.includes('Samantha') ||
+                voice.name.includes('Daniel') ||
+                voice.lang.startsWith('en-US')
+            );
+            
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+                console.log("🎭 Using voice:", preferredVoice.name);
+            } else {
+                console.warn("⚠️ No preferred voice found, using default");
+            }
+            
+            console.log("🔊 Playing question audio:", text.substring(0, 50) + "...");
+            
+            // Add error handling
+            utterance.onerror = (event) => {
+                console.error("🔊 Speech synthesis error:", event.error);
+                updateVoiceStatus(`Error: ${event.error}`, "error");
+            };
+            
+            utterance.onstart = () => {
+                console.log("🔊 Question audio started");
+                updateVoiceStatus("Speaking...", "info");
+            };
+            
+            utterance.onend = () => {
+                console.log("🔊 Question audio completed");
+                updateVoiceStatus(`Ready (${speechSynthesis.getVoices().length} voices)`, "success");
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        function playConversationAudio(conversationText, taskType) {
+            if (!speechSynthesis) {
+                console.warn("⚠️ Speech synthesis not supported");
+                return;
+            }
+            
+            if (!voicesLoaded) {
+                console.warn("⚠️ Voices not yet loaded, waiting...");
+                setTimeout(() => playConversationAudio(conversationText, taskType), 100);
+                return;
+            }
+            
+            // Stop any current speech
+            speechSynthesis.cancel();
+            
+            console.log("🔊 Playing conversation with two voices:", conversationText.substring(0, 50) + "...");
+            
+            // Show listening indicator
+            const recordInstructionElement = document.getElementById('record-instruction');
+            if (recordInstructionElement) {
+                recordInstructionElement.textContent = '🔊 Listen carefully to the conversation...';
+            }
+            
+            // Parse conversation into speaker parts
+            const lines = conversationText.split('\n').filter(line => line.trim());
+            let currentSpeakerIndex = 0;
+            
+            // Get available voices
+            const voices = speechSynthesis.getVoices();
+            
+            // Find female and male voices
+            const femaleVoice = voices.find(voice => 
+                voice.name.includes('Karen') || 
+                voice.name.includes('Samantha') ||
+                voice.name.includes('Victoria') ||
+                voice.name.includes('Susan') ||
+                (voice.name.includes('Female') && voice.lang.startsWith('en')) ||
+                (voice.gender === 'female' && voice.lang.startsWith('en'))
+            ) || voices.find(voice => voice.lang.startsWith('en-US'));
+            
+            const maleVoice = voices.find(voice => 
+                voice.name.includes('Daniel') || 
+                voice.name.includes('Alex') ||
+                voice.name.includes('David') ||
+                voice.name.includes('Tom') ||
+                voice.name.includes('Aaron') ||
+                voice.name.includes('Fred') ||
+                voice.name.includes('Oliver') ||
+                voice.name.includes('Ricky') ||
+                (voice.name.includes('Male') && voice.lang.startsWith('en')) ||
+                (voice.gender === 'male' && voice.lang.startsWith('en'))
+            ) || voices.find(voice => voice.lang.startsWith('en-US') && voice !== femaleVoice);
+            
+            console.log("🎭 Using voices - Female:", femaleVoice?.name, "Male:", maleVoice?.name);
+            
+            function speakNextLine(lineIndex) {
+                if (lineIndex >= lines.length) {
+                    console.log("🔊 Conversation audio completed");
+                    if (recordInstructionElement) {
+                        recordInstructionElement.textContent = 'Conversation completed. Prepare your response.';
+                    }
+                    return;
+                }
+                
+                const line = lines[lineIndex].trim();
+                if (!line) {
+                    speakNextLine(lineIndex + 1);
+                    return;
+                }
+                
+                // Determine speaker based on line content
+                let voice = femaleVoice;
+                let speakerName = '';
+                
+                if (line.includes('Female Student:') || line.includes('Woman:') || line.includes('Female:')) {
+                    voice = femaleVoice;
+                    speakerName = 'Female Student';
+                } else if (line.includes('Male Student:') || line.includes('Man:') || line.includes('Male:')) {
+                    voice = maleVoice;
+                    speakerName = 'Male Student';
+                } else {
+                    // If no explicit speaker, alternate between voices
+                    voice = (currentSpeakerIndex % 2 === 0) ? femaleVoice : maleVoice;
+                    speakerName = (currentSpeakerIndex % 2 === 0) ? 'Female Student' : 'Male Student';
+                    currentSpeakerIndex++;
+                }
+                
+                // Clean the text (remove speaker labels)
+                let cleanText = line
+                    .replace(/^(Female Student:|Male Student:|Woman:|Man:|Female:|Male:)\s*/, '')
+                    .trim();
+                
+                if (!cleanText) {
+                    speakNextLine(lineIndex + 1);
+                    return;
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.voice = voice;
+                utterance.rate = 0.85; // Appropriate for listening comprehension
+                utterance.pitch = voice === femaleVoice ? 1.1 : 0.8; // Higher pitch for female, lower for male
+                utterance.volume = 0.9;
+                
+                // Update UI to show current speaker
+                if (recordInstructionElement) {
+                    recordInstructionElement.textContent = `🔊 ${speakerName}: "${cleanText.substring(0, 50)}${cleanText.length > 50 ? '...' : ''}"`;
+                }
+                
+                utterance.onend = () => {
+                    console.log(`🔊 Completed: ${speakerName}`);
+                    // Small pause between speakers
+                    setTimeout(() => {
+                        speakNextLine(lineIndex + 1);
+                    }, 500);
+                };
+                
+                utterance.onerror = (event) => {
+                    console.error("🔊 Speech error:", event.error);
+                    speakNextLine(lineIndex + 1);
+                };
+                
+                console.log(`🔊 Speaking as ${speakerName}:`, cleanText.substring(0, 50) + "...");
+                speechSynthesis.speak(utterance);
+            }
+            
+            // Start speaking the conversation
+            speakNextLine(0);
+        }
+
+        function updateContent(content, phase) {
+            console.log("📝 Updating content display with:", content);
+            
+            try {
+                // Update question title
+                const titleElement = document.getElementById('question-title');
+                if (titleElement && content.metadata) {
+                    titleElement.textContent = content.metadata.title || 'TOEFL Speaking Task';
+                }
+                
+                // Update question text based on phase
+                const questionElement = document.getElementById('question-text');
+                if (questionElement) {
+                    let questionHTML = '';
+                    
+                    if (phase === 'introduction') {
+                        questionHTML = `
+                            <div class="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-lg">
+                                <h4 class="font-bold text-purple-900 mb-3 text-lg flex items-center">
+                                    🎯 Task Introduction
+                                </h4>
+                                <p class="text-purple-800 text-base font-medium mb-2">Listen carefully to the task instructions.</p>
+                                <p class="text-purple-600 text-sm">The test will begin automatically after the introduction.</p>
+                            </div>
+                            <div class="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                                <h4 class="font-semibold text-gray-900 mb-2">Your Question:</h4>
+                                <p class="text-gray-700 text-sm">${content.question_prompt || 'Loading question...'}</p>
+                            </div>
+                        `;
+                    } else                     if (phase === 'reading') {
+                        questionHTML = `
+                            <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg">
+                                <h4 class="font-bold text-blue-900 mb-3 text-lg flex items-center">
+                                    📖 Reading Phase
+                                </h4>
+                                <p class="text-blue-800 text-base font-medium mb-2">Read the passage silently by yourself.</p>
+                                <p class="text-blue-600 text-sm">You have 50 seconds to read. Do not read aloud.</p>
+                            </div>
+                        `;
+                    } else if (phase === 'listening') {
+                        questionHTML = `
+                            <div class="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg">
+                                <h4 class="font-bold text-green-900 mb-3 text-lg flex items-center">
+                                    🔊 Listening Phase
+                                </h4>
+                                <p class="text-green-800 text-base font-medium mb-2">Listen to the conversation between two students.</p>
+                                <p class="text-green-600 text-sm">You will hear it once with two different voices. Listen carefully.</p>
+                            </div>
+                        `;
+                    } else if (phase === 'preparation' || phase === 'response') {
+                        questionHTML = `
+                            <div class="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg">
+                                <h4 class="font-bold text-yellow-900 mb-3 text-lg flex items-center">
+                                    ❓ Your Question
+                                </h4>
+                                <p class="text-yellow-800 font-medium text-base leading-relaxed">${content.question_prompt}</p>
+                            </div>
+                            <div class="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                                <h4 class="font-semibold text-gray-900 mb-2">Instructions:</h4>
+                                <p class="text-gray-700 text-sm">${content.instructions}</p>
+                            </div>
+                        `;
+                    } else {
+                        // Default display
+                        questionHTML = `
+                            <div class="mb-4">
+                                <h4 class="font-semibold text-gray-900 mb-2">Question:</h4>
+                                <p class="text-gray-700">${content.question_prompt}</p>
+                            </div>
+                            <div class="mb-4">
+                                <h4 class="font-semibold text-gray-900 mb-2">Instructions:</h4>
+                                <p class="text-gray-600 text-sm">${content.instructions}</p>
+                            </div>
+                        `;
+                    }
+                    
+                    questionElement.innerHTML = questionHTML;
+                }
+                
+                // Update additional content (reading passage, listening script, etc.)
+                const additionalContentElement = document.getElementById('additional-content');
+                if (additionalContentElement) {
+                    let additionalHTML = '';
+                    
+                    if (content.reading_passage) {
+                        if (phase === 'reading') {
+                            // During reading phase, show the passage for students to read silently
+                            additionalHTML += `
+                                <div class="mb-6 p-4 bg-blue-50 border-2 border-blue-300 rounded-lg">
+                                    <h4 class="font-bold text-blue-900 mb-3 text-lg">📖 Reading Passage</h4>
+                                    <div class="text-blue-800 text-base leading-relaxed whitespace-pre-line bg-white p-4 rounded border">${content.reading_passage}</div>
+                                    <p class="mt-3 text-blue-600 text-sm font-medium">📖 Read this passage silently. You have 50 seconds.</p>
+                                </div>
+                            `;
+                        } else if (phase === 'listening' || phase === 'preparation' || phase === 'response') {
+                            // After reading, show the passage for reference
+                            additionalHTML += `
+                                <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <h4 class="font-semibold text-blue-900 mb-2">Reading Passage (Reference):</h4>
+                                    <div class="text-blue-800 text-sm whitespace-pre-line">${content.reading_passage}</div>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // Handle listening script based on phase
+                    if (content.listening_script) {
+                        if (phase === 'listening') {
+                            // During listening phase, show listening indicator instead of text
+                            additionalHTML += `
+                                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <h4 class="font-semibold text-green-900 mb-2">🔊 Listening Phase</h4>
+                                    <div class="text-green-800 text-sm">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="animate-pulse w-2 h-2 bg-green-500 rounded-full"></div>
+                                            <span>Listen carefully to the conversation between two students...</span>
+                                        </div>
+                                        <p class="mt-2 text-green-600 text-xs">The conversation will be played once with two different voices.</p>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (phase === 'preparation' || phase === 'response') {
+                            // After listening, show the script for reference
+                            additionalHTML += `
+                                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <h4 class="font-semibold text-green-900 mb-2">Conversation (Reference):</h4>
+                                    <div class="text-green-800 text-sm whitespace-pre-line">${content.listening_script}</div>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    additionalContentElement.innerHTML = additionalHTML;
+                }
+                
+                console.log("✅ Content display updated successfully");
+            } catch (error) {
+                console.error("❌ Error updating content display:", error);
+            }
+        }
+
+        function updatePhase(phase, taskType) {
+            console.log("🔄 Updating phase:", phase);
+            
+            try {
+                // Update phase indicator
+                const phaseIndicatorElement = document.getElementById('phase-indicator');
+                if (phaseIndicatorElement) {
+                    // Remove existing phase classes
+                    phaseIndicatorElement.classList.remove('preparation', 'response', 'introduction', 'reading', 'listening');
+                    
+                    // Add new phase class and update text
+                    switch (phase) {
+                        case 'introduction':
+                            phaseIndicatorElement.classList.add('preparation');
+                            phaseIndicatorElement.textContent = 'Introduction';
+                            break;
+                        case 'reading':
+                            phaseIndicatorElement.classList.add('preparation');
+                            phaseIndicatorElement.textContent = 'Reading Time';
+                            break;
+                        case 'listening':
+                            phaseIndicatorElement.classList.add('preparation');
+                            phaseIndicatorElement.textContent = 'Listening Time';
+                            break;
+                        case 'preparation':
+                            phaseIndicatorElement.classList.add('preparation');
+                            phaseIndicatorElement.textContent = 'Preparation Time';
+                            break;
+                        case 'response':
+                            phaseIndicatorElement.classList.add('response');
+                            phaseIndicatorElement.textContent = 'Response Time';
+                            break;
+                        default:
+                            phaseIndicatorElement.classList.add('preparation');
+                            phaseIndicatorElement.textContent = 'Preparing...';
+                    }
+                }
+                
+                // Update record button visibility and instruction
+                const recordButton = document.getElementById('record-btn');
+                const recordInstructionElement = document.getElementById('record-instruction');
+                
+                if (recordButton && recordInstructionElement) {
+                    switch (phase) {
+                        case 'introduction':
+                            recordButton.style.display = 'none';
+                            recordInstructionElement.textContent = 'Listen to the question introduction';
+                            break;
+                        case 'reading':
+                            recordButton.style.display = 'none';
+                            recordInstructionElement.textContent = 'Read the passage carefully';
+                            break;
+                        case 'listening':
+                            recordButton.style.display = 'none';
+                            recordInstructionElement.textContent = 'Listen to the audio carefully - do not take notes';
+                            break;
+                        case 'preparation':
+                            recordButton.style.display = 'none';
+                            recordInstructionElement.textContent = 'Prepare your response - think about your answer';
+                            break;
+                        case 'response':
+                            recordButton.style.display = 'flex';
+                            recordInstructionElement.textContent = 'Recording will start automatically...';
+                            
+                            // Add click handler for manual toggle if not already added
+                            if (!recordButton.hasAttribute('data-handler-added')) {
+                                recordButton.addEventListener('click', toggleRecording);
+                                recordButton.setAttribute('data-handler-added', 'true');
+                                console.log("🎤 Record button click handler added");
+                            }
+                            break;
+                        default:
+                            recordButton.style.display = 'none';
+                            recordInstructionElement.textContent = 'Preparing test...';
+                    }
+                }
+                
+                console.log("✅ Phase updated successfully");
+            } catch (error) {
+                console.error("❌ Error updating phase:", error);
+            }
+        }
+        
+        function handlePhaseChange(data) {
+            console.log("🔄 Phase change received:", data);
+            updatePhase(data.phase, data.task_type);
+            
+            // Handle automatic audio playback for new phases
+            if (data.phase === 'introduction' && data.content) {
+                playQuestionAudio(data.content.question_prompt);
+            } else if (data.phase === 'preparation' && data.content) {
+                // Read the question aloud during preparation phase
+                setTimeout(() => {
+                    playQuestionAudio(data.content.question_prompt);
+                }, 500);
+            }
+        }
+        
+        function handleTestComplete(data) {
+            console.log("🏁 Test completed:", data);
+            stopProgressPolling();
+            if (currentTest.timerInterval) {
+                clearInterval(currentTest.timerInterval);
+            }
+            showResults();
+        }
+
+        function showResults() {
+            document.getElementById('test-interface').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+            
+            generateResults();
+        }
+
+        function generateResults() {
+            // Generate simulated results based on test data
+            const scoreDisplay = '24/30'; // This would come from backend
+            document.getElementById('overall-score').textContent = scoreDisplay;
+            
+            // Generate task results
+            const taskResults = document.getElementById('task-results');
+            taskResults.innerHTML = '';
+            
+            for (let i = 1; i <= currentTest.totalTasks; i++) {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'flex justify-between items-center p-3 bg-gray-50 mb-2';
+                taskDiv.style.borderRadius = '16px';
+                taskDiv.innerHTML = `
+                    <span class="font-medium">Task ${i}</span>
+                    <span class="font-bold text-green-600">${Math.floor(Math.random() * 6) + 24}/30</span>
+                `;
+                taskResults.appendChild(taskDiv);
+            }
+            
+            // Add session info
+            const sessionInfo = document.createElement('div');
+            sessionInfo.className = 'mt-4 p-3 bg-blue-50 rounded-lg';
+            sessionInfo.innerHTML = `
+                <p class="text-sm text-blue-800">
+                    <strong>Session ID:</strong> ${currentTest.sessionId || 'N/A'}
+                </p>
+            `;
+            taskResults.appendChild(sessionInfo);
+        }
+
+        // Control functions for buttons
+        function retakeTest() {
+            window.location.reload();
+        }
+
+        function goToDashboard() {
+            window.location.href = 'voice-dashboard.html';
+        }
+
+        function downloadResults() {
+            alert('Results downloaded! (This is a simulation)');
+        }
+
+        async function initializeRecording() {
+            try {
+                console.log("🎤 Initializing recording...");
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        sampleRate: 44100
+                    } 
+                });
+                
+                currentTest.audioStream = stream;
+                currentTest.mediaRecorder = new MediaRecorder(stream);
+                currentTest.recordedChunks = [];
+                
+                currentTest.mediaRecorder.ondataavailable = function(event) {
+                    if (event.data.size > 0) {
+                        currentTest.recordedChunks.push(event.data);
+                        console.log("🎤 Recording data received:", event.data.size, "bytes");
+                    }
+                };
+                
+                currentTest.mediaRecorder.onstop = function() {
+                    console.log("🎤 Recording stopped. Total chunks:", currentTest.recordedChunks.length);
+                    const recordButton = document.getElementById('record-btn');
+                    const recordInstructionElement = document.getElementById('record-instruction');
+                    
+                    if (recordButton) {
+                        recordButton.classList.remove('recording');
+                        recordButton.innerHTML = `
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
+                                <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
+                                <path d="M12 18v4"/>
+                                <path d="M8 22h8"/>
+                            </svg>
+                        `;
+                    }
+                    
+                    if (recordInstructionElement) {
+                        recordInstructionElement.textContent = 'Recording completed';
+                    }
+                    
+                    // Create blob for verification
+                    if (currentTest.recordedChunks.length > 0) {
+                        const blob = new Blob(currentTest.recordedChunks, { type: 'audio/webm' });
+                        console.log("🎤 Recording blob created:", blob.size, "bytes");
+                        currentTest.recordingBlob = blob;
+                    }
+                };
+                
+                currentTest.mediaRecorder.onstart = function() {
+                    console.log("🎤 Recording started successfully");
+                };
+                
+                currentTest.mediaRecorder.onerror = function(event) {
+                    console.error("🎤 Recording error:", event.error);
+                };
+                
+                console.log("🎤 Recording initialized successfully");
+                return true;
+            } catch (error) {
+                console.error("❌ Error initializing recording:", error);
+                showError("Could not access microphone. Please allow microphone access and refresh the page.");
+                return false;
+            }
+        }
+
+        async function toggleRecording() {
+            if (!currentTest.mediaRecorder) {
+                const initialized = await initializeRecording();
+                if (!initialized) return;
+            }
+            
+            const recordButton = document.getElementById('record-btn');
+            const recordInstructionElement = document.getElementById('record-instruction');
+            
+            if (!currentTest.isRecording) {
+                // Start recording
+                currentTest.recordedChunks = [];
+                currentTest.mediaRecorder.start();
+                currentTest.isRecording = true;
+                
+                if (recordButton) {
+                    recordButton.classList.add('recording');
+                    recordButton.innerHTML = `
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <rect x="6" y="6" width="12" height="12" rx="2"/>
+                        </svg>
+                    `;
+                }
+                
+                if (recordInstructionElement) {
+                    recordInstructionElement.textContent = '🎤 Recording... Speak your response now!';
+                }
+                
+                console.log("🎤 Recording started");
+            } else {
+                // Stop recording
+                currentTest.mediaRecorder.stop();
+                currentTest.isRecording = false;
+                
+                console.log("🎤 Recording stopped");
+            }
+        }
+
+        // Voice testing and debugging functions
+        function testVoices() {
+            console.log("🧪 Testing voice synthesis...");
+            
+            if (!speechSynthesis) {
+                console.error("❌ Speech synthesis not supported");
+                alert("Speech synthesis not supported in this browser");
+                return;
+            }
+            
+            const voices = speechSynthesis.getVoices();
+            console.log("🎭 Available voices:", voices.length);
+            
+            if (voices.length === 0) {
+                console.warn("⚠️ No voices available");
+                alert("No voices available. This might be a browser compatibility issue.");
+                return;
+            }
+            
+            // Log all voices
+            voices.forEach((voice, index) => {
+                console.log(`🎭 Voice ${index + 1}: ${voice.name} (${voice.lang}) - ${voice.default ? 'DEFAULT' : ''}`);
+            });
+            
+            // Test with first available voice
+            const testVoice = voices[0];
+            const utterance = new SpeechSynthesisUtterance("Hello! This is a test of the voice synthesis system. Can you hear me speaking?");
+            utterance.voice = testVoice;
+            utterance.rate = 0.9;
+            utterance.volume = 0.8;
+            
+            // Add event handlers for debugging
+            utterance.onstart = () => console.log("🔊 Test utterance started");
+            utterance.onend = () => console.log("🔊 Test utterance completed");
+            utterance.onerror = (event) => console.error("🔊 Test utterance error:", event.error);
+            
+            console.log("🔊 Testing voice:", testVoice.name);
+            speechSynthesis.speak(utterance);
+            
+            // Show voice info to user
+            alert(`Found ${voices.length} voices. Testing with: ${testVoice.name}\nCheck console for full voice list.`);
+        }
+        
+        // Check browser audio settings and permissions
+        function checkAudioSettings() {
+            console.log("🔍 Checking audio settings...");
+            
+            let issues = [];
+            
+            // Check if speech synthesis is supported
+            if (!speechSynthesis) {
+                issues.push("Speech synthesis not supported in this browser");
+            }
+            
+            // Check if voices are loaded
+            if (!voicesLoaded) {
+                issues.push("Voices not yet loaded");
+            }
+            
+            // Check browser type and known issues
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes('Chrome')) {
+                console.log("🌐 Chrome detected - checking for known issues");
+                // Chrome sometimes has issues with speech synthesis in certain contexts
+                if (window.location.protocol === 'file:') {
+                    issues.push("Chrome may have issues with speech synthesis on local files");
+                }
+            } else if (userAgent.includes('Safari')) {
+                console.log("🌐 Safari detected - checking for known issues");
+                // Safari requires user interaction before playing audio
+                issues.push("Safari requires user interaction before playing audio");
+            }
+            
+            // Check if page is muted
+            if (document.mozHidden !== undefined && document.mozHidden) {
+                issues.push("Page may be hidden/tab not active");
+            }
+            
+            // Check for autoplay restrictions
+            if (window.location.protocol === 'https:' && window.location.protocol !== 'file:') {
+                console.log("🔒 HTTPS detected - autoplay restrictions may apply");
+            }
+            
+            if (issues.length > 0) {
+                console.warn("⚠️ Potential audio issues detected:");
+                issues.forEach(issue => console.warn("  - " + issue));
+                alert("Audio issues detected:\n\n" + issues.join("\n") + "\n\nCheck console for details.");
+            } else {
+                console.log("✅ No obvious audio issues detected");
+                alert("No obvious audio issues detected. If you still can't hear audio, check:\n\n1. Browser volume settings\n2. System volume\n3. Browser console for errors");
+            }
+        }
+        
+        // Make functions globally available
+        window.retakeTest = retakeTest;
+        window.goToDashboard = goToDashboard;
+        window.downloadResults = downloadResults;
+        window.testVoices = testVoices;
+        window.checkAudioSettings = checkAudioSettings;
+    </script>
+</body>
+</html>

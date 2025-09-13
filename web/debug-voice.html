@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Agent Debug - UTERNITY</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Voice Agent Diagnostic</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Backend Tests -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">Backend Connection</h2>
+                <button onclick="testBackend()" class="bg-blue-500 text-white px-4 py-2 rounded mb-4">Test Backend</button>
+                <div id="backend-result" class="text-sm"></div>
+            </div>
+            
+            <!-- API Tests -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">API Services</h2>
+                <button onclick="testAPI()" class="bg-green-500 text-white px-4 py-2 rounded mb-4">Test API</button>
+                <div id="api-result" class="text-sm"></div>
+            </div>
+            
+            <!-- WebSocket Tests -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">WebSocket Connection</h2>
+                <button onclick="testWebSocket()" class="bg-purple-500 text-white px-4 py-2 rounded mb-4">Test WebSocket</button>
+                <div id="websocket-result" class="text-sm"></div>
+            </div>
+            
+            <!-- Audio Tests -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">Audio Capture</h2>
+                <button onclick="testAudio()" class="bg-red-500 text-white px-4 py-2 rounded mb-4">Test Audio</button>
+                <div id="audio-result" class="text-sm"></div>
+            </div>
+            
+            <!-- Session Tests -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">Session Creation</h2>
+                <button onclick="testSession()" class="bg-yellow-500 text-white px-4 py-2 rounded mb-4">Test Session</button>
+                <div id="session-result" class="text-sm"></div>
+            </div>
+            
+            <!-- Full Integration Test -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">Full Integration</h2>
+                <button onclick="testFull()" class="bg-indigo-500 text-white px-4 py-2 rounded mb-4">Test Everything</button>
+                <div id="full-result" class="text-sm"></div>
+            </div>
+        </div>
+        
+        <div class="mt-8 bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4">Console Log</h2>
+            <div id="console-log" class="bg-gray-100 p-4 rounded text-sm font-mono h-64 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import services
+        import { apiService } from './js/services/api.js';
+        import { authService } from './js/services/auth.js';
+        import { sessionStore } from './js/stores/sessionStore.js';
+        
+        window.apiService = apiService;
+        window.authService = authService;
+        window.sessionStore = sessionStore;
+        
+        // Override console.log to show in our debug panel
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const logDiv = document.getElementById('console-log');
+            if (logDiv) {
+                logDiv.innerHTML += args.join(' ') + '\n';
+                logDiv.scrollTop = logDiv.scrollHeight;
+            }
+        };
+        
+        console.log('🚀 Debug page loaded');
+    </script>
+    
+    <script>
+        async function updateResult(elementId, status, message, details = '') {
+            const element = document.getElementById(elementId);
+            const statusColor = status === 'success' ? 'text-green-600' : 
+                               status === 'warning' ? 'text-yellow-600' : 'text-red-600';
+            const statusIcon = status === 'success' ? '✅' : 
+                              status === 'warning' ? '⚠️' : '❌';
+            
+            element.innerHTML = `
+                <div class="${statusColor} font-medium">${statusIcon} ${message}</div>
+                ${details ? `<div class="text-gray-600 mt-2">${details}</div>` : ''}
+            `;
+        }
+        
+        async function testBackend() {
+            console.log('🔍 Testing backend connection...');
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                if (response.ok) {
+                    updateResult('backend-result', 'success', 'Backend Connected', 
+                        `Status: ${response.status}, Server: uvicorn`);
+                } else {
+                    updateResult('backend-result', 'error', 'Backend Error', 
+                        `Status: ${response.status}`);
+                }
+            } catch (error) {
+                updateResult('backend-result', 'error', 'Backend Unreachable', 
+                    `Error: ${error.message}`);
+            }
+        }
+        
+        async function testAPI() {
+            console.log('🔍 Testing API services...');
+            try {
+                if (!window.apiService) {
+                    throw new Error('API service not loaded');
+                }
+                
+                const health = await window.apiService.checkHealth();
+                updateResult('api-result', 'success', 'API Service Working', 
+                    'API client initialized and responsive');
+            } catch (error) {
+                updateResult('api-result', 'error', 'API Service Failed', 
+                    `Error: ${error.message}`);
+            }
+        }
+        
+        async function testWebSocket() {
+            console.log('🔍 Testing WebSocket connection...');
+            try {
+                const ws = new WebSocket('ws://localhost:8000/api/v1/ws/test-session');
+                
+                ws.onopen = () => {
+                    console.log('✅ WebSocket connected');
+                    updateResult('websocket-result', 'success', 'WebSocket Connected', 
+                        'Successfully connected to ws://localhost:8000');
+                    ws.close();
+                };
+                
+                ws.onerror = (error) => {
+                    console.error('❌ WebSocket error:', error);
+                    updateResult('websocket-result', 'error', 'WebSocket Failed', 
+                        'Could not connect to WebSocket server');
+                };
+                
+                ws.onclose = () => {
+                    console.log('🔌 WebSocket closed');
+                };
+                
+                // Timeout after 5 seconds
+                setTimeout(() => {
+                    if (ws.readyState === WebSocket.CONNECTING) {
+                        ws.close();
+                        updateResult('websocket-result', 'error', 'WebSocket Timeout', 
+                            'Connection timeout after 5 seconds');
+                    }
+                }, 5000);
+                
+            } catch (error) {
+                updateResult('websocket-result', 'error', 'WebSocket Error', 
+                    `Error: ${error.message}`);
+            }
+        }
+        
+        async function testAudio() {
+            console.log('🔍 Testing audio capture...');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                console.log('✅ Microphone access granted');
+                
+                // Stop the stream
+                stream.getTracks().forEach(track => track.stop());
+                
+                updateResult('audio-result', 'success', 'Audio Access Granted', 
+                    'Microphone permissions available');
+            } catch (error) {
+                console.error('❌ Audio access failed:', error);
+                updateResult('audio-result', 'error', 'Audio Access Denied', 
+                    `Error: ${error.message}`);
+            }
+        }
+        
+        async function testSession() {
+            console.log('🔍 Testing session creation...');
+            try {
+                if (!window.sessionStore) {
+                    throw new Error('Session store not loaded');
+                }
+                
+                const result = await window.sessionStore.createSession('toefl', 'full', {});
+                if (result.success) {
+                    updateResult('session-result', 'success', 'Session Created', 
+                        `Session ID: ${result.session.id}`);
+                } else {
+                    updateResult('session-result', 'error', 'Session Failed', 
+                        `Error: ${result.error}`);
+                }
+            } catch (error) {
+                updateResult('session-result', 'error', 'Session Error', 
+                    `Error: ${error.message}`);
+            }
+        }
+        
+        async function testFull() {
+            console.log('🔍 Running full integration test...');
+            let results = [];
+            
+            try {
+                // Test each component
+                await testBackend();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await testAPI();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await testWebSocket();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await testAudio();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                await testSession();
+                
+                updateResult('full-result', 'success', 'Integration Test Complete', 
+                    'All components tested - check individual results above');
+                
+            } catch (error) {
+                updateResult('full-result', 'error', 'Integration Test Failed', 
+                    `Error: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html> 

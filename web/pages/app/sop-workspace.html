@@ -1,0 +1,2447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="If-Modified-Since" content="0">
+    <title>SOP Writing Workspace - UTERNITY</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237c3aed'><path d='M12 4L4 8L12 12L20 8L12 4Z'/><path d='M4 12L12 16L20 12'/><path d='M4 16L12 20L20 16'/></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../../js/sop-api.js?v=3.0&t=1754102389"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Hide scrollbars for all elements */
+        * {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+        
+        *::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        /* Header styling to ensure visibility */
+        #header-container {
+            position: relative;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .header-container {
+            position: relative;
+            z-index: 50;
+            padding: 1rem;
+            margin-bottom: 0;
+        }
+
+        .header-nav {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            border-radius: 24px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 10px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link i {
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1);
+        }
+
+        .nav-link.active i {
+            transform: scale(1.1);
+        }
+
+        /* Main container with proper spacing for header */
+        .main-container {
+            height: calc(100vh - 80px);
+            padding: 3.2px 0;
+            display: flex;
+            overflow: hidden;
+            padding-top: 3.2px;
+        }
+
+        /* Enhanced Layout */
+        .sop-workspace {
+            display: flex;
+            height: 100%;
+            gap: 24px;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        /* Left Sidebar - Section Navigation & Progress */
+        .sop-sidebar {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Section Progress Card */
+        .section-progress-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            overflow: hidden;
+        }
+
+        .section-progress-header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .section-list {
+            padding: 16px;
+        }
+
+        .section-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .section-item:hover {
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            border-color: #8b5cf6;
+        }
+
+        .section-item.active {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .section-item.completed {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-info {
+            flex: 1;
+        }
+
+        .section-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .section-status {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .section-progress {
+            width: 60px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .section-progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* History Button */
+        .history-button-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            overflow: hidden;
+            padding: 16px;
+        }
+
+        .history-button {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .history-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .history-count {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* SOP Preview Button */
+        .sop-preview-button-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            overflow: hidden;
+            padding: 16px;
+        }
+
+        .sop-preview-button {
+            width: 100%;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .sop-preview-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .preview-status {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* History Modal */
+        .history-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .history-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .history-modal-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .history-modal.show .history-modal-content {
+            transform: scale(1);
+        }
+
+        .history-modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .history-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .history-modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .history-modal-body {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border-left: 4px solid #8b5cf6;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            transform: translateY(-2px);
+        }
+
+        .history-item.new {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        }
+
+        .history-item.new:hover {
+            background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+        }
+
+        .university-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .program-name {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+
+        .progress-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-info span {
+            font-size: 12px;
+            color: #8b5cf6;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 80px;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #8b5cf6;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .last-updated {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .history-item.new .university-name {
+            color: #059669;
+        }
+
+        .history-item.new .program-name {
+            color: #10b981;
+        }
+
+        /* SOP Preview Modal */
+        .sop-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sop-preview-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sop-preview-modal-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        /* Adjust SOP modal when AI assistant is open */
+        .sop-preview-modal.ai-assistant-open .sop-preview-modal-content {
+            width: calc(95% - 400px);
+            max-width: calc(800px - 400px);
+        }
+
+        .sop-preview-modal.show .sop-preview-modal-content {
+            transform: scale(1);
+        }
+
+        .sop-preview-modal-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-assistant-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-assistant-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .sop-preview-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .sop-preview-modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sop-preview-modal-body {
+            padding: 0;
+            height: calc(90vh - 80px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .editor-toolbar {
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .toolbar-btn:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .toolbar-btn.active {
+            background: #8b5cf6;
+            color: white;
+            border-color: #8b5cf6;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 24px;
+            background: #e5e7eb;
+            margin: 0 4px;
+        }
+
+        .editor-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            border: none;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+
+        .editor-content:focus {
+            outline: none;
+        }
+
+        .editor-content h2 {
+            color: #1f2937;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .editor-content p {
+            margin-bottom: 16px;
+        }
+
+        .editor-content strong {
+            color: #8b5cf6;
+            font-weight: 600;
+        }
+
+        /* AI Assistant Sidebar */
+        .ai-assistant-modal {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 400px;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1100;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            border-radius: 0;
+        }
+
+        .ai-assistant-modal.show {
+            transform: translateX(0);
+        }
+
+        .ai-assistant-modal-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 0;
+            box-shadow: none;
+            width: 100%;
+            max-width: none;
+            max-height: none;
+            overflow: hidden;
+            transform: none;
+            transition: none;
+        }
+
+        .ai-assistant-modal.show .ai-assistant-modal-content {
+            transform: none;
+        }
+
+        .ai-assistant-modal-header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ai-assistant-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .ai-assistant-modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-assistant-modal-body {
+            padding: 20px;
+            height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-assistant-chat {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .ai-message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .ai-content {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 12px;
+            flex: 1;
+        }
+
+        .ai-content p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .ai-content ul {
+            margin-bottom: 12px;
+            padding-left: 20px;
+        }
+
+        .ai-content li {
+            margin-bottom: 4px;
+        }
+
+        .ai-assistant-input {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .ai-assistant-input textarea {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: none;
+            min-height: 60px;
+            max-height: 120px;
+        }
+
+        .ai-assistant-input textarea:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        .send-ai-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .send-ai-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* Main Workspace */
+        .sop-main-workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Conversation Area */
+        .conversation-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .conversation-header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 14px 20px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 56px;
+        }
+
+        .conversation-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .progress-dot.active {
+            background: white;
+        }
+
+        .progress-dot.completed {
+            background: #10b981;
+        }
+
+        /* Conversation Starter */
+        .conversation-starter {
+            padding: 24px;
+            background: linear-gradient(135deg, #fafafa 0%, #f8fafc 100%);
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .starter-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+
+        .starter-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .starter-option {
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            text-align: left;
+        }
+
+        .starter-option:hover {
+            border-color: #8b5cf6;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            transform: translateY(-2px);
+        }
+
+        .starter-option.selected {
+            border-color: #8b5cf6;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .option-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #8b5cf6;
+        }
+
+        .starter-option.selected .option-icon {
+            color: white;
+        }
+
+        .option-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .option-description {
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        /* Conversation Area */
+        .conversation-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .conversation-messages {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .message {
+            margin-bottom: 24px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.ai {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .message.user {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .message-avatar.ai {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .message-avatar.user {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+        }
+
+        .message-content {
+            background: #f8fafc;
+            padding: 16px 20px;
+            border-radius: 16px;
+            max-width: 80%;
+            line-height: 1.6;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+        }
+
+        .message.ai .message-content {
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+            border: 1px solid #e9d5ff;
+        }
+
+        /* Enhanced Input Area */
+        .conversation-input {
+            padding: 32px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .input-container:focus-within {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1), 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-field {
+            flex: 1;
+            position: relative;
+        }
+
+        .story-textarea {
+            width: 100%;
+            min-height: 60px;
+            max-height: 200px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 0;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: all 0.2s ease;
+            background: transparent;
+            outline: none;
+        }
+
+        .story-textarea::placeholder {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .continue-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .skip-btn {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .skip-btn:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.2);
+        }
+
+
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sop-workspace {
+                flex-direction: column;
+            }
+            
+            .sop-sidebar {
+                width: 100%;
+                flex-direction: row;
+                gap: 16px;
+            }
+            
+            .section-progress-card,
+            .story-fragments-card {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sop-sidebar {
+                flex-direction: column;
+            }
+            
+            .starter-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Container -->
+    <div id="header-container"></div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="sop-workspace">
+            <!-- Left Sidebar -->
+            <div class="sop-sidebar">
+                <!-- Section Progress Card -->
+                <div class="section-progress-card">
+                    <div class="section-progress-header">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        SOP Progress
+                    </div>
+                    <div class="section-list">
+                        <div class="section-item active" data-section="personal_motivation">
+                            <div class="section-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="section-info">
+                                <div class="section-name">Personal Motivation</div>
+                                <div class="section-status">In Progress</div>
+                            </div>
+                            <!-- Removed sidebar mini progress bar as per request -->
+                        </div>
+                        
+                        <div class="section-item" data-section="academic_background">
+                            <div class="section-icon">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="section-info">
+                                <div class="section-name">Academic Background</div>
+                                <div class="section-status">Not Started</div>
+                            </div>
+                            <!-- Removed sidebar mini progress bar as per request -->
+                        </div>
+                        
+                        <div class="section-item" data-section="professional_experience">
+                            <div class="section-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="section-info">
+                                <div class="section-name">Professional Experience</div>
+                                <div class="section-status">Not Started</div>
+                            </div>
+                            <!-- Removed sidebar mini progress bar as per request -->
+                        </div>
+                        
+                        <div class="section-item" data-section="future_goals">
+                            <div class="section-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="section-info">
+                                <div class="section-name">Future Goals</div>
+                                <div class="section-status">Not Started</div>
+                            </div>
+                            <!-- Removed sidebar mini progress bar as per request -->
+                        </div>
+                        
+                        <div class="section-item" data-section="university_fit">
+                            <div class="section-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <div class="section-info">
+                                <div class="section-name">University Fit</div>
+                                <div class="section-status">Not Started</div>
+                            </div>
+                            <!-- Removed sidebar mini progress bar as per request -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOP Preview Button -->
+                <div class="sop-preview-button-card">
+                    <button id="sopPreviewButton" class="sop-preview-button">
+                        <i class="fas fa-eye mr-2"></i>
+                        SOP Preview
+                        <span class="preview-status">Draft</span>
+                    </button>
+                </div>
+
+                <!-- Back to Dashboard Button (identical layout to previous) -->
+                <div class="history-button-card">
+                    <button id="backToDashboard" class="history-button">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Dashboard
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Main Workspace -->
+            <div class="sop-main-workspace">
+                <!-- Conversation Card -->
+                <div class="conversation-card">
+                    <div class="conversation-header">
+                        <div id="conversationHeaderTitle">
+                            <i class="fas fa-university mr-2"></i>
+                            <!-- Will be replaced by target university/program -->
+                        </div>
+                        <div class="conversation-progress">
+                            <!-- dots removed as requested -->
+                            <div id="section-progress-mini" style="display:flex;align-items:center;gap:8px;margin-left:12px;">
+                                <div class="bg-white/30" style="width:120px;height:6px;border-radius:9999px;overflow:hidden;">
+                                    <div id="section-progress-mini-fill" class="bg-white" style="width:0%;height:100%;"></div>
+                                </div>
+                                <span id="section-progress-mini-text" style="font-size:12px;opacity:0.9;">0%</span>
+                            </div>
+                            <button id="saveSectionBtn" class="toolbar-btn" style="margin-left:12px" title="Save section to a university">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Conversation Starter -->
+                    <div id="conversationStarter" class="conversation-starter">
+                        <div class="starter-title">How would you like to start developing your SOP?</div>
+                        <div class="starter-options">
+                            <div class="starter-option" data-option="has-story">
+                                <div class="option-icon">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <div class="option-title">I have a story in mind</div>
+                                <div class="option-description">I know the experiences I want to share and need help developing them into compelling narratives.</div>
+                            </div>
+                            
+                            <div class="starter-option" data-option="use-saved">
+                                <div class="option-icon">
+                                    <i class="fas fa-save"></i>
+                                </div>
+                                <div class="option-title">Use my saved notes</div>
+                                <div class="option-description">I have previous work saved and want to continue developing my SOP from where I left off.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conversation Area -->
+                    <div id="conversationArea" class="conversation-area" style="display: none;">
+                        <div class="conversation-messages" id="conversationMessages">
+                            <!-- Messages will be dynamically added here -->
+                        </div>
+                        
+                        <div class="conversation-input">
+                            <div class="input-container">
+                                <div class="input-field">
+                                    <textarea 
+                                        id="responseInput" 
+                                        class="story-textarea" 
+                                        placeholder="Share your experience, thoughts, or answer the question above..."
+                                        rows="3"
+                                    ></textarea>
+                                </div>
+                                <div class="input-actions">
+                                    <button id="continueBtn" class="action-btn continue-btn" disabled title="Continue">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                    <button class="action-btn skip-btn" title="Skip">
+                                        <i class="fas fa-forward"></i>
+                                    </button>
+                                    <button id="doneBtn" class="action-btn" title="I'm done with this section" style="background:#10b981;color:white;">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="history-modal">
+        <div class="history-modal-content">
+            <div class="history-modal-header">
+                <div>
+                    <i class="fas fa-history mr-2"></i>
+                    SOP History
+                </div>
+                <button class="history-modal-close" id="closeHistoryModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="history-modal-body">
+                <div class="history-item">
+                    <div class="university-name">MIT</div>
+                    <div class="program-name">Computer Science MS</div>
+                    <div class="progress-info">
+                        <span>Progress: 75%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div class="last-updated">Last updated: 2 hours ago</div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="university-name">Stanford</div>
+                    <div class="program-name">AI & Machine Learning</div>
+                    <div class="progress-info">
+                        <span>Progress: 45%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div class="last-updated">Last updated: 1 day ago</div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="university-name">UC Berkeley</div>
+                    <div class="program-name">Data Science MS</div>
+                    <div class="progress-info">
+                        <span>Progress: 20%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    <div class="last-updated">Last updated: 3 days ago</div>
+                </div>
+                
+                <div class="history-item new">
+                    <div class="university-name">+ Add New University</div>
+                    <div class="program-name">Start a new SOP</div>
+                    <div class="progress-info">
+                        <span>Click to begin</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOP Preview Modal -->
+    <div id="sopPreviewModal" class="sop-preview-modal">
+        <div class="sop-preview-modal-content">
+            <div class="sop-preview-modal-header">
+                <div>
+                    <i class="fas fa-eye mr-2"></i>
+                    SOP Preview & Editor
+                </div>
+                <div class="header-actions">
+                    <button class="ai-assistant-btn" id="aiAssistantBtn">
+                        <i class="fas fa-robot"></i>
+                        AI Helper
+                    </button>
+                    <button class="sop-preview-modal-close" id="closeSopPreviewModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="sop-preview-modal-body">
+                <div class="editor-container">
+                    <div class="editor-toolbar">
+                        <button class="toolbar-btn" data-command="bold" title="Bold">
+                            <i class="fas fa-bold"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="italic" title="Italic">
+                            <i class="fas fa-italic"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="underline" title="Underline">
+                            <i class="fas fa-underline"></i>
+                        </button>
+                        <div class="toolbar-separator"></div>
+                        <button class="toolbar-btn" data-command="justifyLeft" title="Align Left">
+                            <i class="fas fa-align-left"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="justifyCenter" title="Align Center">
+                            <i class="fas fa-align-center"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="justifyRight" title="Align Right">
+                            <i class="fas fa-align-right"></i>
+                        </button>
+                        <div class="toolbar-separator"></div>
+                        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+                            <i class="fas fa-list-ul"></i>
+                        </button>
+                        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+                            <i class="fas fa-list-ol"></i>
+                        </button>
+                    </div>
+                    <div class="editor-content" id="sopEditor" contenteditable="true">
+                        <h2>Statement of Purpose</h2>
+                        <p id="sop-empty-hint" style="color:#6b7280;">Your SOP will appear here, section by section, as you complete them.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Modal -->
+    <div id="aiAssistantModal" class="ai-assistant-modal">
+        <div class="ai-assistant-modal-content">
+            <div class="ai-assistant-modal-header">
+                <div>
+                    <i class="fas fa-robot mr-2"></i>
+                    AI Writing Assistant
+                </div>
+                <button class="ai-assistant-modal-close" id="closeAiAssistantModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="ai-assistant-modal-body">
+                <div class="ai-assistant-chat">
+                    <div class="ai-message">
+                        <div class="ai-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="ai-content">
+                            <p>Hello! I'm here to help you improve your SOP. I can help with:</p>
+                            <ul>
+                                <li>Strengthening specific sections</li>
+                                <li>Improving clarity and flow</li>
+                                <li>Adding compelling details</li>
+                                <li>Ensuring proper structure</li>
+                            </ul>
+                            <p>What section would you like me to help you with?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-assistant-input">
+                    <textarea id="aiAssistantInput" placeholder="Ask me to help with any section of your SOP..."></textarea>
+                    <button id="sendAiMessage" class="send-ai-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load header when DOM is ready (exactly like other pages)
+        function loadHeaderNow() {
+            console.log('🔄 Loading header component...');
+            
+            // Always use the simple header structure (like chat page)
+            console.log('🔄 Loading simple header...');
+            document.getElementById('header-container').innerHTML = `
+                <header class="header-container">
+                    <nav class="header-nav">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                                <svg class="w-6 h-6 text-purple-600" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 4L4 8L12 12L20 8L12 4Z" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M4 12L12 16L20 12" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M4 16L12 20L20 16" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <span class="text-2xl font-bold text-white">UTERNITY</span>
+                        </div>
+                        <div class="flex items-center space-x-6">
+                            <a href="chat.html" class="nav-link text-white">
+                                <i class="fas fa-comments mr-2"></i>
+                                Chat
+                            </a>
+                            <a href="sop-create.html" class="nav-link text-white">
+                                <i class="fas fa-file-alt mr-2"></i>
+                                SOP
+                            </a>
+                            <a href="cost-calculator.html" class="nav-link text-white">
+                                <i class="fas fa-calculator mr-2"></i>
+                                Cost Calculator
+                            </a>
+                            <a href="university-recommender.html" class="nav-link text-white">
+                                <i class="fas fa-university mr-2"></i>
+                                Recommend
+                            </a>
+                            <a href="voice-dashboard.html" class="nav-link text-white">
+                                <i class="fas fa-graduation-cap mr-2"></i>
+                                TOEFL/IELTS
+                            </a>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative notification-menu">
+                                <button class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center text-white hover:bg-opacity-30 transition-all">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                            </div>
+                            <div class="relative user-menu">
+                                <button id="userMenuButton" class="flex items-center space-x-2 p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors">
+                                    <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                                        <span id="userInitial" class="text-sm font-semibold text-white">?</span>
+                                    </div>
+                                    <span id="userDisplayName" class="text-white font-medium hidden sm:block"></span>
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+                                <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 hidden" style="z-index: 9999;">
+                                    <div class="px-4 py-2 border-b border-gray-100">
+                                        <p id="userDropdownName" class="text-sm font-medium text-gray-800"></p>
+                                        <p id="userEmail" class="text-xs text-gray-500 mt-1"></p>
+                                    </div>
+                                    <a href="/profile" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                        Profile
+                                    </a>
+                                    <button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                        </svg>
+                                        Sign Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            `;
+            console.log('✅ Simple header created and should be visible!');
+        }
+
+        // Add CSS for dropdown hover functionality
+        const dropdownCSS = `
+            <style>
+                .user-menu:hover #userDropdown {
+                    display: block !important;
+                }
+                .user-menu #userDropdown {
+                    display: none;
+                }
+                .user-menu:hover #userDropdown.hidden {
+                    display: block !important;
+                }
+            </style>
+        `;
+        document.head.insertAdjacentHTML('beforeend', dropdownCSS);
+
+        // Setup header dropdown functionality
+        function setupHeaderDropdowns() {
+            // User dropdown
+            const userMenuButton = document.getElementById('userMenuButton');
+            const userDropdown = document.getElementById('userDropdown');
+            const logoutButton = document.getElementById('logoutButton');
+
+            if (userMenuButton && userDropdown) {
+                userMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('hidden');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Logout functionality
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function() {
+                    localStorage.removeItem('uternity_token');
+                    window.location.href = '/';
+                });
+            }
+        }
+        
+        // Load header immediately if DOM is ready, otherwise wait
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                loadHeaderNow();
+                setupHeaderDropdowns();
+            });
+        } else {
+            loadHeaderNow();
+            setupHeaderDropdowns();
+        }
+
+
+
+        // Enhanced SOP Workspace JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Enhanced SOP Workspace Loaded');
+            
+            // Initialize workspace
+            initializeSOPWorkspace();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Test backend connection
+            testBackendConnection();
+        });
+
+        function initializeSOPWorkspace() {
+            console.log('⚙️ Initializing SOP Workspace...');
+            
+            // Initialize section progress
+            updateSectionProgress();
+            
+            // Initialize SOP history
+            updateSOPHistory();
+            
+            // Set up conversation flow
+            setupConversationFlow();
+        }
+
+        function setupEventListeners() {
+            // Section navigation
+            document.querySelectorAll('.section-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const section = this.dataset.section;
+                    selectSection(section);
+                });
+            });
+
+            // Saved SOPs button
+            const historyButton = document.getElementById('historyButton');
+            if (historyButton) {
+                historyButton.addEventListener('click', function() {
+                    console.log('Navigating to saved SOPs...');
+                    console.log('Current location:', window.location.href);
+                    
+                    // Simple relative navigation - should work with any static server
+                    const newUrl = 'saved-sops.html';
+                    console.log('Navigating to:', newUrl);
+                    window.location.href = newUrl;
+                });
+            }
+
+            // Close history modal
+            const closeHistoryModal = document.getElementById('closeHistoryModal');
+            if (closeHistoryModal) {
+                closeHistoryModal.addEventListener('click', hideHistoryModal);
+            }
+
+            // History modal items
+            document.querySelectorAll('.history-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const universityName = this.querySelector('.university-name').textContent;
+                    handleHistoryItemClick(universityName);
+                });
+            });
+
+            // Close modal when clicking outside
+            const historyModal = document.getElementById('historyModal');
+            if (historyModal) {
+                historyModal.addEventListener('click', function(e) {
+                    if (e.target === historyModal) {
+                        hideHistoryModal();
+                    }
+                });
+            }
+
+            // SOP Preview button
+            const sopPreviewButton = document.getElementById('sopPreviewButton');
+            if (sopPreviewButton) {
+                sopPreviewButton.addEventListener('click', showSopPreviewModal);
+            }
+
+            // Close SOP Preview modal
+            const closeSopPreviewModal = document.getElementById('closeSopPreviewModal');
+            if (closeSopPreviewModal) {
+                closeSopPreviewModal.addEventListener('click', hideSopPreviewModal);
+            }
+
+            // AI Assistant button
+            const aiAssistantBtn = document.getElementById('aiAssistantBtn');
+            if (aiAssistantBtn) {
+                aiAssistantBtn.addEventListener('click', showAiAssistantModal);
+            }
+
+            // Close AI Assistant modal
+            const closeAiAssistantModal = document.getElementById('closeAiAssistantModal');
+            if (closeAiAssistantModal) {
+                closeAiAssistantModal.addEventListener('click', hideAiAssistantModal);
+            }
+
+            // Close AI Assistant when clicking outside (but not on the sidebar itself)
+            document.addEventListener('click', function(e) {
+                const aiModal = document.getElementById('aiAssistantModal');
+                const aiContent = document.querySelector('.ai-assistant-modal-content');
+                
+                if (aiModal && aiModal.classList.contains('show')) {
+                    // If click is outside the sidebar and not on the SOP modal
+                    if (!aiContent.contains(e.target) && !e.target.closest('.sop-preview-modal')) {
+                        hideAiAssistantModal();
+                    }
+                }
+            });
+
+            // Send AI message
+            const sendAiMessage = document.getElementById('sendAiMessage');
+            if (sendAiMessage) {
+                sendAiMessage.addEventListener('click', handleAiMessage);
+            }
+
+            // Editor toolbar
+            document.querySelectorAll('.toolbar-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const command = this.dataset.command;
+                    executeEditorCommand(command);
+                });
+            });
+
+            // Save section button
+            const saveSectionBtn = document.getElementById('saveSectionBtn');
+            if (saveSectionBtn) {
+                saveSectionBtn.addEventListener('click', handleSaveSection);
+            }
+
+            // Starter options
+            document.querySelectorAll('.starter-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const optionType = this.dataset.option;
+                    handleStarterOptionClick(optionType);
+                });
+            });
+
+            // Continue button
+            const continueBtn = document.getElementById('continueBtn');
+            if (continueBtn) {
+                continueBtn.addEventListener('click', handleContinueClick);
+            }
+
+            // Done button to manually advance to next section
+            const doneBtn = document.getElementById('doneBtn');
+            if (doneBtn) {
+                doneBtn.addEventListener('click', async function() {
+                    const readyPrompt = document.getElementById('readyToMovePrompt');
+                    if (readyPrompt) readyPrompt.remove();
+                    
+                    // Generate section content before moving
+                    await generateCurrentSection();
+                    moveToNextSection();
+                });
+            }
+
+            // Input field
+            const responseInput = document.getElementById('responseInput');
+            if (responseInput) {
+                responseInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleContinueClick();
+                    }
+                });
+            }
+        }
+
+        function selectSection(sectionId) {
+            console.log('🎯 Selecting section:', sectionId);
+            
+            // Update active section
+            document.querySelectorAll('.section-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+            
+            // Update conversation context
+            updateConversationContext(sectionId);
+        }
+
+        async function handleStarterOptionClick(optionType) {
+            console.log('🎯 Starter option selected:', optionType);
+            
+            // Hide starter options
+            document.getElementById('conversationStarter').style.display = 'none';
+            
+            // Show conversation area
+            document.getElementById('conversationArea').style.display = 'flex';
+            
+            // Add initial AI message based on option
+            const messages = document.getElementById('conversationMessages');
+            let initialMessage = '';
+            
+            const currentSectionKey = getCurrentSectionApiKey();
+            const sectionGreeting = getSectionGreeting(currentSectionKey);
+            
+            switch(optionType) {
+                case 'has-story':
+                    initialMessage = `🎯 <strong>AI Assistant:</strong> ${sectionGreeting}<br><br>Excellent! I'd love to help you develop your story. Please share the experience, project, or moment you have in mind, and we'll explore it together to create compelling SOP content.`;
+                    break;
+                case 'use-saved':
+                    initialMessage = `🎯 <strong>AI Assistant:</strong> ${sectionGreeting}<br><br>Great! Let's continue working on your saved story. You can select from your previous work or start developing an existing story further.`;
+                    break;
+            }
+            
+            if (messages && initialMessage) {
+                messages.innerHTML = `
+                    <div class="message ai">
+                        <div class="message-avatar ai">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>${initialMessage}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // If brainstorming, fetch an initial question from backend for current section
+            if (optionType === 'need-brainstorm') {
+                const sectionKey = getCurrentSectionApiKey();
+                let questionAdded = false;
+                
+                // Try backend first and ONLY use backend
+                if (window.sopAPI) {
+                    try {
+                        console.log('Attempting to call backend for section questions...');
+                        const res = await window.sopAPI.getSectionQuestions(sectionKey);
+                        console.log('Backend response:', res);
+                        const question = Array.isArray(res) && res[0]?.question ? res[0].question : null;
+                        if (question) {
+                            messages.innerHTML += `
+                                <div class="message ai">
+                                    <div class="message-avatar ai"><i class="fas fa-robot"></i></div>
+                                    <div class="message-content"><p>🎯 <strong>AI Assistant:</strong> ${question}</p></div>
+                                </div>`;
+                            messages.scrollTop = messages.scrollHeight;
+                            questionAdded = true;
+                        }
+                    } catch (e) {
+                        console.error('Backend failed:', e);
+                    }
+                }
+                
+                // Show LLM not working if backend didn't work
+                if (!questionAdded) {
+                    messages.innerHTML += `
+                        <div class="message ai">
+                            <div class="message-avatar ai"><i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i></div>
+                            <div class="message-content"><p>⚠️ <strong>System:</strong> LLM not working. Please check back later.</p></div>
+                        </div>`;
+                    messages.scrollTop = messages.scrollHeight;
+                }
+            }
+            
+            // Enable input
+            document.getElementById('responseInput').focus();
+            document.getElementById('continueBtn').disabled = false;
+        }
+
+        async function handleContinueClick() {
+            const input = document.getElementById('responseInput');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            if (!input || !input.value.trim()) {
+                return;
+            }
+            
+            // Add user message
+            addUserMessage(input.value);
+            
+            // Show loading state
+            continueBtn.disabled = true;
+            continueBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            const sectionKey = getCurrentSectionApiKey();
+            const messages = document.getElementById('conversationMessages');
+            let followUpAdded = false;
+            
+            // Try backend ONLY - no fallbacks
+            if (window.sopAPI) {
+                try {
+                    console.log('Attempting to call backend for follow-up question...');
+                    console.log('User input:', input.value);
+                    // Build simple context by concatenating prior messages to improve completeness scoring
+                    const prior = Array.from(document.querySelectorAll('.conversation-messages .message .message-content p'))
+                        .map(p => p.textContent.trim()).join('\n');
+                    const currentSection = getCurrentSectionApiKey();
+                    const res = await window.sopAPI.getFollowUpQuestion(input.value, prior || null, null, currentSection);
+                    console.log('Backend response:', res);
+                    const followUp = res?.question || res?.follow_up_question;
+
+                    // Update adaptive completeness UI if present
+                    try {
+                        if (res?.completeness && typeof res.completeness.score === 'number') {
+                            applyCompletenessToUI(res.completeness);
+                        }
+                        if (res?.section_complete_suggestion === true || res?.completeness?.suggest_close === true) {
+                            showReadyToMovePrompt();
+                        }
+                    } catch (e) {
+                        console.warn('Completeness UI update failed:', e);
+                    }
+                    if (followUp) {
+                        messages.innerHTML += `
+                            <div class="message ai">
+                                <div class="message-avatar ai"><i class="fas fa-robot"></i></div>
+                                <div class="message-content"><p>🎯 <strong>AI Assistant:</strong> ${followUp}</p></div>
+                            </div>`;
+                        messages.scrollTop = messages.scrollHeight;
+                        followUpAdded = true;
+                    }
+                } catch (e) {
+                    console.error('Backend failed:', e);
+                    showOfflineIndicator();
+                }
+            }
+            
+            // Show LLM not working message if backend didn't work
+            if (!followUpAdded) {
+                messages.innerHTML += `
+                    <div class="message ai">
+                        <div class="message-avatar ai"><i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i></div>
+                        <div class="message-content"><p>⚠️ <strong>System:</strong> LLM not working. Please check back later.</p></div>
+                    </div>`;
+                messages.scrollTop = messages.scrollHeight;
+            }
+                
+                // Clear input and restore button
+                input.value = '';
+                            continueBtn.disabled = false;
+            continueBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                input.focus();
+        }
+
+        // Apply completeness info to mini bar and sidebar row
+        function applyCompletenessToUI(completeness) {
+            const score = Math.max(0, Math.min(1, Number(completeness.score) || 0));
+            const percent = Math.round(score * 100);
+            const fill = document.getElementById('section-progress-mini-fill');
+            const text = document.getElementById('section-progress-mini-text');
+            if (fill) fill.style.width = percent + '%';
+            if (text) text.textContent = percent + '%';
+
+            // Sidebar mini bars were removed; only update status text
+            try {
+                const active = document.querySelector('.section-item.active');
+                const status = active ? active.querySelector('.section-status') : null;
+                if (status) {
+                    const covered = Array.isArray(completeness.covered) ? completeness.covered.length : 0;
+                    const missing = Array.isArray(completeness.missing) ? completeness.missing.length : 0;
+                    status.textContent = percent >= 100 ? 'Complete' : `Progress: ${percent}% (${covered}✓/${missing}▢)`;
+                    if (percent >= 100) active.classList.add('completed'); else active.classList.remove('completed');
+                }
+            } catch (e) {
+                console.warn('Sidebar status update failed:', e);
+            }
+        }
+
+        // Prompt to move to next section when model suggests
+        function showReadyToMovePrompt() {
+            const header = document.querySelector('.conversation-header');
+            if (!header || header.querySelector('.ready-to-move')) return;
+            const prompt = document.createElement('div');
+            prompt.className = 'ready-to-move';
+            prompt.style.cssText = 'position:absolute;right:16px;top:56px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;padding:6px 10px;border-radius:8px;font-size:12px;z-index:10;';
+            prompt.innerHTML = '<i class="fas fa-check-circle" style="margin-right:6px;"></i>Looks complete. Move to next section? <button id="moveNextInline" style="margin-left:8px;background:#10b981;color:white;border:none;border-radius:6px;padding:4px 8px;cursor:pointer;">Next</button>';
+            header.style.position = 'relative';
+            header.appendChild(prompt);
+            const btn = document.getElementById('moveNextInline');
+            if (btn) btn.addEventListener('click', () => { prompt.remove(); moveToNextSection(); });
+            setTimeout(() => { if (prompt && prompt.parentNode) prompt.remove(); }, 12000);
+        }
+
+        // Advance to next section and reset conversation UI
+        function moveToNextSection() {
+            const items = Array.from(document.querySelectorAll('.section-item'));
+            const idx = items.findIndex(el => el.classList.contains('active'));
+            const next = idx >= 0 && idx < items.length - 1 ? items[idx + 1] : null;
+            if (next) {
+                // Clear conversation and move to next section
+                next.click();
+                try {
+                    const messages = document.getElementById('conversationMessages');
+                    if (messages) messages.innerHTML = '';
+                    document.getElementById('conversationStarter').style.display = '';
+                    document.getElementById('conversationArea').style.display = 'none';
+                    applyCompletenessToUI({ score: 0, covered: [], missing: [] });
+                } catch {}
+            }
+        }
+
+        async function generateCurrentSection() {
+            try {
+                const sectionKey = getCurrentSectionApiKey();
+                const messages = document.getElementById('conversationMessages');
+                if (!messages || !sectionKey) return;
+                
+                // Collect story text from chat messages
+                let storyText = Array.from(messages.children)
+                    .map(msg => {
+                        const isUser = msg.classList.contains('user');
+                        const content = msg.querySelector('.message-content p');
+                        return content ? `${isUser ? 'You' : 'AI'}: ${content.textContent.trim()}` : '';
+                    })
+                    .filter(Boolean)
+                    .join('\n\n');
+                
+                // Fallback: use current input if no messages yet
+                if (!storyText || storyText.trim().length === 0) {
+                    const inputEl = document.getElementById('responseInput');
+                    const value = (inputEl && inputEl.value || '').trim();
+                    if (value) storyText = `You: ${value}`;
+                }
+                
+                if (!storyText || storyText.trim().length === 0) return; // nothing to generate
+                
+                console.log(`Generating section for: ${sectionKey}`);
+                // Include target context if available
+                let target = null;
+                try { target = JSON.parse(localStorage.getItem('sopTargetContext') || 'null'); } catch {}
+                const response = await window.sopAPI.generateSectionContent(
+                    sectionKey,
+                    storyText,
+                    target?.fieldOfStudy || null,
+                    target?.university || null,
+                    null
+                );
+                
+                if (response && response.content) {
+                    const editor = document.getElementById('sopEditor');
+                    const emptyHint = document.getElementById('sop-empty-hint');
+                    if (emptyHint) emptyHint.remove();
+                    
+                    const title = sectionKey === 'personal' ? 'Personal Motivation'
+                                 : sectionKey === 'academic' ? 'Academic Background' 
+                                 : sectionKey === 'projects' ? 'Projects'
+                                 : sectionKey === 'professional' ? 'Professional Experience'
+                                 : 'Future Goals / University Fit';
+                    
+                    const block = document.createElement('div');
+                    block.innerHTML = `<p><strong>${title}</strong></p><p>${response.content}</p><br>`;
+                    editor.appendChild(block);
+                    
+                    showSectionAddedToast(title);
+                    console.log(`Added ${title} section to SOP Preview`);
++
++                    // Open preview and scroll to bottom
++                    showSopPreviewModal();
++                    setTimeout(() => { editor.scrollTop = editor.scrollHeight; }, 50);
+                }
+            } catch (error) {
+                console.error('Failed to generate section:', error);
+            }
+        }
+
+        function showSectionAddedToast(title) {
+            const toast = document.createElement('div');
+            toast.textContent = `${title} added to SOP Preview`;
+            toast.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:#fff;padding:10px 14px;border-radius:10px;z-index:2000;box-shadow:0 6px 20px rgba(16,185,129,0.35)';
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 2200);
+        }
+
+        function addUserMessage(text) {
+            const messages = document.getElementById('conversationMessages');
+            if (messages) {
+                const userMessage = `
+                    <div class="message user">
+                        <div class="message-avatar user">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="message-content">
+                            <p>${text}</p>
+                        </div>
+                    </div>
+                `;
+                messages.innerHTML += userMessage;
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        function generateAIResponse(userText) {
+            const messages = document.getElementById('conversationMessages');
+            let aiResponse = '';
+            
+            // Generate intelligent responses based on user input context
+            if (userText.includes('want to go') || userText.includes('study abroad') || userText.includes('united states') || userText.includes('don\'t know what to do')) {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> I understand you want to study in the United States! That\'s a great goal. For your SOP, we need to focus on your experiences that led to this decision. Can you tell me about a specific project, achievement, or experience that sparked your interest in your field and made you want to pursue further studies?';
+            } else if (userText.includes('electric vehicle') || userText.includes('ev') || userText.includes('car') || userText.includes('vehicle')) {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> Excellent! Creating an electric vehicle is a remarkable achievement. Can you tell me more about the specific challenges you faced during this project? What technical difficulties did you encounter, and how did you overcome them?';
+            } else if (userText.includes('project') && (userText.includes('final') || userText.includes('capstone') || userText.includes('senior'))) {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> Great! Final year projects often demonstrate your peak capabilities. What was the most challenging aspect of this project? How did it change your perspective on your field of study?';
+            } else if (userText.includes('team') || userText.includes('group') || userText.includes('collaboration')) {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> Teamwork is crucial in real-world projects. What was your specific role in this project? How did you handle any conflicts or challenges within the team?';
+            } else if (userText.includes('research') && !userText.includes('want to') && !userText.includes('study abroad')) {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> Research experience is valuable for graduate applications. What methodology did you use? What were your key findings or contributions?';
+            } else if (userText.includes('internship') || userText.includes('work experience') || userText.includes('job')) {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> Work experience provides great insights. What were your main responsibilities? What skills did you develop that relate to your academic goals?';
+            } else if (userText.includes('quiz') || userText.includes('test') || userText.includes('exam')) {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> I see you mentioned taking quizzes or tests. Are you referring to entrance exams, course assessments, or certification tests? Could you provide more context about this experience?';
+            } else if (userText.length < 10 || !userText.match(/[a-zA-Z]{3,}/)) {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> I didn\'t quite catch that. Could you please share more details about your experience? For example, tell me about a specific project, research, internship, or achievement you\'re proud of.';
+            } else {
+                aiResponse = '🎯 <strong>AI Assistant:</strong> Thanks for sharing! To help you craft a strong SOP, I need to understand your background better. Can you tell me about a specific experience, project, or achievement that demonstrates your passion for your field? What made it meaningful to you?';
+            }
+            
+            const aiMessage = `
+                <div class="message ai">
+                    <div class="message-avatar ai">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>${aiResponse}</p>
+                    </div>
+                </div>
+            `;
+            
+            messages.innerHTML += aiMessage;
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function updateSectionProgress() {
+            // Update progress indicators based on conversation state
+            console.log('📊 Updating section progress...');
+        }
+
+        function updateSOPHistory() {
+            // No-op: saved SOPs counter removed
+        }
+
+        function setupConversationFlow() {
+            // Set up conversation flow and progression
+            console.log('🔄 Setting up conversation flow...');
+            const backBtn = document.getElementById('backToDashboard');
+            if (backBtn) backBtn.addEventListener('click', () => {
+                window.location.href = 'sop-create.html';
+            });
+        }
+
+        function showHistoryModal() {
+            console.log('📚 Showing history modal');
+            const modal = document.getElementById('historyModal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function hideHistoryModal() {
+            console.log('📚 Hiding history modal');
+            const modal = document.getElementById('historyModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        function handleHistoryItemClick(universityName) {
+            console.log('🎓 History item clicked:', universityName);
+            
+            // Hide modal first
+            hideHistoryModal();
+            
+            if (universityName === '+ Add New University') {
+                // Start new SOP for a new university
+                console.log('🆕 Starting new SOP for new university');
+                showNewUniversityDialog();
+            } else {
+                // Load existing SOP for selected university
+                console.log('📖 Loading existing SOP for:', universityName);
+                loadExistingSOP(universityName);
+            }
+        }
+
+        function showNewUniversityDialog() {
+            // Show dialog to add new university
+            console.log('🎯 Showing new university dialog');
+            // This would open a modal or form to add new university
+            alert('New University feature coming soon!');
+        }
+
+        function loadExistingSOP(universityName) {
+            // Load existing SOP for the selected university
+            console.log('📚 Loading SOP for:', universityName);
+            // This would load the saved SOP data and continue conversation
+            alert(`Loading SOP for ${universityName}...`);
+        }
+
+        function showSopPreviewModal() {
+            console.log('📝 Showing SOP Preview modal');
+            const modal = document.getElementById('sopPreviewModal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function hideSopPreviewModal() {
+            console.log('📝 Hiding SOP Preview modal');
+            const modal = document.getElementById('sopPreviewModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        function showAiAssistantModal() {
+            console.log('🤖 Showing AI Assistant sidebar');
+            const modal = document.getElementById('aiAssistantModal');
+            const sopModal = document.getElementById('sopPreviewModal');
+            if (modal) {
+                modal.classList.add('show');
+                // Add class to SOP modal to adjust its width
+                if (sopModal) {
+                    sopModal.classList.add('ai-assistant-open');
+                }
+            }
+        }
+
+        function hideAiAssistantModal() {
+            console.log('🤖 Hiding AI Assistant sidebar');
+            const modal = document.getElementById('aiAssistantModal');
+            const sopModal = document.getElementById('sopPreviewModal');
+            if (modal) {
+                modal.classList.remove('show');
+                // Remove class from SOP modal to restore its width
+                if (sopModal) {
+                    sopModal.classList.remove('ai-assistant-open');
+                }
+            }
+        }
+
+        function handleAiMessage() {
+            const input = document.getElementById('aiAssistantInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            console.log('🤖 AI Assistant message:', message);
+            
+            // Add user message to chat
+            addAiChatMessage('user', message);
+            
+            // Clear input
+            input.value = '';
+            
+            // Simulate AI response
+            setTimeout(() => {
+                const aiResponse = generateAiAssistantResponse(message);
+                addAiChatMessage('ai', aiResponse);
+            }, 1000);
+        }
+
+        function addAiChatMessage(type, content) {
+            const chat = document.querySelector('.ai-assistant-chat');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'ai' ? 'ai-message' : 'user-message';
+            
+            if (type === 'ai') {
+                messageDiv.innerHTML = `
+                    <div class="ai-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="ai-content">
+                        <p>${content}</p>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="ai-content" style="margin-left: auto; background: #8b5cf6; color: white;">
+                        <p>${content}</p>
+                    </div>
+                `;
+            }
+            
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function generateAiAssistantResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('personal motivation') || lowerMessage.includes('motivation')) {
+                return "I can help you strengthen your personal motivation section! Try adding specific details about what sparked your interest, any pivotal moments, and how your passion has evolved over time. Consider including a brief anecdote that shows your genuine interest in the field.";
+            } else if (lowerMessage.includes('academic') || lowerMessage.includes('background')) {
+                return "For your academic background, focus on highlighting relevant coursework, research experiences, and academic achievements. Mention specific projects or courses that relate to your target program. Quantify your achievements where possible (GPA, research publications, etc.).";
+            } else if (lowerMessage.includes('professional') || lowerMessage.includes('experience')) {
+                return "In your professional experience section, emphasize transferable skills and how your work experience relates to your academic goals. Focus on leadership, problem-solving, and technical skills. Show progression and growth in your roles.";
+            } else if (lowerMessage.includes('future') || lowerMessage.includes('goals')) {
+                return "Your future goals should be specific and realistic. Connect them to the program you're applying to. Mention specific research areas, faculty members, or resources at the university that align with your goals.";
+            } else if (lowerMessage.includes('university') || lowerMessage.includes('fit')) {
+                return "Show why this specific university is perfect for you. Mention specific faculty, research centers, courses, or resources that align with your interests. Demonstrate that you've done your research about the program.";
+            } else {
+                return "I can help you improve any section of your SOP! Try asking about specific sections like 'personal motivation', 'academic background', 'professional experience', 'future goals', or 'university fit'. I can provide specific suggestions to make your SOP stronger.";
+            }
+        }
+
+        function executeEditorCommand(command) {
+            console.log('🛠️ Executing editor command:', command);
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.toolbar-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Execute the command
+            document.execCommand(command, false, null);
+            
+            // Focus back to editor
+            document.getElementById('sopEditor').focus();
+        }
+
+        function updateConversationContext(sectionId) {
+            // Update conversation context when section changes
+            console.log('🎯 Updating conversation context for section:', sectionId);
+        }
+
+        function getCurrentSectionApiKey() {
+            const active = document.querySelector('.section-item.active');
+            const id = active ? active.dataset.section : 'personal_motivation';
+            // Map UI section IDs to backend section slugs
+            const map = {
+                personal_motivation: 'personal',
+                academic_background: 'academic',
+                projects: 'projects',
+                professional_experience: 'professional',
+                future_goals: 'goals',
+                university_fit: 'goals' // closest category supported by API
+            };
+            return map[id] || 'personal';
+        }
+
+        function getSectionGreeting(sectionKey) {
+            const greetings = {
+                personal: "Welcome to the Personal Motivation section! 🌟 This is where we'll explore the experiences and moments that sparked your passion for this field.",
+                academic: "Welcome to the Academic Background section! 📚 Let's dive into your educational journey and the academic experiences that shaped your goals.",
+                projects: "Welcome to the Projects section! 🚀 Time to showcase the projects and hands-on experiences that demonstrate your skills and dedication.",
+                professional: "Welcome to the Professional Experience section! 💼 Let's explore your work experiences, internships, and leadership roles that prepared you for graduate studies.",
+                goals: "Welcome to the Future Goals section! 🎯 Here we'll discuss your aspirations and how this program aligns with your career vision."
+            };
+            return greetings[sectionKey] || greetings.personal;
+        }
+
+        function showOfflineIndicator() {
+            // Add a small indicator that LLM is not working
+            const header = document.querySelector('.conversation-header .progress-indicator');
+            if (header && !header.querySelector('.offline-indicator')) {
+                const indicator = document.createElement('span');
+                indicator.className = 'offline-indicator';
+                indicator.innerHTML = '⚠️ LLM Not Working';
+                indicator.style.cssText = 'font-size: 12px; color: #ef4444; margin-left: 10px; opacity: 1;';
+                header.appendChild(indicator);
+                
+                // Remove after 10 seconds
+                setTimeout(() => {
+                    if (indicator.parentNode) indicator.remove();
+                }, 10000);
+            }
+        }
+
+        // Ensure university/program context is present; if not, redirect to start page
+        (function ensureTargetContext() {
+            try {
+                const target = JSON.parse(localStorage.getItem('sopTargetContext') || 'null');
+                if (!target || !target.university) {
+                    // Redirect to Start SOP page to capture target
+                    window.location.href = 'sop-create.html';
+                    return;
+                }
+                // Update conversation header title to show only University SOP
+                const titleEl = document.getElementById('conversationHeaderTitle');
+                if (titleEl) {
+                    const uni = target.university || 'Your University';
+                    titleEl.innerHTML = `<i class="fas fa-university mr-2"></i>${uni}`;
+                }
+            } catch {}
+        })();
+
+        // ALL FALLBACK FUNCTIONS REMOVED AS REQUESTED - ONLY REAL LLM OR "NOT WORKING" MESSAGE
+
+        function handleSaveSection() {
+            try {
+                const currentSectionEl = document.querySelector('.section-item.active .section-name');
+                const sectionKey = currentSectionEl ? currentSectionEl.textContent.trim().toLowerCase().replace(/\s+/g, '_') : 'personal_motivation';
+                const responseInput = document.getElementById('responseInput');
+                let text = (responseInput && responseInput.value.trim()) ? responseInput.value.trim() : '';
+ 
+                 if (!text) {
+                     // Get all conversation messages
+                     const allMessages = Array.from(document.querySelectorAll('.conversation-messages .message')).map(msg => {
+                         const isUser = msg.classList.contains('user');
+                         const content = msg.querySelector('.message-content p');
+                         return content ? `${isUser ? 'You' : 'AI'}: ${content.textContent.trim()}` : '';
+                     }).filter(msg => msg).join('\n\n');
+                     
+                     text = allMessages || '';
+                 }
+ 
+                 if (!text) {
+                     alert('Please start a conversation first by clicking "I have a story in mind" and then responding to the AI.');
+                     return;
+                 }
+ 
+                 // Prefer target context university; fall back to prompt
+                 let university = null;
+                 try {
+                     const target = JSON.parse(localStorage.getItem('sopTargetContext') || 'null');
+                     university = target?.university || null;
+                 } catch {}
+                 if (!university) university = prompt('Enter university name to save this section under:');
+                 if (!university) return;
+ 
+                 const saved = JSON.parse(localStorage.getItem('sopSavedByUniversity') || '{}');
+                 const uniKey = university.trim();
+                 if (!saved[uniKey]) saved[uniKey] = { sections: {}, updatedAt: new Date().toISOString() };
+                 saved[uniKey].sections[sectionKey] = text;
+                 saved[uniKey].updatedAt = new Date().toISOString();
+ 
+                 localStorage.setItem('sopSavedByUniversity', JSON.stringify(saved));
+                 // Navigate to Saved SOPs page to confirm
+                 window.location.href = 'saved-sops.html';
+             } catch (e) {
+                 console.error('Failed to save section:', e);
+                 alert('Failed to save. Please try again.');
+             }
+         }
+
+        function testBackendConnection() {
+            console.log('🔗 Testing backend connection...');
+            // Backend connection test logic
+        }
+    </script>
+</body>
+</html> 

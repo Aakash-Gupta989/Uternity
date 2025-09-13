@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP Assistant Integration Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/sop-api.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">🚀 SOP Assistant Integration Test</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Backend Connection Test -->
+                <div class="border rounded-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4">Backend Connection</h2>
+                    <div id="connection-status" class="mb-4">
+                        <span class="text-gray-500">Testing connection...</span>
+                    </div>
+                    <button id="test-connection" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                        Test Connection
+                    </button>
+                </div>
+
+                <!-- API Test -->
+                <div class="border rounded-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4">API Test</h2>
+                    <div id="api-status" class="mb-4">
+                        <span class="text-gray-500">Ready to test API...</span>
+                    </div>
+                    <button id="test-api" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                        Test API
+                    </button>
+                </div>
+            </div>
+
+            <!-- Console Output -->
+            <div class="mt-8">
+                <h2 class="text-xl font-semibold mb-4">Console Output</h2>
+                <div id="console-output" class="bg-gray-900 text-green-400 font-mono p-4 rounded-lg h-64 overflow-y-auto">
+                    <div>🚀 SOP Assistant Integration Test Started...</div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="mt-8 text-center">
+                <a href="pages/app/sop-workspace.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg inline-block">
+                    Go to SOP Dashboard
+                </a>
+                <a href="pages/app/sop-workspace.html" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg inline-block ml-4">
+                    Go to SOP Workspace
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Console output function
+        function logToConsole(message, type = 'info') {
+            const console = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const typeColors = {
+                info: 'text-green-400',
+                success: 'text-blue-400', 
+                error: 'text-red-400',
+                warning: 'text-yellow-400'
+            };
+            
+            const div = document.createElement('div');
+            div.className = typeColors[type] || 'text-green-400';
+            div.textContent = `[${timestamp}] ${message}`;
+            console.appendChild(div);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        // Test backend connection
+        async function testConnection() {
+            const statusEl = document.getElementById('connection-status');
+            const btn = document.getElementById('test-connection');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            statusEl.innerHTML = '<span class="text-yellow-500">🔄 Testing connection...</span>';
+            
+            try {
+                logToConsole('Testing backend connection...', 'info');
+                const health = await window.sopAPI.checkHealth();
+                
+                statusEl.innerHTML = '<span class="text-green-500">✅ Connected Successfully!</span>';
+                logToConsole(`✅ Backend connected: ${JSON.stringify(health)}`, 'success');
+                
+            } catch (error) {
+                statusEl.innerHTML = '<span class="text-red-500">❌ Connection Failed</span>';
+                logToConsole(`❌ Connection failed: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Test Connection';
+            }
+        }
+
+        // Test API functionality
+        async function testAPI() {
+            const statusEl = document.getElementById('api-status');
+            const btn = document.getElementById('test-api');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            statusEl.innerHTML = '<span class="text-yellow-500">🔄 Testing API...</span>';
+            
+            try {
+                logToConsole('Testing API endpoints...', 'info');
+                
+                // Test 1: Health check
+                const health = await window.sopAPI.checkHealth();
+                logToConsole(`Health check: ${JSON.stringify(health)}`, 'success');
+                
+                // Test 2: Get sessions (should work even if empty)
+                try {
+                    const sessions = await window.sopAPI.getSessions('test-user');
+                    logToConsole(`Sessions retrieved: ${JSON.stringify(sessions)}`, 'success');
+                } catch (sessionsError) {
+                    logToConsole(`Sessions error: ${sessionsError.message}`, 'warning');
+                }
+                
+                // Test 3: Try to create a session
+                try {
+                    const sessionData = {
+                        title: 'Frontend Test Session',
+                        description: 'Testing from frontend integration',
+                        user_id: 'test-user',
+                        target_program: 'Test Program',
+                        field_of_study: 'Computer Science',
+                        academic_level: 'GRADUATE'
+                    };
+                    const newSession = await window.sopAPI.createSession(sessionData);
+                    logToConsole(`Session created: ${JSON.stringify(newSession)}`, 'success');
+                } catch (createError) {
+                    logToConsole(`Session creation error: ${createError.message}`, 'warning');
+                }
+                
+                statusEl.innerHTML = '<span class="text-green-500">✅ API Test Completed!</span>';
+                logToConsole('✅ API test completed successfully', 'success');
+                
+            } catch (error) {
+                statusEl.innerHTML = '<span class="text-red-500">❌ API Test Failed</span>';
+                logToConsole(`❌ API test failed: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Test API';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('test-connection').addEventListener('click', testConnection);
+        document.getElementById('test-api').addEventListener('click', testAPI);
+
+        // Auto-test connection on load
+        document.addEventListener('DOMContentLoaded', function() {
+            logToConsole('Page loaded, testing connection automatically...', 'info');
+            testConnection();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,3626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEFL Speaking Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .test-container {
+            display: block;
+            margin-top: 20px;
+        }
+        
+        .phase-indicator {
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1rem;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+        
+        .phase-indicator.preparation {
+            background: #fef3c7;
+            border-color: #fbbf24;
+            color: #92400e;
+        }
+        
+        .phase-indicator.response {
+            background: #dbeafe;
+            border-color: #60a5fa;
+            color: #1d4ed8;
+        }
+
+        .phase-indicator.reading {
+            background: #f0f9ff;
+            border-color: #38bdf8;
+            color: #0369a1;
+        }
+
+        .phase-indicator.listening {
+            background: #ecfdf5;
+            border-color: #34d399;
+            color: #065f46;
+        }
+
+        .timer {
+            font-size: 2em;
+            font-weight: 700;
+            text-align: center;
+            margin: 16px 0;
+            padding: 16px;
+            background: #f9fafb;
+            color: #374151;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-family: 'Inter', monospace;
+        }
+
+        .timer.warning {
+            background: #fef2f2;
+            border-color: #f87171;
+            color: #dc2626;
+        }
+
+        .question-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+        }
+
+        .reading-passage {
+            background: #f9fafb;
+            border: 1px solid #d1d5db;
+            border-left: 3px solid #6b7280;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+
+        .reading-passage h3 {
+            color: #374151;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 8px;
+        }
+
+        .reading-passage p {
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .question-text {
+            background: #f9fafb;
+            border: 1px solid #d1d5db;
+            border-left: 3px solid #6b7280;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+
+        .question-text h4 {
+            color: #374151;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .question-text p {
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .instructions-box {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+
+        .instructions-box p {
+            color: #374151;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .record-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .record-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .record-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .record-btn.recording {
+            background: #27ae60;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .start-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-message {
+            text-align: center;
+            margin: 20px 0;
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            font-weight: 500;
+        }
+
+        .error-container {
+            margin: 20px 0;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .retry-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .session-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+        }
+
+        .task-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="text-4xl font-bold mb-2">TOEFL Speaking Test</h1>
+                    <p class="text-xl text-purple-100">Real-time Voice Assessment System</p>
+            </div>
+                <div>
+                    <button onclick="endTestAndExit()" 
+                            style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease;"
+                            onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+                            onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                         ← Return to Dashboard
+                </button>
+                </div>
+            </div>
+            </div>
+            
+        <div class="content" style="padding: 32px;">
+            <div class="error-container" id="error-container"></div>
+            
+            <div id="test-container" class="test-container">
+                <div id="session-info" class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+                    <span class="font-semibold text-gray-700">Session ID:</span> 
+                    <span id="session-id" class="font-mono text-gray-900">Not Started</span>
+                    </div>
+                
+                <!-- Task Header Card -->
+                <div class="bg-gray-100 rounded-lg p-6 mb-6" id="task-info">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 id="task-title" class="text-2xl font-bold text-black mb-2">Task 1: Independent Speaking</h2>
+                            <p id="task-counter" class="text-purple-600 font-medium">Task 1 of 4</p>
+                    </div>
+                        <div id="timer" class="bg-purple-600 text-white text-2xl font-bold px-6 py-3 rounded-lg">0:00</div>
+                </div>
+                </div>
+                
+                <div id="status-message" class="status-message">🎭 Initializing Revolutionary Voice System...</div>
+                
+                <div id="phase-indicator" class="phase-indicator">Preparing test...</div>
+                
+                <div id="question-container" class="question-container">
+                    <p>Loading question content...</p>
+            </div>
+            
+
+
+                <div class="record-section">
+                    <p id="record-instruction">Test will automatically progress through all 4 tasks</p>
+                    <button id="record-btn" class="record-btn" onclick="toggleRecording()" style="display: none;">🎤 Start Recording</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        const API_BASE = 'http://localhost:8080/api/v1';
+        
+        let sessionId = null;
+        let currentTask = 1;
+        let currentTaskForRecording = 1; // Separate variable to track task for current recording
+        let currentTaskStartTime = null;
+        let currentPhase = '';
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let taskResponses = [];
+        let recordingProcessingPromise = null; // Track recording processing
+        
+        // Configuration
+        const WS_BASE = 'ws://localhost:8002/api/v1/ws';
+        let ws = null;
+        let wsReconnectAttempts = 0;
+        const MAX_RECONNECT_ATTEMPTS = 5;
+        const RECONNECT_DELAY = 2000; // 2 seconds
+        
+        // State
+        let progressTimer = null;
+        
+        // DOM Elements
+        const startTestBtn = document.getElementById('start-test-btn');
+        const testInterface = document.getElementById('test-container');
+        const sessionIdSpan = document.getElementById('session-id');
+
+        // ===== REVOLUTIONARY HUMAN-LIKE TTS SYSTEM 2024 =====
+        // Based on latest research: natural prosody, intelligent pausing, and emotional expression
+        
+        class NaturalSpeechEngine {
+            constructor() {
+                this.voices = [];
+                this.currentUtterance = null;
+                this.isInitialized = false;
+                this.speechQueue = [];
+                this.isProcessingQueue = false;
+                
+                // Optimized voice profiles based on 2024 TTS research
+                this.voiceProfiles = {
+                    'introduction': { 
+                        baseRate: 0.95, basePitch: 1.08, baseVolume: 0.92,
+                        prosodyStyle: 'welcoming',
+                        breathingPattern: 'relaxed',
+                        pauseStrategy: 'confident'
+                    },
+                    'question': { 
+                        baseRate: 0.88, basePitch: 1.15, baseVolume: 0.96,
+                        prosodyStyle: 'inquisitive', 
+                        breathingPattern: 'focused',
+                        pauseStrategy: 'thoughtful'
+                    },
+                    'conversation_female': { 
+                        baseRate: 0.98, basePitch: 1.25, baseVolume: 0.89,
+                        prosodyStyle: 'engaging',
+                        breathingPattern: 'natural',
+                        pauseStrategy: 'conversational'
+                    },
+                    'conversation_male': { 
+                        baseRate: 0.85, basePitch: 0.78, baseVolume: 0.95,
+                        prosodyStyle: 'engaging',
+                        breathingPattern: 'natural', 
+                        pauseStrategy: 'conversational'
+                    },
+                    'instruction': { 
+                        baseRate: 0.92, basePitch: 1.03, baseVolume: 0.97,
+                        prosodyStyle: 'authoritative',
+                        breathingPattern: 'controlled',
+                        pauseStrategy: 'clear'
+                    },
+                    'neutral': { 
+                        baseRate: 0.96, basePitch: 1.05, baseVolume: 0.94,
+                        prosodyStyle: 'balanced',
+                        breathingPattern: 'moderate',
+                        pauseStrategy: 'standard'
+                    }
+                };
+                
+                // Reduced prosody patterns for smoother speech flow
+                this.prosodyPatterns = {
+                    'welcoming': { 
+                        rateVariation: 0.08, pitchVariation: 0.06, 
+                        pauseMultiplier: 0.8, emphasisStyle: 'warm',
+                        rhythmPattern: 'flowing'
+                    },
+                    'inquisitive': { 
+                        rateVariation: 0.12, pitchVariation: 0.09, 
+                        pauseMultiplier: 0.9, emphasisStyle: 'curious',
+                        rhythmPattern: 'questioning'
+                    },
+                    'engaging': { 
+                        rateVariation: 0.15, pitchVariation: 0.12, 
+                        pauseMultiplier: 0.7, emphasisStyle: 'lively',
+                        rhythmPattern: 'dynamic'
+                    },
+                    'authoritative': { 
+                        rateVariation: 0.04, pitchVariation: 0.03, 
+                        pauseMultiplier: 0.8, emphasisStyle: 'firm',
+                        rhythmPattern: 'steady'
+                    },
+                    'balanced': { 
+                        rateVariation: 0.07, pitchVariation: 0.05, 
+                        pauseMultiplier: 0.7, emphasisStyle: 'neutral',
+                        rhythmPattern: 'regular'
+                    }
+                };
+                
+                this.initialize();
+            }
+
+            async initialize() {
+                return new Promise((resolve) => {
+                    const loadVoices = () => {
+                        this.voices = speechSynthesis.getVoices();
+                        if (this.voices.length > 0) {
+                            this.isInitialized = true;
+                            console.log("🎭 Natural Speech Engine initialized with", this.voices.length, "voices");
+                            this.logVoiceCapabilities();
+                            resolve(true);
+                        }
+                    };
+
+                    loadVoices();
+                    if (!this.isInitialized) {
+                        speechSynthesis.onvoiceschanged = loadVoices;
+                        setTimeout(() => {
+                            if (!this.isInitialized) {
+                                console.warn("⚠️ Speech Engine initialization timeout");
+                                resolve(false);
+                            }
+                        }, 3000);
+                    }
+                });
+            }
+
+            logVoiceCapabilities() {
+                const qualityVoices = this.voices.filter(v => {
+                    const name = v.name.toLowerCase();
+                    return name.includes('neural') || name.includes('natural') || 
+                           name.includes('enhanced') || name.includes('premium');
+                });
+                console.log("🎯 High-quality voices available:", qualityVoices.length);
+                console.log("🌍 Languages supported:", [...new Set(this.voices.map(v => v.lang))].length);
+            }
+
+            // Revolutionary text preprocessing for human-like speech
+            preprocessText(text, contentType = 'neutral') {
+                let processedText = text.trim();
+                
+                // Step 1: Normalize and clean text
+                processedText = this.normalizeText(processedText);
+                
+                // Step 2: Add linguistic prosodic markers
+                processedText = this.addLinguisticProsody(processedText, contentType);
+                
+                // Step 3: Insert natural breathing patterns
+                processedText = this.addNaturalBreathing(processedText, contentType);
+                
+                // Step 4: Add rhythmic micro-pauses
+                processedText = this.addRhythmicPauses(processedText, contentType);
+                
+                // Step 5: Enhance emotional expression
+                processedText = this.enhanceEmotionalExpression(processedText, contentType);
+                
+                // Step 6: Add conversational flow markers
+                processedText = this.addConversationalFlow(processedText, contentType);
+                
+                console.log(`📝 Preprocessed text (${contentType}):`, processedText.substring(0, 100) + "...");
+                return processedText;
+            }
+
+            normalizeText(text) {
+                return text
+                    .replace(/\s+/g, ' ')
+                    .replace(/([.!?])\s*([A-Z])/g, '$1 $2')
+                    .replace(/(\d+)\s*([A-Za-z])/g, '$1 $2')
+                    .replace(/([a-z])([A-Z])/g, '$1 $2')
+                    .trim();
+            }
+
+            addLinguisticProsody(text, contentType) {
+                const profile = this.voiceProfiles[contentType] || this.voiceProfiles['neutral'];
+                const prosody = this.prosodyPatterns[profile.prosodyStyle] || this.prosodyPatterns['balanced'];
+                const pauseIntensity = prosody.pauseMultiplier;
+                
+                // Reduced pause mapping for smoother flow
+                const pauseMap = {
+                    micro: ' ',           // Syllable boundary
+                    short: ' ',           // Word boundary (minimal pause)
+                    medium: ' . ',        // Phrase boundary (reduced)
+                    long: ' .. ',         // Clause boundary (reduced)
+                    extended: ' .. ',     // Sentence boundary (reduced)
+                    breath: ' ... '       // Paragraph boundary (reduced)
+                };
+                
+                // Adjust pause lengths based on content type
+                const intensity = pauseIntensity > 1.5 ? 'extended' : 
+                                pauseIntensity > 1.2 ? 'long' : 
+                                pauseIntensity > 1.0 ? 'medium' : 'short';
+                
+                const sentencePause = pauseMap[intensity];
+                const clausePause = pauseMap[pauseIntensity > 1.3 ? 'long' : 'medium'];
+                const phrasePause = pauseMap[pauseIntensity > 1.1 ? 'medium' : 'short'];
+                
+                return text
+                    // Sentence boundaries (strongest prosodic break)
+                    .replace(/([.!?])\s+/g, '$1' + sentencePause)
+                    
+                    // Clause boundaries (major syntactic breaks)
+                    .replace(/([,;:])\s+/g, '$1' + clausePause)
+                    
+                    // Parenthetical expressions
+                    .replace(/\(\s*([^)]+)\s*\)/g, phrasePause + '($1)' + phrasePause)
+                    .replace(/—\s*([^—]+)\s*—/g, phrasePause + '—$1—' + phrasePause)
+                    
+                    // Quotations need natural pauses
+                    .replace(/"\s*([^"]+)\s*"/g, phrasePause + '"$1"' + phrasePause)
+                    
+                    // Numbers and acronyms for clarity
+                    .replace(/\b(\d+)\b/g, pauseMap.micro + '$1' + pauseMap.micro)
+                    .replace(/\b([A-Z]{2,})\b/g, pauseMap.micro + '$1' + pauseMap.micro)
+                    
+                    // Emphasis markers for important words
+                    .replace(/\b(important|remember|carefully|listen|note|attention|warning|critical|please|thank you)\b/gi, 
+                            phrasePause + '$1' + phrasePause);
+            }
+
+            addNaturalBreathing(text, contentType) {
+                const profile = this.voiceProfiles[contentType] || this.voiceProfiles['neutral'];
+                const breathingStyle = profile.breathingPattern;
+                
+                // Reduced breathing patterns for smoother flow
+                const breathingMarkers = {
+                    'relaxed': ' . ',      // Calm, unhurried breathing (reduced)
+                    'focused': ' ',        // Controlled, purposeful breathing (minimal)
+                    'natural': ' . ',      // Normal conversational breathing (reduced)
+                    'controlled': ' . ',   // Deliberate, authoritative breathing (reduced)
+                    'moderate': ' . '      // Balanced breathing pattern (reduced)
+                };
+                
+                const breathMarker = breathingMarkers[breathingStyle] || breathingMarkers['moderate'];
+                const deepBreath = breathMarker + breathMarker; // For longer pauses
+                
+                return text
+                    // Breathing after long phrases (>50 characters)
+                    .replace(/([^.!?]{50,}[.!?])/g, '$1' + breathMarker)
+                    
+                    // Natural breathing before discourse markers
+                    .replace(/\b(now|next|then|first|second|third|finally|however|moreover|furthermore|in conclusion|by the way)\b/gi, 
+                            breathMarker + '$1')
+                    
+                    // Thoughtful pauses with hesitation markers
+                    .replace(/\b(well|um|uh|you know|I mean|actually|basically|essentially)\b/gi, '$1' + breathMarker)
+                    
+                    // Breathing before important announcements
+                    .replace(/\b(attention|listen|important|remember|note that|please note|keep in mind)\b/gi, 
+                            breathMarker + '$1')
+                    
+                    // Natural pauses before complex information
+                    .replace(/\b(because|since|although|while|when|if|unless|provided that)\b/gi, '$1' + breathMarker)
+                    
+                    // Breathing before emotional expressions
+                    .replace(/\b(unfortunately|fortunately|surprisingly|amazingly|incredibly)\b/gi, 
+                            breathMarker + '$1')
+                    
+                    // Deep breath before new paragraphs or major transitions
+                    .replace(/\n\s*/g, deepBreath);
+            }
+
+            addRhythmicPauses(text, contentType) {
+                // Add micro-pauses for natural speech rhythm
+                return text
+                    // Minimal pauses after conjunctions for smoother flow
+                    .replace(/\b(and|but|or|yet|so|for|nor)\s+/gi, '$1 ')
+                    .replace(/\b(because|since|although|though|while|whereas|unless)\s+/gi, '$1 ')
+                    
+                    // Minimal pauses around quoted speech
+                    .replace(/\s+"/g, ' "')
+                    .replace(/"\s+/g, '" ')
+                    
+                    // Reduced pauses around time expressions
+                    .replace(/\b(today|tomorrow|yesterday|now|then|later|soon|recently|currently|meanwhile)\b/gi, '$1')
+                    
+                    // Task markers with minimal separation
+                    .replace(/\b(task|part|section|question|step)\s+(\d+)/gi, '$1 $2')
+                    
+                    // Minimal pauses before lists
+                    .replace(/\b(first|second|third|fourth|fifth|next|finally|lastly)\b/gi, '$1')
+                    
+                    // Remove pauses around conditional phrases for smoother flow
+                    .replace(/\b(if|when|where|how|why|what|which)\s+/gi, '$1 ');
+            }
+
+            enhanceEmotionalExpression(text, contentType) {
+                const profile = this.voiceProfiles[contentType] || this.voiceProfiles['neutral'];
+                const prosody = this.prosodyPatterns[profile.prosodyStyle] || this.prosodyPatterns['balanced'];
+                const emphasisStyle = prosody.emphasisStyle;
+                
+                // Minimal emotional expression for smoother flow (no excessive pauses)
+                if (emphasisStyle === 'warm') {
+                    // Minimal emphasis around warm words
+                    text = text.replace(/\b(welcome|hello|hi|good|great|wonderful|excellent|perfect)\b/gi, '$1');
+                    text = text.replace(/\b(thank you|thanks|please|you're welcome)\b/gi, '$1');
+                } else if (emphasisStyle === 'curious') {
+                    // Minimal pauses around question words
+                    text = text.replace(/\b(what|how|why|when|where|which|who)\b/gi, '$1');
+                    text = text.replace(/\b(interesting|fascinating|curious|wonder)\b/gi, '$1');
+                } else if (emphasisStyle === 'lively') {
+                    // Minimal emphasis around positive words
+                    text = text.replace(/\b(amazing|fantastic|incredible|awesome|brilliant|excellent)\b/gi, '$1');
+                    text = text.replace(/\b(yes|absolutely|definitely|certainly|exactly)\b/gi, '$1');
+                } else if (emphasisStyle === 'firm') {
+                    // Minimal emphasis around important words
+                    text = text.replace(/\b(must|should|need to|required|mandatory|important|critical)\b/gi, '$1');
+                    text = text.replace(/\b(no|never|cannot|will not|do not)\b/gi, '$1');
+                }
+                
+                return text;
+            }
+
+            addConversationalFlow(text, contentType) {
+                // Minimal conversational flow markers for smoother speech
+                if (contentType.includes('conversation')) {
+                    text = text
+                        // Minimal conversation starters
+                        .replace(/\b(well|so|anyway|by the way|speaking of)\b/gi, '$1')
+                        
+                        // Minimal agreement markers
+                        .replace(/\b(I agree|I disagree|exactly|absolutely|not really|I think|in my opinion)\b/gi, '$1')
+                        
+                        // Minimal conversation fillers
+                        .replace(/\b(you see|you know|I mean|like|sort of|kind of)\b/gi, '$1')
+                        
+                        // Minimal turn-taking markers
+                        .replace(/\b(what about you|your turn|what do you think)\b/gi, '$1');
+                } else if (contentType === 'question') {
+                    text = text
+                        // Minimal question lead-ins
+                        .replace(/\b(can you|could you|would you|will you|do you|are you|have you)\b/gi, '$1')
+                        
+                        // Minimal clarification requests
+                        .replace(/\b(please explain|can you clarify|what do you mean|could you elaborate)\b/gi, '$1');
+                }
+                
+                return text;
+            }
+
+            // Revolutionary voice selection with AI-powered quality scoring
+            selectOptimalVoice(preference = 'neutral', language = 'en') {
+                if (!this.voices.length) return null;
+
+                const languageVoices = this.voices.filter(voice => 
+                    voice.lang.toLowerCase().startsWith(language.toLowerCase())
+                );
+
+                if (!languageVoices.length) return this.voices[0];
+
+                // Advanced voice quality scoring algorithm
+                const scoredVoices = languageVoices.map(voice => {
+                    let score = 0;
+                    const name = voice.name.toLowerCase();
+                    const uri = voice.voiceURI ? voice.voiceURI.toLowerCase() : '';
+                    
+                    // Premium quality indicators (highest priority)
+                    if (name.includes('neural') || name.includes('wavenet')) score += 25;
+                    if (name.includes('studio') || name.includes('journey')) score += 20;
+                    if (name.includes('premium') || name.includes('enhanced')) score += 18;
+                    if (name.includes('natural') || name.includes('lifelike')) score += 15;
+                    
+                    // High-quality platform indicators
+                    if (name.includes('google') || uri.includes('google')) score += 12;
+                    if (name.includes('microsoft') || uri.includes('microsoft')) score += 10;
+                    if (name.includes('apple') || uri.includes('apple')) score += 10;
+                    if (name.includes('amazon') || name.includes('polly')) score += 8;
+                    
+                    // Voice clarity and quality indicators
+                    if (name.includes('clear') || name.includes('crisp')) score += 7;
+                    if (name.includes('smooth') || name.includes('fluid')) score += 6;
+                    if (name.includes('expressive') || name.includes('dynamic')) score += 8;
+                    if (voice.default) score += 4;
+                    
+                    // Gender and style preference scoring
+                    if (preference === 'female') {
+                        const femaleNames = ['karen', 'samantha', 'victoria', 'susan', 'emma', 'joanna', 'salli', 'amy', 'kimberly', 'zira', 'hazel', 'moira', 'tessa', 'ava', 'allison', 'susan', 'fiona'];
+                        if (name.includes('female') || femaleNames.some(n => name.includes(n))) {
+                            score += 20;
+                        }
+                    } else if (preference === 'male') {
+                        if (name.includes('male') || 
+                            ['daniel', 'alex', 'david', 'tom', 'matthew', 'joey', 'brian', 'justin', 'russell'].some(n => name.includes(n))) {
+                            score += 15;
+                        }
+                    }
+                    
+                    return { voice, score };
+                });
+
+                // Return the highest scored voice
+                scoredVoices.sort((a, b) => b.score - a.score);
+                return scoredVoices[0].voice;
+            }
+
+            // Create utterance with advanced parameters
+            createAdvancedUtterance(text, voiceType = 'neutral', customSettings = {}) {
+                const processedText = this.preprocessText(text, voiceType);
+                const utterance = new SpeechSynthesisUtterance(processedText);
+                
+                const profile = this.voiceProfiles[voiceType] || this.voiceProfiles['neutral'];
+                
+                // Apply base settings with natural variation
+                utterance.rate = this.addNaturalVariation(profile.baseRate, 0.1);
+                utterance.pitch = this.addNaturalVariation(profile.basePitch, 0.05);
+                utterance.volume = this.addNaturalVariation(profile.baseVolume, 0.05);
+                
+                // Apply custom settings if provided
+                if (customSettings.rate) utterance.rate = customSettings.rate;
+                if (customSettings.pitch) utterance.pitch = customSettings.pitch;
+                if (customSettings.volume) utterance.volume = customSettings.volume;
+                
+                // Clamp values to valid ranges
+                utterance.rate = Math.max(0.1, Math.min(10, utterance.rate));
+                utterance.pitch = Math.max(0, Math.min(2, utterance.pitch));
+                utterance.volume = Math.max(0, Math.min(1, utterance.volume));
+                
+                return utterance;
+            }
+
+            addNaturalVariation(baseValue, variationRange) {
+                // Add subtle random variation to make speech more natural
+                const variation = (Math.random() - 0.5) * 2 * variationRange;
+                return baseValue + variation;
+            }
+
+            // Chunk long text for better pacing
+            chunkText(text, maxLength = 200) {
+                if (text.length <= maxLength) return [text];
+                
+                const sentences = text.split(/(?<=[.!?])\s+/);
+                const chunks = [];
+                let currentChunk = '';
+                
+                for (const sentence of sentences) {
+                    if (currentChunk.length + sentence.length <= maxLength) {
+                        currentChunk += (currentChunk ? ' ' : '') + sentence;
+                    } else {
+                        if (currentChunk) chunks.push(currentChunk);
+                        currentChunk = sentence;
+                    }
+                }
+                
+                if (currentChunk) chunks.push(currentChunk);
+                return chunks;
+            }
+
+            // Main speak function with advanced features
+            async speak(text, voiceType = 'neutral', options = {}) {
+                return new Promise((resolve, reject) => {
+                    if (!this.isInitialized) {
+                        console.error("❌ TTS Engine not initialized");
+                        reject(new Error("TTS Engine not initialized"));
+                        return;
+                    }
+
+                    // Cancel any existing speech
+                    speechSynthesis.cancel();
+                    
+                    const {
+                        voicePreference = 'neutral',
+                        onStart = null,
+                        onEnd = null,
+                        onError = null,
+                        chunkDelay = 300
+                    } = options;
+
+                    const chunks = this.chunkText(text);
+                    let currentChunk = 0;
+
+                    const speakChunk = () => {
+                        if (currentChunk >= chunks.length) {
+                            if (onEnd) onEnd();
+                            resolve();
+                            return;
+                        }
+
+                        const utterance = this.createAdvancedUtterance(chunks[currentChunk], voiceType);
+                        const voice = this.selectOptimalVoice(voicePreference);
+                        
+                        if (voice) {
+                            utterance.voice = voice;
+                            console.log(`🎭 Using voice: ${voice.name} for chunk ${currentChunk + 1}/${chunks.length}`);
+                        }
+
+                        utterance.onstart = () => {
+                            if (currentChunk === 0 && onStart) onStart();
+                            console.log(`🔊 Speaking chunk ${currentChunk + 1}/${chunks.length}`);
+                        };
+
+                        utterance.onend = () => {
+                            console.log(`✅ Completed chunk ${currentChunk + 1}/${chunks.length}`);
+                            currentChunk++;
+                            setTimeout(speakChunk, chunkDelay);
+                        };
+
+                        utterance.onerror = (event) => {
+                            console.error(`❌ Speech error on chunk ${currentChunk + 1}:`, event.error);
+                            if (onError) onError(event);
+                            reject(event);
+                        };
+
+                        this.currentUtterance = utterance;
+                        speechSynthesis.speak(utterance);
+                    };
+
+                    speakChunk();
+                });
+            }
+
+            // Control methods
+            pause() {
+                speechSynthesis.pause();
+            }
+
+            resume() {
+                speechSynthesis.resume();
+            }
+
+            stop() {
+                speechSynthesis.cancel();
+                this.currentUtterance = null;
+            }
+
+            // Get voice information
+            getAvailableVoices() {
+                return this.voices.map(voice => ({
+                    name: voice.name,
+                    lang: voice.lang,
+                    default: voice.default,
+                    localService: voice.localService
+                }));
+            }
+        }
+
+        // Initialize the revolutionary natural speech engine
+        const naturalSpeechEngine = new NaturalSpeechEngine();
+
+        // Enhanced voice functions using the revolutionary natural speech engine
+        function createNaturalUtterance(text, voiceType = 'neutral') {
+            // Legacy function for compatibility - now uses revolutionary engine
+            return naturalSpeechEngine.createAdvancedUtterance(text, voiceType);
+        }
+
+        function addNaturalPauses(text) {
+            // Legacy function for compatibility - now uses revolutionary preprocessing
+            return naturalSpeechEngine.preprocessText(text, 'neutral');
+        }
+
+        function selectBestVoice(voices, preference = 'neutral') {
+            // Legacy function for compatibility - now uses revolutionary selection
+            return naturalSpeechEngine.selectOptimalVoice(preference);
+        }
+
+        // Enhanced voice functions with completion callbacks using revolutionary engine
+        async function playTaskIntroductionAndWait(text, callback) {
+            console.log("🔊 Playing task introduction with revolutionary natural speech:", text.substring(0, 50) + "...");
+            
+            try {
+                await naturalSpeechEngine.speak(text, 'introduction', {
+                    voicePreference: 'neutral',
+                    onStart: () => {
+                        console.log("🔊 Revolutionary introduction started");
+                    },
+                    onEnd: () => {
+                        console.log("✅ Revolutionary introduction completed");
+                        setTimeout(() => {
+                            if (callback) callback();
+                        }, 800);
+                    },
+                        onError: (event) => {
+                            console.error("❌ Introduction error:", event.error);
+                            // Suppress intrusive alert during navigation; just log and proceed silently
+                            if (callback) callback();
+                        }
+                });
+            } catch (error) {
+                console.error("❌ Failed to play introduction:", error);
+                if (callback) callback();
+            }
+        }
+
+        async function playQuestionAudioAndWait(text, callback) {
+            console.log("🔊 Playing question with revolutionary natural speech:", text.substring(0, 50) + "...");
+            
+            try {
+                await naturalSpeechEngine.speak(text, 'question', {
+                    voicePreference: 'neutral',
+                    onStart: () => {
+                        console.log("🔊 Revolutionary question started");
+                    },
+                    onEnd: () => {
+                        console.log("✅ Revolutionary question completed");
+                        setTimeout(() => {
+                            if (callback) callback();
+                        }, 1000);
+                    },
+                    onError: (event) => {
+                        console.error("❌ Question error:", event.error);
+                        if (callback) callback();
+                    }
+                });
+            } catch (error) {
+                console.error("❌ Failed to play question:", error);
+                if (callback) callback();
+            }
+        }
+
+        async function playConversationAudioAndWait(conversationText, callback) {
+            console.log("🔊 Playing conversation with revolutionary natural speech:", conversationText.substring(0, 50) + "...");
+            
+            try {
+                const lines = conversationText.split('\n').filter(line => line.trim());
+                let currentLineIndex = 0;
+
+                const speakNextLine = async () => {
+                    if (currentLineIndex >= lines.length) {
+                        console.log("✅ Revolutionary conversation completed");
+                        setTimeout(() => {
+                            if (callback) callback();
+                        }, 1200);
+                        return;
+                    }
+                    
+                    const line = lines[currentLineIndex].trim();
+                    if (!line) {
+                        currentLineIndex++;
+                        await speakNextLine();
+                        return;
+                    }
+                    
+                    // Remove explicit narration about who is speaking
+                    let cleanedLine = line.replace(/^(Male student|Female student|Student [12]|The male student|The female student):\s*/i, '');
+                    
+                    // Alternate between male and female voices
+                    const isFemaleVoice = currentLineIndex % 2 === 0;
+                    const voiceType = isFemaleVoice ? 'conversation_female' : 'conversation_male';
+                    const voicePreference = isFemaleVoice ? 'female' : 'male';
+                    
+                    await naturalSpeechEngine.speak(cleanedLine, voiceType, {
+                        voicePreference: voicePreference,
+                        onStart: () => {
+                            console.log(`🔊 Speaking line ${currentLineIndex + 1}: ${cleanedLine.substring(0, 30)}...`);
+                        },
+                        onEnd: () => {
+                            console.log(`✅ Completed line ${currentLineIndex + 1}`);
+                            currentLineIndex++;
+                            setTimeout(speakNextLine, 800);
+                        },
+                        onError: (event) => {
+                            console.error(`❌ Error speaking line ${currentLineIndex + 1}:`, event.error);
+                            currentLineIndex++;
+                            setTimeout(speakNextLine, 500);
+                        }
+                    });
+                };
+
+                await speakNextLine();
+            } catch (error) {
+                console.error("❌ Failed to play conversation:", error);
+                if (callback) callback();
+            }
+        }
+
+        function startPreparationPhase(duration, callback) {
+            console.log(`📝 Starting preparation phase: ${duration} seconds`);
+            currentPhase = 'preparation';
+            updatePhaseIndicator('preparation');
+            
+            const prepInstruction = `You now have ${duration} seconds to prepare your response. Think about your answer.`;
+            playTaskIntroductionAndWait(prepInstruction, () => {
+                // After instruction completes, start the timer
+                let timeLeft = duration;
+                updateTimer(timeLeft);
+                
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    updateTimer(timeLeft);
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        console.log("✅ Preparation phase completed");
+                        if (callback) callback();
+                    }
+                }, 1000);
+            });
+        }
+
+        function startResponsePhase(duration, callback) {
+            console.log(`🎤 Starting response phase for Task ${currentTask}: ${duration} seconds`);
+            currentPhase = 'response';
+            updatePhaseIndicator('response');
+            currentTaskStartTime = Date.now(); // Set start time for duration calculation
+            
+            const responseInstruction = `Begin speaking after the beep. You have ${duration} seconds to record your response.`;
+            playTaskIntroductionAndWait(responseInstruction, () => {
+                // After instruction completes, show record button and start recording automatically
+                document.getElementById('record-btn').style.display = 'block';
+                
+                console.log(`🎤 Initializing recording for Task ${currentTask}...`);
+                
+                // Ensure recording is properly initialized before starting
+                initializeRecording().then((success) => {
+                    if (success) {
+                        console.log(`✅ Recording initialized successfully for Task ${currentTask}`);
+                        // Wait a moment for initialization to complete
+                        setTimeout(() => {
+                            console.log(`🎤 Starting recording for Task ${currentTask}...`);
+                            startRecording();
+                        }, 500);
+                    } else {
+                        console.error(`❌ Failed to initialize recording for Task ${currentTask}`);
+                        alert("❌ Could not access microphone. Please check your browser permissions and try again.");
+                    }
+                }).catch((error) => {
+                    console.error(`❌ Recording initialization error for Task ${currentTask}:`, error);
+                    alert("❌ Recording initialization failed: " + error.message);
+                });
+                
+                let timeLeft = duration;
+                updateTimer(timeLeft);
+                
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    updateTimer(timeLeft);
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        console.log(`✅ Response phase completed for Task ${currentTask}`);
+                        
+                        // Automatically stop recording when time is up
+                        if (isRecording) {
+                            console.log(`🛑 Stopping recording for Task ${currentTaskForRecording}...`);
+                            stopRecording();
+                        }
+                        
+                        // Wait for recording processing to complete before moving to next task
+                        setTimeout(async () => {
+                            if (recordingProcessingPromise) {
+                                console.log(`⏳ Waiting for Task ${currentTaskForRecording} recording processing to complete...`);
+                                try {
+                                    await recordingProcessingPromise;
+                                    console.log(`✅ Task ${currentTaskForRecording} recording processing completed`);
+            } catch (error) {
+                                    console.error(`❌ Task ${currentTaskForRecording} recording processing failed:`, error);
+                                }
+                                recordingProcessingPromise = null;
+                            }
+                            if (callback) callback();
+                        }, 1000);
+                    }
+                }, 1000);
+            });
+        }
+
+        // Test voice narration function
+        function testVoiceNarration() {
+            console.log("🧪 Testing voice narration...");
+            updateStatus('Testing voice narration...');
+            
+            // Check if speech synthesis is supported
+            if (!window.speechSynthesis) {
+                alert('❌ Speech synthesis is not supported in this browser. Please use Chrome, Safari, or Edge.');
+                return;
+            }
+            
+            // Force load voices first
+            const voices = speechSynthesis.getVoices();
+            console.log("🎭 Current voices available:", voices.length);
+            
+            if (voices.length === 0) {
+                console.log("⏳ Voices not loaded yet, waiting...");
+                speechSynthesis.onvoiceschanged = () => {
+                    console.log("🔄 Voices loaded, retrying test");
+                    testVoiceNarration();
+                };
+                return;
+            }
+            
+            // Test with a simple utterance first
+            const testText = "Hello! This is a test of the voice narration system. If you can hear this, the voice system is working correctly.";
+            
+            const utterance = new SpeechSynthesisUtterance(testText);
+            utterance.rate = 0.8;
+            utterance.volume = 1.0;
+            utterance.pitch = 1.0;
+            
+            // Find a good voice
+            const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+            if (englishVoices.length > 0) {
+                utterance.voice = englishVoices[0];
+                console.log("🎭 Using voice:", englishVoices[0].name);
+            }
+            
+            utterance.onstart = () => {
+                console.log("✅ Voice test started successfully");
+                updateStatus('Voice test in progress...');
+            };
+            
+            utterance.onend = () => {
+                console.log("✅ Voice test completed successfully");
+                updateStatus('Voice test completed - Ready to start test');
+            };
+            
+            utterance.onerror = (event) => {
+                console.error("❌ Voice test failed:", event.error);
+                updateStatus('Voice test failed: ' + event.error);
+                alert('❌ Voice test failed: ' + event.error + '. Please check your browser settings and try again.');
+            };
+            
+            // Cancel any existing speech and start new one
+            speechSynthesis.cancel();
+            setTimeout(() => {
+                console.log("🔊 Starting voice test...");
+                speechSynthesis.speak(utterance);
+            }, 100);
+        }
+
+        // Debug voice system
+        function debugVoiceSystem() {
+            console.log("🔍 Debugging voice system...");
+            console.log("🔍 speechSynthesis available:", !!window.speechSynthesis);
+            
+            if (window.speechSynthesis) {
+                const voices = speechSynthesis.getVoices();
+                console.log("🔍 Voices loaded:", voices.length);
+                console.log("🔍 Speaking:", speechSynthesis.speaking);
+                console.log("🔍 Pending:", speechSynthesis.pending);
+                console.log("🔍 Paused:", speechSynthesis.paused);
+                
+                if (voices.length > 0) {
+                    console.log("🔍 Available voices:");
+                    voices.forEach((voice, index) => {
+                        console.log(`  ${index}: ${voice.name} (${voice.lang}) ${voice.default ? '[DEFAULT]' : ''} ${voice.localService ? '[LOCAL]' : '[REMOTE]'}`);
+                    });
+                } else {
+                    console.log("🔍 No voices available yet");
+                }
+            }
+        }
+
+        // Initialize when page loads – support single-task mode via ?section and unlock on first gesture (no UI changes)
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const section = params.get('section');
+            const testSet = params.get('test_set');
+            const modular = params.get('modular');
+            const retake = params.get('retake');
+            
+            console.log('🔍 URL Params:', window.location.search);
+            console.log('🔍 Section extracted:', section);
+            console.log('🔍 Test Set:', testSet);
+            console.log('🔍 Modular mode:', modular);
+            console.log('🔍 Retake:', retake);
+            
+            // Store parameters globally for use in scoring
+            window.testParameters = {
+                section: section,
+                test_set: testSet,
+                modular: modular === 'true',
+                retake: retake === 'true'
+            };
+            
+            // Load test content if test_set is specified
+            if (testSet) {
+                console.log(`🔄 Loading test content for set: ${testSet}`);
+                updateStatus(`Loading test content for ${testSet}...`);
+                await loadTestContent(testSet);
+            } else {
+                console.log('⚠️ No test_set specified, using default content');
+                loadedTestContent = getDefaultTestContent();
+            }
+            
+            updateStatus('🎭 Initializing Revolutionary Voice System...');
+            
+            naturalSpeechEngine.initialize().then(() => {
+                console.log("🎭 Natural Speech Engine initialized");
+                setTimeout(() => {
+                    if (section) {
+                        // Single-task mode: wait for first user gesture on this page, then start only that task
+                        window.__singleTaskMode = true;
+                        window.__singleTaskSection = section;
+                        const unlockOnce = async () => {
+                            try {
+                                // Force voice system unlock for Edge
+                                if (window.speechSynthesis && window.speechSynthesis.paused) {
+                                    window.speechSynthesis.resume();
+                                }
+                                window.speechSynthesis.cancel(); // Clear any stuck queue
+                                
+                                // Wait for voices to be available with polling
+                                let attempts = 0;
+                                while (window.speechSynthesis.getVoices().length === 0 && attempts < 20) {
+                                    await new Promise(resolve => setTimeout(resolve, 50));
+                                    attempts++;
+                                }
+                                
+                                if (!naturalSpeechEngine.isInitialized) {
+                                    await naturalSpeechEngine.initialize();
+                                }
+                                
+                                // Brief confirmation sound to unlock audio
+                                const testUtterance = new SpeechSynthesisUtterance("Starting task");
+                                testUtterance.volume = 0.1;
+                                testUtterance.rate = 2;
+                                window.speechSynthesis.speak(testUtterance);
+                                
+                                // Start the actual task after brief delay
+                                setTimeout(() => startSingleTask(section), 200);
+                            } catch (e) {
+                                console.error('Audio unlock failed:', e);
+                                startSingleTask(section); // Continue anyway
+                            } finally {
+                                document.removeEventListener('click', unlockOnce, true);
+                                document.removeEventListener('keydown', unlockOnce, true);
+                            }
+                        };
+                        document.addEventListener('click', unlockOnce, true);
+                        document.addEventListener('keydown', unlockOnce, true);
+                        updateStatus('✅ Voice ready. Click anywhere to begin.');
+                    } else {
+                        // Full test mode
+                        console.log("🎭 Auto-starting full test");
+                        updateStatus('🚀 Starting TOEFL Speaking Test...');
+                        setTimeout(() => { startTOEFLTest(); }, 1500);
+                    }
+                }, 300);
+            });
+            
+            // Debug voice system first
+            debugVoiceSystem();
+            
+            // Test voices immediately and after a delay
+            setTimeout(() => {
+                debugVoiceSystem();
+                testVoices();
+            }, 100);
+            
+            // Also listen for voices changed event
+            if (window.speechSynthesis) {
+                speechSynthesis.onvoiceschanged = () => {
+                    console.log("🔄 Voices changed event fired");
+                    debugVoiceSystem();
+                    testVoices();
+                };
+            }
+        });
+
+        function startSingleTask(section) {
+            console.log('🎯 startSingleTask called with section:', section);
+            console.log('🎯 Setting single task mode flag');
+            window.__singleTaskMode = true;
+            
+            const map = {
+                'independent': () => { currentTask = 1; startTask1Demo(); },
+                'campus': () => { currentTask = 2; startTask2Demo(); },
+                'academic-course': () => { currentTask = 3; startTask3Demo(); },
+                'academic-lecture': () => { currentTask = 4; startTask4Demo(); }
+            };
+            updateStatus(`🚀 Starting ${section?.replace('-', ' ') || 'task'}...`);
+            if (map[section]) { 
+                console.log(`🎯 Starting task function for ${section}`);
+                map[section](); 
+            } else { 
+                console.log('🎯 Section not found, defaulting to task 1');
+                startTask1Demo(); 
+            }
+        }
+
+        // Start TOEFL Test - Auto-called from instructions page
+        async function startTOEFLTest() {
+            console.log('🎯 Starting TOEFL test with revolutionary voice system...');
+            updateStatus('🚀 Starting TOEFL Speaking Test with AI narration...');
+            
+            // Ensure voice system is ready
+            if (!naturalSpeechEngine.isInitialized) {
+                console.log('⏳ Waiting for voice system to initialize...');
+                await naturalSpeechEngine.initialize();
+            }
+            
+            // Start the test with the new voice system
+            setTimeout(() => {
+                startTask1Demo();
+            }, 1000);
+        }
+
+        // Remove old WebSocket and backend-related functions - not needed for demo mode
+
+        function updateStatus(message) {
+            const statusElement = document.getElementById('status-message');
+            if (statusElement) {
+                statusElement.textContent = message;
+            }
+        }
+
+        function updatePhase(phase) {
+            console.log("🔄 Updating phase:", phase);
+            const recordBtn = document.getElementById('record-btn');
+            const recordInstruction = document.getElementById('record-instruction');
+            
+            if (phase === 'response') {
+                if (recordBtn) recordBtn.style.display = 'block';
+                if (recordInstruction) recordInstruction.textContent = 'Recording your response...';
+            } else {
+                if (recordBtn) recordBtn.style.display = 'none';
+                if (recordInstruction) recordInstruction.textContent = 'Listen to instructions...';
+            }
+        }
+
+        // Update task information
+        function updateTaskInfo(taskType, taskInfo) {
+            const taskTitle = document.getElementById('task-title');
+            const taskCounter = document.getElementById('task-counter');
+            
+            if (taskTitle && taskInfo.task_name) {
+                taskTitle.textContent = `Task ${taskInfo.task_number}: ${taskInfo.task_name}`;
+            }
+            
+            if (taskCounter) {
+                taskCounter.textContent = `Task ${taskInfo.task_number} of 4`;
+            }
+        }
+            
+            // Update phase indicator
+        function updatePhaseIndicator(phase) {
+            const phaseIndicator = document.getElementById('phase-indicator');
+            if (phaseIndicator) {
+                phaseIndicator.className = `phase-indicator ${phase}`;
+                
+                const phaseNames = {
+                    'introduction': 'Introduction',
+                    'reading': 'Reading',
+                    'listening': 'Listening', 
+                    'preparation': 'Preparation Time',
+                    'response': 'Response Time',
+                    'transition': 'Transition',
+                    'completed': 'Test Completed'
+                };
+                
+                phaseIndicator.textContent = phaseNames[phase] || phase;
+            }
+            }
+            
+            // Update question content with improved formatting
+        function updateQuestionContent(content) {
+            const questionContainer = document.getElementById('question-container');
+            if (questionContainer && content.question_text) {
+                let formattedContent = '';
+                
+                // Check if this is a reading passage
+                if (content.question_text.includes("**Reading Passage") || 
+                    (content.instructions && content.instructions.includes("Read") && content.instructions.includes("silently"))) {
+                    
+                    // Format as reading passage
+                    let passageContent = content.question_text
+                        .replace(/\*\*Reading Passage[^*]*\*\*/g, '')
+                        .replace(/University Announcement:/g, '<h3>University Announcement:</h3>')
+                        .replace(/Extended Library Hours During Exam Week/g, '<h3>Extended Library Hours During Exam Week</h3>')
+                        .replace(/Cognitive Dissonance Theory/g, '<h3>Cognitive Dissonance Theory</h3>')
+                        .trim();
+                    
+                    // Split into paragraphs and wrap each in <p> tags
+                    const paragraphs = passageContent.split('\n\n').filter(p => p.trim());
+                    const formattedParagraphs = paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+                    
+                    formattedContent = `
+                        <div class="reading-passage">
+                            <h3>Reading Passage</h3>
+                            ${formattedParagraphs}
+                        </div>
+                    `;
+                } else {
+                    // Format as regular question
+                    formattedContent = `
+                        <div class="question-text">
+                            <h4>Question</h4>
+                        <p>${content.question_text}</p>
+                    </div>
+                `;
+            }
+                
+                // Add instructions if present
+                if (content.instructions) {
+                    formattedContent += `
+                        <div class="instructions-box">
+                            <p>${content.instructions}</p>
+                        </div>
+                    `;
+                }
+                
+                questionContainer.innerHTML = formattedContent;
+            }
+        }
+
+        // Update timer display with warning colors
+        function updateTimer(timeInSeconds) {
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = timeInSeconds % 60;
+            const timerElement = document.getElementById('timer');
+            
+            if (timerElement) {
+                timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Add warning class when time is running low (last 10 seconds)
+                if (timeInSeconds <= 10 && timeInSeconds > 0) {
+                    timerElement.classList.add('warning');
+                } else {
+                    timerElement.classList.remove('warning');
+                }
+            }
+        }
+
+        // Gracefully end the test with confirmation and navigate back to Voice dashboard
+        function endTestAndExit(){
+            const confirmExit = window.confirm('Exit the speaking test and return to TOEFL & IELTS? Any ongoing narration/recording will stop.');
+            if (!confirmExit) return;
+            try {
+                if (window.speechSynthesis) speechSynthesis.cancel();
+            } catch(e) {}
+            try {
+                if (isRecording) { stopRecording(); }
+            } catch(e) {}
+            try {
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+            } catch(e) {}
+            // Small delay to allow any async cleanup to settle
+            setTimeout(()=>{ window.location.href = '/pages/app/voice-dashboard.html'; }, 50);
+        }
+        
+        // Voice narration functions with improved voice loading
+        function playTaskIntroduction(text) {
+            console.log("🔊 Attempting to play task introduction:", text.substring(0, 50) + "...");
+            
+            if (!window.speechSynthesis) {
+                console.error("❌ Speech synthesis not supported in this browser");
+                alert("Voice narration is not supported in this browser. Please use Chrome, Safari, or Edge.");
+                return;
+            }
+            
+            // Stop any current speech
+            speechSynthesis.cancel();
+            
+            // Wait for voices to load if they haven't loaded yet
+            function speakWithVoice() {
+                const voices = speechSynthesis.getVoices();
+                console.log("🎭 Available voices:", voices.length, voices.map(v => v.name));
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9; // Improved pace for better flow
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                // Try to find a good English voice
+                const preferredVoice = voices.find(voice => 
+                    voice.lang.startsWith('en-') && (
+                        voice.name.includes('Karen') || 
+                        voice.name.includes('Samantha') ||
+                        voice.name.includes('Daniel') ||
+                        voice.name.includes('Google') ||
+                        voice.name.includes('Microsoft') ||
+                        voice.default
+                    )
+                ) || voices.find(voice => voice.lang.startsWith('en-')) || voices[0];
+                
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                    console.log("🎭 Using voice:", preferredVoice.name, preferredVoice.lang);
+                } else {
+                    console.warn("⚠️ No suitable voice found, using default");
+                }
+                
+                utterance.onstart = () => {
+                    console.log("🔊 Speech started");
+                };
+                
+                utterance.onend = () => {
+                    console.log("🔊 Speech ended");
+                };
+                
+                utterance.onerror = (event) => {
+                    console.error("❌ Speech error:", event.error);
+                };
+                
+                console.log("🔊 Starting speech synthesis...");
+                speechSynthesis.speak(utterance);
+            }
+            
+            // Check if voices are loaded
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                speakWithVoice();
+            } else {
+                console.log("⏳ Waiting for voices to load...");
+                speechSynthesis.onvoiceschanged = () => {
+                    console.log("🔄 Voices loaded");
+                    speakWithVoice();
+                };
+                // Fallback timeout
+                setTimeout(speakWithVoice, 1000);
+            }
+        }
+
+        function playQuestionAudio(text) {
+            console.log("🔊 Attempting to play question audio:", text.substring(0, 50) + "...");
+            
+            if (!window.speechSynthesis) {
+                console.error("❌ Speech synthesis not supported");
+                return;
+            }
+            
+            // Stop any current speech
+            speechSynthesis.cancel();
+            
+            function speakQuestion() {
+                const voices = speechSynthesis.getVoices();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.85; // Improved pace for question reading
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                // Find a good voice for questions
+                const preferredVoice = voices.find(voice => 
+                    voice.lang.startsWith('en-') && (
+                        voice.name.includes('Karen') || 
+                        voice.name.includes('Samantha') ||
+                        voice.name.includes('Google') ||
+                        voice.name.includes('Microsoft')
+                    )
+                ) || voices.find(voice => voice.lang.startsWith('en-')) || voices[0];
+                
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                    console.log("🎭 Using voice for question:", preferredVoice.name);
+                }
+                
+                utterance.onstart = () => console.log("🔊 Question speech started");
+                utterance.onend = () => console.log("🔊 Question speech ended");
+                utterance.onerror = (event) => console.error("❌ Question speech error:", event.error);
+                
+                speechSynthesis.speak(utterance);
+            }
+            
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                speakQuestion();
+            } else {
+                speechSynthesis.onvoiceschanged = speakQuestion;
+                setTimeout(speakQuestion, 1000);
+            }
+        }
+
+        function playConversationAudio(conversationText) {
+            console.log("🔊 Attempting to play conversation with two voices:", conversationText.substring(0, 50) + "...");
+            
+            if (!window.speechSynthesis) {
+                console.error("❌ Speech synthesis not supported");
+                return;
+            }
+            
+            // Stop any current speech
+            speechSynthesis.cancel();
+            
+            function startConversation() {
+                const voices = speechSynthesis.getVoices();
+                console.log("🎭 Available voices for conversation:", voices.length);
+                
+                // Find distinct female and male voices
+                const femaleVoices = voices.filter(voice => 
+                    voice.lang.startsWith('en-') && (
+                        voice.name.toLowerCase().includes('female') ||
+                        voice.name.includes('Karen') || 
+                        voice.name.includes('Samantha') ||
+                        voice.name.includes('Victoria') ||
+                        voice.name.includes('Susan') ||
+                        voice.name.includes('Zira') ||
+                        voice.name.includes('Hazel')
+                    )
+                );
+                
+                const maleVoices = voices.filter(voice => 
+                    voice.lang.startsWith('en-') && (
+                        voice.name.toLowerCase().includes('male') ||
+                        voice.name.includes('Daniel') || 
+                        voice.name.includes('Alex') ||
+                        voice.name.includes('David') ||
+                        voice.name.includes('Tom') ||
+                        voice.name.includes('Mark') ||
+                        voice.name.includes('James')
+                    )
+                );
+                
+                // Fallback to any English voices if specific gendered voices not found
+                const femaleVoice = femaleVoices[0] || voices.find(v => v.lang.startsWith('en-')) || voices[0];
+                const maleVoice = maleVoices[0] || voices.find(v => v.lang.startsWith('en-') && v !== femaleVoice) || voices[1] || voices[0];
+                
+                console.log("🎭 Female voice:", femaleVoice?.name, "Male voice:", maleVoice?.name);
+                
+                // Parse conversation into speaker parts
+                const lines = conversationText.split('\n').filter(line => line.trim());
+                
+                function speakNextLine(lineIndex) {
+                    if (lineIndex >= lines.length) {
+                        console.log("🔊 Conversation audio completed");
+                        // Update UI when conversation is done
+                        const recordInstruction = document.getElementById('record-instruction');
+                        if (recordInstruction) {
+                            recordInstruction.textContent = 'Conversation completed. Prepare your response.';
+                        }
+                        return;
+                    }
+                    
+                    const line = lines[lineIndex].trim();
+                    if (!line) {
+                        speakNextLine(lineIndex + 1);
+                        return;
+                    }
+                    
+                    // Determine speaker - alternate between female and male
+                    let voice = (lineIndex % 2 === 0) ? femaleVoice : maleVoice;
+                    let speakerName = (lineIndex % 2 === 0) ? 'Female Student' : 'Male Student';
+                    
+                    // Clean the text (remove speaker labels if any)
+                    let cleanText = line
+                        .replace(/^(Female Student:|Male Student:|Woman:|Man:|Female:|Male:)\s*/, '')
+                        .trim();
+                    
+                    if (!cleanText) {
+                        speakNextLine(lineIndex + 1);
+                        return;
+                    }
+                    
+                    const utterance = new SpeechSynthesisUtterance(cleanText);
+                    if (voice) utterance.voice = voice;
+                    utterance.rate = 0.9; // Improved pace for listening comprehension
+                    utterance.pitch = voice === femaleVoice ? 1.2 : 0.9; // Higher pitch for female, lower for male
+                    utterance.volume = 1.0;
+                    
+                    // Update UI to show current speaker
+                    const recordInstruction = document.getElementById('record-instruction');
+                    if (recordInstruction) {
+                        recordInstruction.textContent = `🔊 ${speakerName}: "${cleanText.substring(0, 50)}${cleanText.length > 50 ? '...' : ''}"`;
+                    }
+                    
+                    utterance.onstart = () => {
+                        console.log(`🔊 ${speakerName} speaking:`, cleanText.substring(0, 30) + "...");
+                    };
+                    
+                    utterance.onend = () => {
+                        console.log(`✅ ${speakerName} finished speaking`);
+                        // Small pause between speakers
+                        setTimeout(() => {
+                            speakNextLine(lineIndex + 1);
+                        }, 800); // Longer pause for better comprehension
+                    };
+                    
+                    utterance.onerror = (event) => {
+                        console.error("❌ Speech error:", event.error);
+                        speakNextLine(lineIndex + 1);
+                    };
+                    
+                    speechSynthesis.speak(utterance);
+                }
+                
+                // Start speaking the conversation
+                speakNextLine(0);
+            }
+            
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                startConversation();
+            } else {
+                console.log("⏳ Waiting for voices to load for conversation...");
+                speechSynthesis.onvoiceschanged = startConversation;
+                setTimeout(startConversation, 1000);
+            }
+        }
+
+        function playReadingPassage(readingText) {
+            console.log("🔊 Attempting to play reading passage:", readingText.substring(0, 50) + "...");
+            
+            if (!window.speechSynthesis) {
+                console.error("❌ Speech synthesis not supported");
+                return;
+            }
+            
+            // Stop any current speech
+            speechSynthesis.cancel();
+            
+            function speakReading() {
+                const voices = speechSynthesis.getVoices();
+                
+                const utterance = new SpeechSynthesisUtterance(readingText);
+                utterance.rate = 0.8; // Improved pace for reading comprehension
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                const preferredVoice = voices.find(voice => 
+                    voice.lang.startsWith('en-') && (
+                        voice.name.includes('Karen') || 
+                        voice.name.includes('Samantha') ||
+                        voice.name.includes('Google') ||
+                        voice.name.includes('Microsoft')
+                    )
+                ) || voices.find(voice => voice.lang.startsWith('en-')) || voices[0];
+                
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                    console.log("🎭 Using voice for reading:", preferredVoice.name);
+                }
+                
+                utterance.onstart = () => {
+                    console.log("🔊 Reading passage started");
+                    const recordInstruction = document.getElementById('record-instruction');
+                    if (recordInstruction) {
+                        recordInstruction.textContent = '📖 Reading passage aloud...';
+                    }
+                };
+                
+                utterance.onend = () => {
+                    console.log("🔊 Reading passage completed");
+                    const recordInstruction = document.getElementById('record-instruction');
+                    if (recordInstruction) {
+                        recordInstruction.textContent = 'Reading completed. Listening to conversation next...';
+                    }
+                };
+                
+                utterance.onerror = (event) => {
+                    console.error("❌ Reading speech error:", event.error);
+                };
+                
+                speechSynthesis.speak(utterance);
+            }
+            
+            const voices = speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                speakReading();
+            } else {
+                speechSynthesis.onvoiceschanged = speakReading;
+                setTimeout(speakReading, 1000);
+            }
+        }
+
+        // TOEFL Demo Mode Implementation
+        let demoMode = false;
+        let demoTimer = null;
+
+        // Removed old startDemoMode - now using direct task start
+
+        function startTask1Demo() {
+            console.log("🎯 Starting Task 1: Independent Speaking");
+            
+            updateTaskInfo('task1', {
+                task_number: 1,
+                task_name: "Independent Speaking",
+                total_tasks: 4
+            });
+            
+            updatePhaseIndicator('introduction');
+            
+            // Get task content from loaded test data
+            const taskData = getCurrentTaskDataForTask(1);
+            const task1Content = {
+                question_text: taskData.question || "Some people prefer to study in a quiet environment, while others prefer to study with background music or in a more lively setting. Which do you prefer and why? Use specific reasons and examples to support your answer.",
+                instructions: "You will have 15 seconds to prepare your response and 45 seconds to speak. Give your opinion and support it with specific reasons and examples."
+            };
+            
+            updateQuestionContent(task1Content);
+            
+            // Play introduction and wait for completion
+            const introText = "This is Task 1, Independent Speaking. You will express your opinion on a topic. You will have 15 seconds to prepare and 45 seconds to speak.";
+            playTaskIntroductionAndWait(introText, () => {
+                // After introduction completes, read the question
+                playQuestionAudioAndWait(task1Content.question_text, () => {
+                    // After question completes, start preparation phase
+                    startPreparationPhase(15, () => {
+                        // After preparation completes, start response phase
+                        startResponsePhase(45, () => {
+                            // After response completes, move to next task
+                            endCurrentTask();
+                        });
+                    });
+                });
+            });
+        }
+
+        // Old Task 1 functions removed - now using callback-based approach
+
+        function endCurrentTask() {
+            console.log(`🏁 Task ${currentTask} completed`);
+            console.log(`📊 Current task responses stored:`, taskResponses.map(r => `Task ${r.task}: ${r.response?.substring(0, 50)}...`));
+            console.log(`🔍 Single task mode flag:`, window.__singleTaskMode);
+            
+            // In single-task mode, don't advance to next task
+            if (window.__singleTaskMode) {
+                console.log("🎯 Single-task mode: showing completion for this task only");
+                showTestCompletion();
+                return;
+            }
+            
+            if (currentTask < 4) {
+                currentTask++;
+                console.log(`⏭️ Advancing to Task ${currentTask}`);
+                setTimeout(() => {
+                    switch(currentTask) {
+                        case 2:
+                            startTask2Demo();
+                            break;
+                        case 3:
+                            startTask3Demo();
+                            break;
+                        case 4:
+                            startTask4Demo();
+                            break;
+                    }
+                }, 2000);
+            } else {
+                showTestCompletion();
+            }
+        }
+
+        function startTask2Demo() {
+            console.log("🎯 Starting Task 2: Campus Situation");
+            console.log(`📝 Current task variable: ${currentTask}, Recording task variable: ${currentTaskForRecording}`);
+            
+            updateTaskInfo('task2', {
+                task_number: 2,
+                task_name: "Campus Situation",
+                total_tasks: 4
+            });
+            
+            updatePhaseIndicator('reading');
+            
+            // Get task content from loaded test data
+            const taskData = getCurrentTaskDataForTask(2);
+            let readingPassage = `**Reading Passage - Campus Announcement**
+
+University Announcement: Extended Library Hours During Exam Week
+
+The university library will extend its operating hours until midnight Monday through Thursday during the final exam week. This change is being implemented to provide students with additional study space and resources during this critical time. The extended hours will allow students more flexibility in their study schedules and reduce overcrowding during peak afternoon and evening hours.
+
+The decision was made after reviewing student feedback surveys which indicated that 78% of students requested longer library access during exam periods. The administration recognizes that many students prefer studying in the library's quiet environment rather than in dormitories or other campus locations.`;
+            
+            // Use dynamic content if available
+            if (taskData.scenario && taskData.scenario.context) {
+                readingPassage = `**Reading Passage - Campus Announcement**
+
+${taskData.scenario.topic}
+
+${taskData.scenario.context}`;
+            }
+            
+            updateQuestionContent({
+                question_text: readingPassage,
+                instructions: "Read the campus announcement silently. You will have 45 seconds to read this passage."
+            });
+            
+            const introText = "This is Task 2, Campus Situation. First, you will read a short announcement silently. Then you will hear a conversation between two students. You will have 30 seconds to prepare and 60 seconds to speak.";
+            playTaskIntroductionAndWait(introText, () => {
+                // After introduction, give reading time (NO NARRATION - user reads silently)
+                console.log("📖 Silent reading time - 45 seconds");
+                updatePhaseIndicator('reading');
+                
+                let readingTime = 45;
+                updateTimer(readingTime);
+                
+                const readingTimer = setInterval(() => {
+                    readingTime--;
+                    updateTimer(readingTime);
+                    
+                    if (readingTime <= 0) {
+                        clearInterval(readingTimer);
+                        console.log("✅ Reading time completed");
+                        startListeningPhase2();
+                    }
+                }, 1000);
+            });
+        }
+
+        function startListeningPhase2() {
+            updatePhaseIndicator('listening');
+            
+            // Get task content from loaded test data
+            const taskData = getCurrentTaskDataForTask(2);
+            let conversation = `Female Student: Hey Mark, did you hear about the library extending hours until midnight during exam week?
+Male Student: Yes, I did! I think it's a fantastic idea. I've been having such trouble finding a quiet place to study, especially with my roommate always having friends over.
+Female Student: Really? I'm not so sure about it, Sarah. I think the current hours are perfectly fine as they are.
+Male Student: But think about it, Lisa - during exam week, the library gets absolutely packed during the day. You can barely find a seat, and it's so noisy with everyone whispering and moving around. With extended hours, we can spread out more and actually have some peace and quiet.
+Female Student: I guess that makes sense, but I'm really worried about safety issues. Walking back to the dorms at midnight doesn't seem very safe, especially for female students like me. The campus can be pretty dark and isolated at night.
+Male Student: That's definitely a valid concern, but didn't you read that the university has campus security patrols running all night long? Plus, they mentioned they'll have extra security personnel during the extended hours.
+Female Student: Even with security, I still feel uncomfortable. And honestly, I think they should focus their resources on adding more study spaces or extending the hours of other buildings instead of just keeping the library open later. What about the student center or some of the academic buildings?
+Male Student: I see your point about other spaces, but the library has all the resources we need - computers, printers, research materials. It's really the ideal study environment.
+Female Student: True, but I still think the safety concerns outweigh the benefits. Maybe they could provide shuttle service to the dorms during those late hours?`;
+            
+            // Use dynamic conversation if available
+            if (taskData.scenario && taskData.scenario.conversation) {
+                conversation = taskData.scenario.conversation.map(line => 
+                    `${line.speaker === 'female' ? 'Female Student' : 'Male Student'}: ${line.text}`
+                ).join('\n');
+            }
+            
+            let questionText = "The woman expresses her opinion about the library's extended hours. State her opinion and explain the reasons she gives for holding that opinion.";
+            if (taskData.question) {
+                questionText = taskData.question;
+            }
+            
+            updateQuestionContent({
+                question_text: questionText,
+                instructions: "Listen to the conversation between two students."
+            });
+            
+            // Play conversation and wait for completion
+            playConversationAudioAndWait(conversation, () => {
+                console.log("✅ Task 2 conversation completed, starting preparation phase");
+                // After conversation completes, start preparation phase
+                startPreparationPhase(30, () => {
+                    console.log("✅ Task 2 preparation completed, starting response phase");
+                    // After preparation completes, start response phase
+                    startResponsePhase(60, () => {
+                        console.log("✅ Task 2 response phase completed");
+                        // After response completes, move to next task
+                        endCurrentTask();
+                    });
+                });
+            });
+        }
+
+        function startTask3Demo() {
+            console.log("🎯 Starting Task 3: Academic Course");
+            
+            updateTaskInfo('task3', {
+                task_number: 3,
+                task_name: "Academic Course",
+                total_tasks: 4
+            });
+            
+            // Get task content from loaded test data
+            const taskData = getCurrentTaskDataForTask(3);
+            let readingPassage = `**Reading Passage - Academic Course Material**
+
+Cognitive Dissonance Theory
+
+Cognitive dissonance is a psychological phenomenon that occurs when a person holds contradictory beliefs, ideas, or values simultaneously. This mental discomfort motivates individuals to reduce the inconsistency by changing their attitudes, beliefs, or behaviors. The theory was first proposed by Leon Festinger in 1957 and has since become a fundamental concept in social psychology.
+
+According to Festinger's theory, when people experience cognitive dissonance, they are motivated to reduce this psychological tension through various mechanisms. They may change their beliefs to align with their actions, modify their behavior to match their values, or add new cognitions that help justify the inconsistency.`;
+            
+            // Use dynamic reading content if available
+            if (taskData.reading && taskData.reading.content) {
+                readingPassage = taskData.reading.content;
+            }
+            
+            updateQuestionContent({
+                question_text: readingPassage,
+                instructions: "Read the academic passage silently. You will have 50 seconds to read this passage."
+            });
+            
+            const introText = "This is Task 3, Academic Course. You will read a passage about an academic concept silently, then listen to a lecture with examples. You will have 30 seconds to prepare and 60 seconds to speak.";
+            playTaskIntroductionAndWait(introText, () => {
+                // After introduction, give reading time (NO NARRATION - user reads silently)
+                console.log("📖 Silent reading time - 50 seconds");
+                updatePhaseIndicator('reading');
+                
+                let readingTime = 50;
+                updateTimer(readingTime);
+                
+                const readingTimer = setInterval(() => {
+                    readingTime--;
+                    updateTimer(readingTime);
+                    
+                    if (readingTime <= 0) {
+                        clearInterval(readingTimer);
+                        console.log("✅ Reading time completed");
+                        startLecturePhase3();
+                    }
+                }, 1000);
+            });
+        }
+
+        function startLecturePhase3() {
+            updatePhaseIndicator('listening');
+            
+            // Get task content from loaded test data
+            const taskData = getCurrentTaskDataForTask(3);
+            let lecture = "Now let me give you a concrete example of cognitive dissonance in action that really illustrates how this psychological phenomenon works in real life. Imagine a student named Sarah who has always believed that cheating is fundamentally wrong and goes against her moral values. She's been raised with strong ethical principles and has never cheated before. However, she finds herself in a very difficult situation. She's failing a crucial organic chemistry exam that could determine whether she gets into medical school, which has been her lifelong dream. The pressure is enormous, and she sees other students around her looking at notes hidden under their desks. In a moment of panic, she decides to cheat by looking at her neighbor's answers. Immediately after the exam, Sarah experiences intense cognitive dissonance because her action of cheating directly contradicts her deeply held belief that cheating is wrong. This creates significant psychological discomfort. To reduce this mental tension, Sarah might employ several strategies. She could rationalize her behavior by telling herself that everyone else was cheating, so it was necessary to level the playing field. Or she might minimize the importance of the incident by saying the exam was unfairly difficult and the professor didn't teach the material properly. Alternatively, she might actually change her belief system, deciding that cheating is sometimes acceptable when the stakes are extremely high and one's future is on the line.";
+            
+            // Use dynamic lecture content if available
+            if (taskData.lecture && taskData.lecture.content) {
+                lecture = taskData.lecture.content;
+            }
+            
+            let questionText = "Using the example from the lecture, explain the concept of cognitive dissonance and how people resolve it.";
+            if (taskData.question) {
+                questionText = taskData.question;
+            }
+            
+            updateQuestionContent({
+                question_text: questionText,
+                instructions: "Listen to the lecture about cognitive dissonance."
+            });
+            
+            // Play lecture and wait for completion
+            playQuestionAudioAndWait(lecture, () => {
+                // After lecture completes, start preparation phase
+                startPreparationPhase(30, () => {
+                    // After preparation completes, start response phase
+                    startResponsePhase(60, () => {
+                        // After response completes, move to next task
+                        endCurrentTask();
+                    });
+                });
+            });
+        }
+
+        function startTask4Demo() {
+            console.log("🎯 Starting Task 4: Academic Lecture");
+            
+            updateTaskInfo('task4', {
+                task_number: 4,
+                task_name: "Academic Lecture",
+                total_tasks: 4
+            });
+            
+            // Get task content from loaded test data
+            const taskData = getCurrentTaskDataForTask(4);
+            let lecture = "Today I want to discuss symbiotic relationships in nature, which are fascinating examples of how different species have evolved to live together in close association. These relationships are crucial for understanding ecosystem dynamics and evolutionary biology. I'll focus on two primary types of symbiotic relationships that demonstrate different outcomes for the organisms involved. The first type is mutualism, where both organisms derive clear benefits from their association. One of the most well-known examples is the relationship between bees and flowering plants. When bees visit flowers to collect nectar, which serves as their primary food source, they inadvertently pick up pollen grains on their fuzzy bodies. As they move from flower to flower, they transfer this pollen, enabling the plants to reproduce through cross-pollination. This relationship is so important that many plant species have evolved specific flower shapes, colors, and scents to attract particular bee species. The second type is commensalism, where one organism benefits significantly while the other remains largely unaffected. A classic example is the relationship between barnacles and whales. Barnacles are filter-feeding crustaceans that attach themselves permanently to the whale's skin. As the whale swims through different ocean regions, the barnacles gain access to diverse feeding areas rich in plankton and other microscopic organisms. The whale, being so large and powerful, is essentially unaffected by carrying these small passengers. The barnacles don't harm the whale, nor do they provide any particular benefit, but they gain tremendous advantages in terms of mobility and access to food sources they could never reach on their own.";
+            
+            // Use dynamic lecture content if available
+            if (taskData.lecture && taskData.lecture.content) {
+                lecture = taskData.lecture.content;
+            }
+            
+            let questionText = "Using the examples from the lecture, explain the two types of symbiotic relationships and how they benefit the organisms involved.";
+            if (taskData.question) {
+                questionText = taskData.question;
+            }
+            
+            updateQuestionContent({
+                question_text: questionText,
+                instructions: "Listen to the lecture about symbiotic relationships."
+            });
+            
+            const introText = "This is Task 4, Academic Lecture. You will listen to part of a lecture. You will have 20 seconds to prepare and 60 seconds to speak.";
+            playTaskIntroductionAndWait(introText, () => {
+                // After introduction completes, play the lecture
+                playQuestionAudioAndWait(lecture, () => {
+                    // After lecture completes, start preparation phase
+                    startPreparationPhase(20, () => {
+                        // After preparation completes, start response phase
+                        startResponsePhase(60, () => {
+                            // After response completes, show completion
+                            showTestCompletion();
+                        });
+                    });
+                });
+            });
+        }
+
+        // Old functions removed - now using callback-based approach
+
+        function showTestCompletion() {
+            console.log("🎉 Test completed! Generating results...");
+            
+            // Wait a moment for any final scoring to complete
+            setTimeout(() => {
+                showResultsPage();
+            }, 3000);
+            
+            const completionMsg = window.__singleTaskMode ? 
+                `🎉 Congratulations! You have completed the selected TOEFL task.\n\nGenerating your score report...\n\nPlease wait while we analyze your response.` :
+                `🎉 Congratulations! You have completed all 4 TOEFL Speaking tasks.\n\nGenerating your detailed score report...\n\nPlease wait while we analyze your responses.`;
+            
+            updateQuestionContent({
+                question_text: completionMsg,
+                instructions: "Scoring in progress..."
+            });
+            
+            updatePhaseIndicator('completed');
+            document.getElementById('record-btn').style.display = 'none';
+        }
+
+        // Show detailed results page
+        function showResultsPage() {
+            console.log("📊 Showing results page");
+            console.log("📋 Task responses:", taskResponses);
+            
+            // Calculate overall score
+            let totalScore = 0;
+            let scoredTasks = 0;
+            
+            taskResponses.forEach(response => {
+                console.log(`📝 Task ${response.task} score:`, response.score);
+                if (response.score && typeof response.score.score === 'number') {
+                    totalScore += response.score.score;
+                    scoredTasks++;
+                } else if (response.score && typeof response.score.score === 'string' && response.score.score !== 'Pending') {
+                    // Handle string scores
+                    const numScore = parseInt(response.score.score);
+                    if (!isNaN(numScore)) {
+                        totalScore += numScore;
+                        scoredTasks++;
+                    }
+                }
+            });
+            
+            const overallScore = scoredTasks > 0 ? Math.round(totalScore / scoredTasks) : '—';
+            console.log(`📊 Overall score: ${overallScore} (from ${scoredTasks} tasks)`);
+            
+            // Generate results HTML
+            const resultsHTML = generateResultsHTML(overallScore);
+            
+            // Replace the entire content with results
+            document.querySelector('.container').innerHTML = resultsHTML;
+        }
+
+        // Generate detailed results HTML
+        function generateResultsHTML(overallScore) {
+            // In single-task mode, only show the completed task
+            const allTasks = window.__singleTaskMode ? 
+                taskResponses.map(r => r.task) : 
+                [1, 2, 3, 4];
+            const taskCards = allTasks.map(taskNum => {
+                const response = taskResponses.find(r => r.task === taskNum);
+                const score = response?.score || { score: 'Pending', feedback: 'Scoring in progress...', suggestions: [] };
+                const taskData = getCurrentTaskDataForTask(taskNum);
+                
+                return `
+                    <div class="task-result-card">
+                        <div class="task-header">
+                            <h3>Task ${taskNum}: ${getTaskName(taskNum)}</h3>
+                            <div class="task-score">${score.score}/30</div>
+                        </div>
+                        
+                        <div class="task-content">
+                            <div class="question-section">
+                                <h4>Question:</h4>
+                                <p class="question-text">${response?.question || taskData.question}</p>
+                            </div>
+                            
+                            <div class="response-section">
+                                <h4>Your Response:</h4>
+                                <p class="response-text">${response?.response || '(no transcript captured)'}</p>
+                                <div class="response-duration">Duration: ${Math.round((response?.duration || 0) / 1000)}s</div>
+                            </div>
+                            
+                            <div class="feedback-section">
+                                <h4>Detailed Feedback:</h4>
+                                <p class="feedback-text">${score.feedback || 'Feedback being generated...'}</p>
+                                
+                                ${score.breakdown ? `
+                                    <h4>Score Breakdown:</h4>
+                                    <div class="score-breakdown">
+                                        <div class="breakdown-item">
+                                            <span class="breakdown-label">Delivery:</span>
+                                            <span class="breakdown-score">${score.breakdown.delivery}/10</span>
+                                        </div>
+                                        <div class="breakdown-item">
+                                            <span class="breakdown-label">Language Use:</span>
+                                            <span class="breakdown-score">${score.breakdown.language_use}/10</span>
+                                        </div>
+                                        <div class="breakdown-item">
+                                            <span class="breakdown-label">Topic Development:</span>
+                                            <span class="breakdown-score">${score.breakdown.topic_development}/10</span>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                ${score.suggestions && score.suggestions.length > 0 ? `
+                                    <h4>🎯 How to Improve Your Score:</h4>
+                                    <ul class="suggestions-list">
+                                        ${score.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+                                    </ul>
+                                ` : (score.score !== 'No Response' && score.score !== 'Pending') ? `
+                                    <h4>🎯 How to Improve Your Score:</h4>
+                                    <ul class="suggestions-list">
+                                        <li>Practice speaking more fluently and at a consistent pace</li>
+                                        <li>Use more varied vocabulary and complex sentence structures</li>
+                                        <li>Provide more specific examples and details to support your points</li>
+                                        <li>Work on pronunciation and intonation for better delivery</li>
+                                    </ul>
+                                ` : ''}
+                                
+                                ${score.ideal_response ? `
+                                    <div class="ideal-response-section">
+                                        <h4>✨ Ideal Response Example (Score: 25-28):</h4>
+                                        <div class="ideal-response-card">
+                                            <p class="ideal-response-text">${score.ideal_response}</p>
+                                            <div class="ideal-response-note">
+                                                <strong>💡 Why this scores higher:</strong> This response demonstrates excellent delivery with smooth transitions, uses varied vocabulary and complex sentence structures, and provides specific, detailed examples that strongly support the main argument.
+                                            </div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            return `
+                <div class="results-container">
+                    <div class="results-header">
+                        <h1>🎯 TOEFL Speaking ${window.__singleTaskMode ? 'Task Result' : 'Test Results'}</h1>
+                        <div class="overall-score">
+                            <div class="score-circle">
+                                <span class="score-number">${overallScore}</span>
+                                <span class="score-label">/ 30</span>
+                            </div>
+                            <p class="score-description">${getScoreDescription(overallScore)}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="results-content">
+                        <div class="results-summary">
+                            <h2>Task Summary</h2>
+                            <div class="task-summary-grid">
+                                ${allTasks.map(taskNum => {
+                                    const response = taskResponses.find(r => r.task === taskNum);
+                                    const raw = response?.score?.score;
+                                    const score = raw !== undefined ? raw : 'Pending';
+                                    return `
+                                        <div class="summary-item">
+                                            <div class="summary-task">Task ${taskNum}</div>
+                                            <div class="summary-score">${typeof score === 'number' || !isNaN(score) ? score + '/30' : score}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="detailed-results">
+                            <h2>Detailed Task Results</h2>
+                            ${taskCards}
+                        </div>
+                        
+                        <div class="results-actions">
+                            <button onclick="window.location.reload()" class="retry-btn">Take Test Again</button>
+                            <button onclick="downloadResults()" class="download-btn">Download Results</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <style>
+                .results-container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    font-family: Arial, sans-serif;
+                }
+                
+                .results-header {
+                    text-align: center;
+                    margin-bottom: 40px;
+                    padding: 30px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border-radius: 15px;
+                }
+                
+                .overall-score {
+                    margin-top: 20px;
+                }
+                
+                .score-circle {
+                    display: inline-block;
+                    width: 120px;
+                    height: 120px;
+                    border: 4px solid white;
+                    border-radius: 50%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 20px auto;
+                }
+                
+                .score-number {
+                    font-size: 36px;
+                    font-weight: bold;
+                }
+                
+                .score-label {
+                    font-size: 14px;
+                    opacity: 0.9;
+                }
+                
+                .score-description {
+                    font-size: 18px;
+                    margin-top: 10px;
+                    opacity: 0.9;
+                }
+                
+                .results-summary {
+                    background: #f8f9fa;
+                    padding: 25px;
+                    border-radius: 10px;
+                    margin-bottom: 30px;
+                }
+                
+                .task-summary-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 15px;
+                    margin-top: 15px;
+                }
+                
+                .summary-item {
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    text-align: center;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+                
+                .summary-task {
+                    font-weight: bold;
+                    color: #495057;
+                    margin-bottom: 8px;
+                }
+                
+                .summary-score {
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #007bff;
+                }
+                
+                .task-result-card {
+                    background: white;
+                    border: 1px solid #dee2e6;
+                    border-radius: 10px;
+                    margin-bottom: 25px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                }
+                
+                .task-header {
+                    background: #e9ecef;
+                    padding: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .task-header h3 {
+                    margin: 0;
+                    color: #495057;
+                }
+                
+                .task-score {
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #007bff;
+                }
+                
+                .task-content {
+                    padding: 25px;
+                }
+                
+                .question-section, .response-section, .feedback-section {
+                    margin-bottom: 20px;
+                }
+                
+                .question-section h4, .response-section h4, .feedback-section h4 {
+                    color: #495057;
+                    margin-bottom: 8px;
+                    font-size: 16px;
+                }
+                
+                .question-text, .response-text, .feedback-text {
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 6px;
+                    line-height: 1.6;
+                    margin-bottom: 10px;
+                }
+                
+                .response-duration {
+                    font-size: 12px;
+                    color: #6c757d;
+                    font-style: italic;
+                }
+                
+                .suggestions-list {
+                    background: #e7f3ff;
+                    padding: 15px 15px 15px 35px;
+                    border-radius: 6px;
+                    border-left: 4px solid #007bff;
+                }
+                
+                .suggestions-list li {
+                    margin-bottom: 8px;
+                    line-height: 1.4;
+                    color: #495057;
+                }
+                
+                .score-breakdown {
+                    margin: 15px 0;
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                    border-left: 4px solid #007bff;
+                }
+                
+                .breakdown-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin: 8px 0;
+                    padding: 5px 0;
+                    border-bottom: 1px solid #e9ecef;
+                }
+                
+                .breakdown-item:last-child {
+                    border-bottom: none;
+                }
+                
+                .breakdown-label {
+                    font-weight: 500;
+                    color: #495057;
+                }
+                
+                .breakdown-score {
+                    font-weight: bold;
+                    color: #007bff;
+                    font-size: 16px;
+                }
+                
+                .results-actions {
+                    text-align: center;
+                    margin-top: 40px;
+                    padding: 30px;
+                    background: #f8f9fa;
+                    border-radius: 10px;
+                }
+                
+                .retry-btn, .download-btn {
+                    padding: 12px 30px;
+                    margin: 0 10px;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                
+                .retry-btn {
+                    background: #007bff;
+                    color: white;
+                }
+                
+                .retry-btn:hover {
+                    background: #0056b3;
+                }
+                
+                .download-btn {
+                    background: #28a745;
+                    color: white;
+                }
+                
+                .download-btn:hover {
+                    background: #1e7e34;
+                }
+                
+                .ideal-response-section {
+                    margin-top: 25px;
+                    padding: 20px;
+                    background: #f0fdf4;
+                    border-radius: 12px;
+                    border: 2px solid #22c55e;
+                }
+                
+                .ideal-response-card {
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    margin-top: 10px;
+                }
+                
+                .ideal-response-text {
+                    line-height: 1.6;
+                    color: #1f2937;
+                    font-size: 14px;
+                    margin-bottom: 15px;
+                }
+                
+                .ideal-response-note {
+                    background: #fef3c7;
+                    padding: 12px;
+                    border-radius: 6px;
+                    border-left: 4px solid #f59e0b;
+                    font-size: 13px;
+                    color: #92400e;
+                }
+                </style>
+            `;
+        }
+
+        // Helper functions
+        function getTaskName(taskNumber) {
+            const names = {
+                1: "Independent Speaking",
+                2: "Campus Situation", 
+                3: "Academic Course",
+                4: "Academic Lecture"
+            };
+            return names[taskNumber] || "Unknown Task";
+        }
+
+        function getScoreDescription(score) {
+            if (score >= 26) return "Excellent - Advanced proficiency";
+            if (score >= 22) return "Good - High-intermediate proficiency";
+            if (score >= 18) return "Fair - Low-intermediate proficiency";
+            if (score >= 10) return "Limited - Basic proficiency";
+            return "Weak - Below basic proficiency";
+        }
+
+        function downloadResults() {
+            // Create a simple text report
+            let report = `TOEFL Speaking Test Results\n`;
+            report += `=================================\n\n`;
+            
+            let totalScore = 0;
+            let scoredTasks = 0;
+            
+            taskResponses.forEach(response => {
+                if (response.score && response.score.score) {
+                    totalScore += response.score.score;
+                    scoredTasks++;
+                }
+            });
+            
+            const overallScore = scoredTasks > 0 ? Math.round(totalScore / scoredTasks) : 0;
+            report += `Overall Score: ${overallScore}/30\n\n`;
+            
+            taskResponses.forEach(response => {
+                const score = response.score || { score: 'Pending', feedback: 'Score being calculated...' };
+                report += `Task ${response.task}: ${getTaskName(response.task)}\n`;
+                report += `Score: ${score.score}/30\n`;
+                report += `Question: ${response.question}\n`;
+                report += `Response: ${response.response || 'No response recorded'}\n`;
+                report += `Feedback: ${score.feedback || 'Feedback being generated...'}\n\n`;
+            });
+            
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `TOEFL_Results_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        async function initializeRecording() {
+            try {
+                console.log("🎤 Requesting microphone access...");
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        sampleRate: 44100
+                    }
+                });
+                console.log("✅ Microphone access granted");
+                
+                // Try different MIME types for better compatibility
+                let mimeType = 'audio/webm;codecs=opus';
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'audio/webm';
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = 'audio/mp4';
+                        if (!MediaRecorder.isTypeSupported(mimeType)) {
+                            mimeType = ''; // Use default
+                        }
+                    }
+                }
+                
+                console.log("🎤 Using MIME type:", mimeType || 'default');
+                
+                mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                        console.log("📦 Audio chunk received:", event.data.size, "bytes");
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    console.log("🎤 Recording stopped, processing audio...");
+                    const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+                    console.log("📦 Audio blob created:", audioBlob.size, "bytes");
+                    // Store the processing promise so we can wait for it
+                    recordingProcessingPromise = processRecording(audioBlob);
+                    audioChunks = [];
+                };
+                
+                mediaRecorder.onerror = (event) => {
+                    console.error("❌ MediaRecorder error:", event.error);
+                };
+                
+                mediaRecorder.onstart = () => {
+                    console.log("✅ MediaRecorder started successfully");
+                };
+                
+                return true;
+            } catch (error) {
+                console.error("❌ Microphone access denied:", error);
+                alert("❌ Microphone access is required for the TOEFL test. Please allow microphone access and refresh the page.");
+                return false;
+            }
+        }
+        
+        // Recording functionality
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+        
+        function startRecording() {
+            if (!mediaRecorder) {
+                console.error("❌ MediaRecorder not initialized");
+                return;
+            }
+            
+            if (currentPhase !== 'response') {
+                console.error(`❌ Cannot start recording during ${currentPhase} phase`);
+                return;
+            }
+            
+            audioChunks = [];
+            currentTaskStartTime = Date.now();
+            currentTaskForRecording = currentTask; // Capture the task number at recording start
+            mediaRecorder.start();
+                isRecording = true;
+            
+            const recordBtn = document.getElementById('record-btn');
+            recordBtn.textContent = '⏹️ Stop Recording';
+                recordBtn.classList.add('recording');
+            console.log(`🎤 Recording started for Task ${currentTaskForRecording} during ${currentPhase} phase`);
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                console.log(`⏹️ Stopping recording for Task ${currentTaskForRecording}`);
+                mediaRecorder.stop();
+            }
+                        isRecording = false;
+            const recordBtn = document.getElementById('record-btn');
+            recordBtn.textContent = '🎤 Start Recording';
+                        recordBtn.classList.remove('recording');
+            console.log(`⏹️ Recording stopped for Task ${currentTaskForRecording}`);
+        }
+
+        // Process recording with speech-to-text and scoring
+        async function processRecording(audioBlob) {
+            const taskNumber = currentTaskForRecording; // Use the captured task number
+            console.log(`🎯 Processing recording for Task ${taskNumber}`);
+            console.log('📦 Audio blob size:', audioBlob.size, 'bytes');
+            
+            if (audioBlob.size === 0) {
+                console.error(`❌ Audio blob is empty for Task ${taskNumber} - no audio recorded`);
+                alert('❌ No audio was recorded. Please check your microphone and try again.');
+                return;
+            }
+            
+            try {
+                // Show processing status
+                updateStatus(`Processing Task ${taskNumber} response...`);
+                
+                // Convert audio to text using Whisper
+                console.log(`📝 Starting transcription for Task ${taskNumber}...`);
+                const transcription = await transcribeAudio(audioBlob, taskNumber);
+                console.log(`✅ Transcription completed for Task ${taskNumber}:`, transcription);
+                
+                if (!transcription || transcription.trim().length === 0) {
+                    console.error(`❌ Empty transcription received for Task ${taskNumber}`);
+                    alert('❌ Could not transcribe your response. Please speak clearly and try again.');
+                    return;
+                }
+                
+                // Get the question and context for this specific task
+                const taskData = getCurrentTaskDataForTask(taskNumber);
+                
+                // Store the response FIRST
+                const taskResponse = {
+                    task: taskNumber,
+                    question: taskData.question,
+                    response: transcription,
+                    audioBlob: audioBlob,
+                    timestamp: Date.now(),
+                    duration: Date.now() - (currentTaskStartTime || Date.now())
+                };
+                
+                taskResponses.push(taskResponse);
+                console.log(`💾 Task ${taskNumber} response stored:`, taskResponse);
+                
+                // Validate task number is correct
+                if (taskNumber !== currentTaskForRecording) {
+                    console.error(`⚠️ Task number mismatch! Expected ${currentTaskForRecording}, got ${taskNumber}`);
+                }
+                
+                // Check for duplicate task responses
+                const duplicates = taskResponses.filter(r => r.task === taskNumber);
+                if (duplicates.length > 1) {
+                    console.warn(`⚠️ Multiple responses found for Task ${taskNumber}:`, duplicates);
+                }
+                
+                // Kick off scoring in background so UI can advance smoothly
+                updateStatus(`Scoring Task ${taskNumber} in background...`);
+                console.log(`🎯 Queueing scoring for Task ${taskNumber} (non-blocking)...`);
+                
+                scoreTaskResponse(taskNumber, taskData.question, transcription)
+                    .then(() => {
+                        console.log(`✅ Task ${taskNumber} scoring completed`);
+                        addDebugLog(`Task ${taskNumber} scored successfully`);
+                    })
+                    .catch((err) => {
+                        console.error(`❌ Task ${taskNumber} scoring failed:`, err);
+                        addDebugLog(`Task ${taskNumber} scoring failed: ${err?.message || err}`);
+                    });
+                
+                console.log(`✅ Task ${taskNumber} processing completed (UI free to continue)`);
+                updateStatus(`Task ${taskNumber} response processed successfully!`);
+                
+            } catch (error) {
+                console.error(`❌ Error processing Task ${taskNumber} recording:`, error);
+                updateStatus(`Error processing Task ${taskNumber} response: ` + error.message);
+                
+                // Still store the response even if processing fails
+                const taskData = getCurrentTaskDataForTask(taskNumber);
+                const errorResponse = {
+                    task: taskNumber,
+                    question: taskData.question,
+                    response: transcription || 'Error: Could not process audio',
+                    audioBlob: audioBlob,
+                    timestamp: Date.now(),
+                    duration: Date.now() - (currentTaskStartTime || Date.now()),
+                    error: error.message
+                };
+                
+                taskResponses.push(errorResponse);
+                console.log(`💾 Task ${taskNumber} error response stored:`, errorResponse);
+            }
+        }
+
+        // Transcribe audio using Whisper API
+        async function transcribeAudio(audioBlob, taskNumber) {
+            console.log(`📤 Sending audio for transcription for Task ${taskNumber}...`);
+            console.log('📦 Audio blob details:', {
+                size: audioBlob.size,
+                type: audioBlob.type
+            });
+            
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+            formData.append('task', taskNumber.toString());
+            
+            console.log(`📤 Making transcription request for Task ${taskNumber} to:`, `${API_BASE}/transcribe`);
+            
+            const response = await fetch(`${API_BASE}/transcribe`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            console.log(`📥 Transcription response status for Task ${taskNumber}:`, response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`❌ Transcription API error for Task ${taskNumber}:`, errorText);
+                throw new Error(`Transcription failed: ${response.statusText} - ${errorText}`);
+            }
+            
+            const result = await response.json();
+            console.log(`✅ Transcription result for Task ${taskNumber}:`, result);
+            
+            if (!result.text || result.text.trim().length === 0) {
+                throw new Error('Empty transcription received from API');
+            }
+            
+            return result.text;
+        }
+
+        // Score task response using Groq Cloud
+        async function scoreTaskResponse(taskNumber, question, response) {
+            console.log(`🎯 Scoring Task ${taskNumber} in background...`);
+            console.log(`📝 Question: ${question.substring(0, 100)}...`);
+            console.log(`🗣️ Response: ${response.substring(0, 100)}...`);
+            
+            // Validate response before scoring
+            if (!response || response.trim().length < 10) {
+                console.warn(`⚠️ Response too short for Task ${taskNumber}, cannot score`);
+                const taskResponse = taskResponses.find(r => r.task === taskNumber);
+                if (taskResponse) {
+                    taskResponse.score = {
+                        score: "Invalid",
+                        feedback: "Response too short or unclear to score. Please ensure you speak clearly and provide a complete answer.",
+                        suggestions: ["Speak clearly and completely", "Provide specific examples", "Use full sentences"],
+                        breakdown: { delivery: "N/A", language_use: "N/A", topic_development: "N/A" }
+                    };
+                }
+                return;
+            }
+            
+            // Check for corrupted/gibberish responses (frontend validation)
+            const commonWords = new Set([
+                'i', 'me', 'my', 'we', 'our', 'you', 'your', 'he', 'him', 'his', 'she', 'her', 'it', 'its',
+                'they', 'them', 'their', 'what', 'which', 'who', 'when', 'where', 'why', 'how', 'all', 'any',
+                'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from',
+                'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
+                'can', 'will', 'should', 'would', 'could', 'may', 'might', 'must', 'good', 'great', 'like',
+                'want', 'think', 'know', 'see', 'get', 'make', 'go', 'come', 'take', 'say', 'tell', 'ask',
+                'study', 'prefer', 'because', 'example', 'people', 'time', 'work', 'school', 'music', 'quiet'
+            ]);
+            
+            const potentialWords = response.toLowerCase().match(/\b[a-zA-Z]{3,}\b/g) || [];
+            const validWords = potentialWords.filter(word => commonWords.has(word));
+            
+            // Old logic aggressively marked responses as Invalid if valid/common word ratio was low.
+            // This caused proper answers to be flagged. We now only mark invalid when there are
+            // fewer than 3 alphabetic words, otherwise we proceed to backend scoring.
+            if (potentialWords.length < 3) {
+                console.warn(`⚠️ Response appears too short/invalid for Task ${taskNumber}: ${potentialWords.length} words`);
+                const taskResponse = taskResponses.find(r => r.task === taskNumber);
+                if (taskResponse) {
+                    taskResponse.score = {
+                        score: "Invalid",
+                        feedback: "Response appears to be corrupted or contains unclear speech. Please try recording again with clear English speech.",
+                        suggestions: ["Speak clearly in English", "Check microphone quality", "Record in quiet environment"],
+                        breakdown: { delivery: "N/A", language_use: "N/A", topic_development: "N/A" }
+                    };
+                }
+                return;
+            }
+
+            // Continue to backend scoring for all other cases
+
+            try {
+                // Generate a session ID if we don't have one (for modular tests)
+                if (!sessionId) {
+                    sessionId = 'modular_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    document.getElementById('session-id').textContent = sessionId;
+                    console.log('🆔 Generated session ID for modular test:', sessionId);
+                }
+                
+                const requestData = {
+                    task_number: taskNumber,
+                    question: question,
+                    response: response,
+                    task_type: getTaskType(taskNumber),
+                    session_id: sessionId,
+                    user_id: 'user_' + Date.now(), // Generate a temporary user ID
+                    test_parameters: window.testParameters || {},
+                    modular_mode: window.testParameters?.modular || false,
+                    test_set: window.testParameters?.test_set || null
+                };
+                
+                console.log(`📤 Sending scoring request:`, requestData);
+                
+                const response_data = await fetch(`${API_BASE}/score-response`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                console.log(`📥 Response status: ${response_data.status}`);
+                
+                if (!response_data.ok) {
+                    const errorText = await response_data.text();
+                    console.error(`❌ Scoring API error: ${errorText}`);
+                    throw new Error(`Scoring failed: ${response_data.statusText}`);
+                }
+                
+                const score = await response_data.json();
+                console.log(`✅ Task ${taskNumber} scored:`, score);
+                
+                // Update the stored response with score
+                const taskResponse = taskResponses.find(r => r.task === taskNumber);
+                if (taskResponse) {
+                    taskResponse.score = score;
+                    console.log(`💾 Updated task response:`, taskResponse);
+            } else {
+                    console.error(`❌ Could not find task response for Task ${taskNumber}`);
+                    console.log(`📋 Available responses:`, taskResponses.map(r => r.task));
+                }
+                
+            } catch (error) {
+                console.error(`❌ Error scoring Task ${taskNumber}:`, error);
+                
+                // Add a strict error score - no fake scores
+                const taskResponse = taskResponses.find(r => r.task === taskNumber);
+                if (taskResponse && !taskResponse.score) {
+                    taskResponse.score = {
+                        score: "Error",
+                        feedback: `Scoring failed: ${error.message}. Please try again.`,
+                        suggestions: ["Try again later", "Check your internet connection"],
+                        breakdown: { delivery: "Error", language_use: "Error", topic_development: "Error" }
+                    };
+                    console.log(`❌ Added error score for Task ${taskNumber} - no fake scores`);
+                }
+            }
+        }
+
+        // Global variable to store loaded test content
+        let loadedTestContent = null;
+
+        // Load test content from embedded data
+        async function loadTestContent(testSetId) {
+            try {
+                console.log(`🔄 Loading test content for set: ${testSetId}`);
+                
+                // Get test content from embedded data
+                const testContent = getTestContentById(testSetId);
+                if (testContent) {
+                    loadedTestContent = testContent;
+                    console.log(`✅ Test content loaded for ${testSetId}:`, loadedTestContent);
+                    return loadedTestContent;
+                } else {
+                    throw new Error(`Test set ${testSetId} not found`);
+                }
+            } catch (error) {
+                console.error(`❌ Error loading test content:`, error);
+                // Fallback to default content
+                loadedTestContent = getDefaultTestContent();
+                return loadedTestContent;
+            }
+        }
+
+        // Get test content by ID from embedded data
+        function getTestContentById(testSetId) {
+            const testSets = {
+                "set_1": {
+                    id: "set_1",
+                    test_type: "toefl",
+                    tasks: [
+                        {
+                            task: 1,
+                            question: "Some people prefer to study in a quiet environment, while others prefer to study with background music or in a more lively setting. Which do you prefer and why?",
+                    type: "independent"
+                },
+                        {
+                            task: 2,
+                            scenario: {
+                                topic: "Library Hours Extension",
+                                context: "Two students discuss the university's plan to extend library hours during exam periods.",
+                                conversation: [
+                                    { speaker: "female", text: "Hey, did you hear about the library extending its hours during finals?" },
+                                    { speaker: "male", text: "Yeah, I saw the email. They're planning to keep it open 24/7 during exam weeks." },
+                                    { speaker: "female", text: "That's great! I always struggle to find a quiet place to study late at night." },
+                                    { speaker: "male", text: "True, but I'm wondering about the cost. They'll need to hire more staff and increase security." }
+                                ]
+                            },
+                            question: "The students discuss the university's plan to extend library hours. Explain the man's concerns about this plan.",
+                            type: "conversation"
+                        },
+                        {
+                            task: 3,
+                            reading: {
+                                title: "Cognitive Dissonance Theory",
+                                content: "**Reading Passage - Academic Course Material**\n\nCognitive Dissonance Theory\n\nCognitive dissonance is the mental discomfort that results from holding two or more contradictory beliefs, ideas, or values. This theory suggests that we have an inner drive to hold all our attitudes and behavior in harmony and avoid disharmony (or dissonance). When there is an inconsistency between attitudes or behaviors, something must change to eliminate the dissonance.\n\nThe theory was first proposed by psychologist Leon Festinger in 1957. According to Festinger, people will go to great lengths to reduce cognitive dissonance, often by rationalizing their behavior or changing their beliefs to match their actions."
+                            },
+                            lecture: {
+                                topic: "Understanding Cognitive Dissonance",
+                                content: "Let me explain cognitive dissonance with a common example. Consider someone who continues to smoke despite knowing it's harmful to their health. This creates mental discomfort because their behavior (smoking) conflicts with their knowledge (smoking is unhealthy). To reduce this dissonance, people might either change their behavior by quitting smoking, or change their beliefs by convincing themselves that the health risks are exaggerated or that the enjoyment outweighs the risks."
+                            },
+                    question: "Using the example from the lecture, explain the concept of cognitive dissonance and how people resolve it.",
+                            type: "lecture"
+                        },
+                        {
+                            task: 4,
+                            lecture: {
+                                topic: "Symbiotic Relationships in Nature",
+                                content: "In biology, we study different types of symbiotic relationships between organisms. Two important types are mutualism and commensalism. In mutualism, both organisms benefit from the relationship. A classic example is the relationship between bees and flowers. Bees get nectar from flowers for food, while flowers benefit from the pollination service provided by bees. In commensalism, one organism benefits while the other is neither helped nor harmed. For instance, when birds build nests in trees, the birds get shelter, but the trees are generally unaffected by their presence."
+                            },
+                    question: "Using the examples from the lecture, explain the two types of symbiotic relationships and how they benefit the organisms involved.",
+                            type: "lecture"
+                        }
+                    ]
+                },
+                "set_2": {
+                    id: "set_2",
+                    test_type: "toefl",
+                    tasks: [
+                        {
+                            task: 1,
+                            question: "Some students prefer to take online classes, while others prefer traditional in-person classes. Which do you prefer and why?",
+                            type: "independent"
+                        },
+                        {
+                            task: 2,
+                            scenario: {
+                                topic: "Campus Bike Sharing Program",
+                                context: "Two students discuss the university's new bike sharing program.",
+                                conversation: [
+                                    { speaker: "male", text: "Have you tried the new bike sharing system on campus?" },
+                                    { speaker: "female", text: "Yes! It's so convenient for getting between classes quickly." },
+                                    { speaker: "male", text: "I'm concerned about the maintenance costs though. Some bikes already look damaged." },
+                                    { speaker: "female", text: "Really? I hadn't noticed that. What kind of damage?" },
+                                    { speaker: "male", text: "Well, some have flat tires, and others have broken locks. If this continues, the program might become too expensive to maintain." }
+                                ]
+                            },
+                            question: "The students discuss the campus bike sharing program. Explain the man's concerns about this program.",
+                            type: "conversation"
+                        },
+                        {
+                            task: 3,
+                            reading: {
+                                title: "Confirmation Bias Theory",
+                                content: "**Reading Passage - Academic Course Material**\n\nConfirmation Bias Theory\n\nConfirmation bias is the tendency to search for, interpret, and recall information in a way that confirms one's preexisting beliefs. This cognitive bias leads people to favor information that supports their views while giving less consideration to alternative possibilities. This can result in people maintaining or strengthening beliefs in the face of contrary evidence.\n\nThis psychological phenomenon affects how people process information and make decisions in various contexts, from scientific research to everyday life choices. Understanding confirmation bias is crucial for developing critical thinking skills and making more objective judgments."
+                            },
+                            lecture: {
+                                topic: "Effects of Confirmation Bias",
+                                content: "Let me illustrate confirmation bias with a common scenario in social media use. When people follow news sources that align with their political views, they tend to accept information that supports their existing beliefs without question, while being highly skeptical of contrary information. For example, someone who believes in a particular economic policy might only read articles that praise its effects, while dismissing or ignoring studies that show its limitations or negative impacts."
+                            },
+                            question: "Using the example from the lecture, explain how confirmation bias affects how people consume and interpret information.",
+                            type: "lecture"
+                        },
+                        {
+                            task: 4,
+                            lecture: {
+                                topic: "Adaptive Behaviors in Animals",
+                                content: "Animals have developed fascinating adaptations to survive in their environments. Two remarkable examples are camouflage and mimicry. Camouflage helps animals blend in with their surroundings to avoid predators or surprise prey. The Arctic fox, for instance, has a white coat in winter that matches the snow, but changes to brown in summer to match the tundra landscape. Mimicry, on the other hand, is when one species evolves to resemble another species. The Viceroy butterfly mimics the appearance of the Monarch butterfly, which predators avoid because it's poisonous. By looking similar, the Viceroy gains protection despite not being poisonous itself."
+                            },
+                            question: "Using the examples from the lecture, explain the two types of adaptive behaviors and how they help animals survive.",
+                            type: "lecture"
+                        }
+                    ]
+                },
+                "set_3": {
+                    id: "set_3",
+                    test_type: "toefl",
+                    tasks: [
+                        {
+                            task: 1,
+                            question: "Some people believe that it's better to make friends with people who share similar interests, while others think it's more beneficial to have friends with different interests. Which approach do you prefer and why?",
+                            type: "independent"
+                        },
+                        {
+                            task: 2,
+                            scenario: {
+                                topic: "New Campus Food Court",
+                                context: "Two students discuss the university's plan to replace the current cafeteria with a modern food court.",
+                                conversation: [
+                                    { speaker: "female", text: "Did you hear they're planning to tear down the old cafeteria and build a food court?" },
+                                    { speaker: "male", text: "Yes! I think it's about time. The current cafeteria food is terrible and there are no options." },
+                                    { speaker: "female", text: "I agree the food needs improvement, but I'm worried about the cost. Won't meal plans become more expensive?" },
+                                    { speaker: "male", text: "Maybe slightly, but think about the variety we'll have - pizza, Asian food, sandwiches. Plus it'll create a better social atmosphere where students actually want to hang out." }
+                                ]
+                            },
+                            question: "The man expresses his opinion about the new food court plan. State his opinion and explain the reasons he gives for supporting it.",
+                            type: "conversation"
+                        },
+                        {
+                            task: 3,
+                            reading: {
+                                title: "Social Learning Theory",
+                                content: "**Reading Passage - Academic Course Material**\n\nSocial Learning Theory\n\nSocial learning theory, developed by Albert Bandura, suggests that people learn not only through direct experience but also by observing others' behaviors and the consequences of those behaviors. This theory emphasizes that learning is a cognitive process that takes place in a social context and can occur through observation, imitation, and modeling.\n\nThe theory proposes that individuals can learn new behaviors without direct reinforcement by watching others perform those behaviors. This observational learning is particularly important in childhood development, where children learn social norms, language, and various skills by watching parents, teachers, and peers."
+                            },
+                            lecture: {
+                                topic: "Applications of Social Learning Theory",
+                                content: "Let me give you a practical example of social learning theory in action. Consider how children learn to be aggressive or peaceful. If a child regularly observes their parents resolving conflicts through calm discussion and compromise, they're likely to adopt similar conflict resolution strategies. Conversely, if they witness aggressive behavior being rewarded or going unpunished, they may learn that aggression is an acceptable way to handle problems. This explains why children from violent households are statistically more likely to exhibit aggressive behaviors themselves - not because of genetics alone, but because they've learned these behaviors through observation and modeling."
+                            },
+                            question: "Using the example from the lecture, explain how social learning theory accounts for the development of behavioral patterns in children.",
+                            type: "lecture"
+                        },
+                        {
+                            task: 4,
+                            lecture: {
+                                topic: "Renewable Energy Sources",
+                                content: "Today we'll discuss two major types of renewable energy: solar and wind power. Solar energy harnesses sunlight through photovoltaic cells that convert light directly into electricity. The main advantage of solar power is its abundance - the sun provides more energy in one hour than the entire world uses in a year. However, solar power has limitations: it only works during daylight hours and efficiency decreases on cloudy days. Wind energy, on the other hand, uses turbines to convert wind movement into electricity. Wind power can operate day and night as long as there's sufficient wind. The challenge with wind energy is that it's location-dependent - you need consistent wind patterns, and the turbines can be noisy and affect local wildlife. Both technologies are becoming more cost-effective as technology improves."
+                            },
+                            question: "Using information from the lecture, compare solar and wind energy, explaining the advantages and disadvantages of each renewable energy source.",
+                            type: "lecture"
+                        }
+                    ]
+                },
+                "set_4": {
+                    id: "set_4",
+                    test_type: "toefl",
+                    tasks: [
+                        {
+                            task: 1,
+                            question: "Do you think it's better for students to choose their own courses or to have a required curriculum decided by the school? Use specific reasons and examples to support your opinion.",
+                            type: "independent"
+                        },
+                        {
+                            task: 2,
+                            scenario: {
+                                topic: "Campus Parking Fee Increase",
+                                context: "Two students discuss the university's decision to increase parking fees.",
+                                conversation: [
+                                    { speaker: "male", text: "I can't believe they're raising parking fees by 50% next semester!" },
+                                    { speaker: "female", text: "I know it seems like a lot, but they're using the money to build a new parking garage and improve campus transportation." },
+                                    { speaker: "male", text: "But many students are already struggling financially. This will force some to park off-campus and walk long distances." },
+                                    { speaker: "female", text: "That's true, but think long-term. More parking spaces mean less time circling around looking for spots. Plus, they're expanding the shuttle service to off-campus areas." }
+                                ]
+                            },
+                            question: "The woman expresses her opinion about the parking fee increase. State her opinion and explain the reasons she gives for supporting it.",
+                            type: "conversation"
+                        },
+                        {
+                            task: 3,
+                            reading: {
+                                title: "Market Segmentation",
+                                content: "**Reading Passage - Academic Course Material**\n\nMarket Segmentation\n\nMarket segmentation is a marketing strategy that involves dividing a broad target market into smaller, more defined groups of consumers who have similar needs, interests, or characteristics. Companies use segmentation to create more targeted marketing campaigns and develop products that better meet specific customer needs.\n\nThere are several ways to segment markets, including demographic segmentation (age, gender, income), geographic segmentation (location, climate), psychographic segmentation (lifestyle, values), and behavioral segmentation (purchasing habits, brand loyalty). Effective segmentation allows companies to allocate resources more efficiently and achieve better customer satisfaction."
+                            },
+                            lecture: {
+                                topic: "Market Segmentation in Practice",
+                                content: "Let's look at how Nike uses market segmentation effectively. Instead of marketing the same shoe to everyone, Nike segments its market based on both demographics and behavior. For example, they have different product lines for professional athletes, casual fitness enthusiasts, and fashion-conscious consumers. Their Air Jordan line targets basketball players and sneaker collectors, while their running shoes focus on serious runners who prioritize performance features. They also segment geographically - their marketing in urban areas emphasizes street style and culture, while suburban marketing focuses more on fitness and health benefits. This segmentation strategy allows Nike to charge premium prices in each segment while building strong brand loyalty."
+                            },
+                            question: "Using the Nike example from the lecture, explain how companies use market segmentation to improve their marketing effectiveness.",
+                            type: "lecture"
+                        },
+                        {
+                            task: 4,
+                            lecture: {
+                                topic: "Urban Heat Islands",
+                                content: "Urban heat islands are a significant environmental phenomenon where cities experience higher temperatures than surrounding rural areas. This happens for several reasons. First, cities have lots of concrete, asphalt, and buildings that absorb and retain heat during the day, then release it slowly at night. Rural areas, in contrast, have vegetation that provides cooling through evapotranspiration - the process where plants release water vapor. Second, cities have less green space and tree cover to provide shade and natural cooling. Third, urban areas generate additional heat from vehicles, air conditioning systems, and industrial activities. The heat island effect can raise city temperatures by 2-5 degrees Celsius compared to surrounding areas. This creates problems like increased energy consumption for cooling, higher air pollution levels, and health risks during heat waves. Cities are addressing this through green roofs, urban forests, and reflective building materials."
+                            },
+                            question: "Using points from the lecture, explain what causes urban heat islands and describe the problems they create for cities.",
+                            type: "lecture"
+                        }
+                    ]
+                },
+                "set_5": {
+                    id: "set_5",
+                    test_type: "toefl",
+                    tasks: [
+                        {
+                            task: 1,
+                            question: "Some people prefer to work independently, while others prefer to work as part of a team. Which working style do you prefer and why? Use specific examples to support your answer.",
+                            type: "independent"
+                        },
+                        {
+                            task: 2,
+                            scenario: {
+                                topic: "Campus Gym Renovation",
+                                context: "Two students discuss the university's plan to renovate the campus gym.",
+                                conversation: [
+                                    { speaker: "female", text: "Have you seen the plans for the gym renovation? They're going to close it for three months." },
+                                    { speaker: "male", text: "Three months seems excessive, but the current gym is really outdated. The equipment is old and there's not enough space." },
+                                    { speaker: "female", text: "But where will students exercise during those three months? The nearest gym is miles away and expensive." },
+                                    { speaker: "male", text: "They're setting up a temporary outdoor fitness area and offering discounted memberships at local gyms. Plus, the new gym will have modern equipment, more space, and better ventilation." }
+                                ]
+                            },
+                            question: "The man expresses his opinion about the gym renovation. State his opinion and explain the reasons he gives for supporting the renovation.",
+                            type: "conversation"
+                        },
+                        {
+                            task: 3,
+                            reading: {
+                                title: "Emotional Intelligence",
+                                content: "**Reading Passage - Academic Course Material**\n\nEmotional Intelligence\n\nEmotional intelligence refers to the ability to recognize, understand, and manage our own emotions while also being able to recognize and respond appropriately to others' emotions. This concept, popularized by psychologist Daniel Goleman, includes four main components: self-awareness, self-regulation, empathy, and social skills.\n\nResearch suggests that emotional intelligence can be more important than traditional IQ for success in many areas of life, including leadership, relationships, and workplace performance. People with high emotional intelligence tend to communicate more effectively, handle stress better, and build stronger relationships with others."
+                            },
+                            lecture: {
+                                topic: "Emotional Intelligence in Leadership",
+                                content: "Let me give you an example of how emotional intelligence works in leadership. Consider two managers facing a crisis - their company just lost a major client. Manager A, with low emotional intelligence, might panic, blame team members, and make hasty decisions based on fear. This creates more stress and reduces team morale. Manager B, with high emotional intelligence, first recognizes their own anxiety and takes time to calm down. They then assess the team's emotional state, acknowledge everyone's concerns, and communicate a clear plan while remaining optimistic. This manager uses empathy to understand how team members are feeling and adjusts their communication style accordingly. The result is that the team feels supported and motivated to work together on solutions rather than feeling demoralized and scattered."
+                            },
+                            question: "Using the example from the lecture, explain how emotional intelligence affects leadership effectiveness during challenging situations.",
+                            type: "lecture"
+                        },
+                        {
+                            task: 4,
+                            lecture: {
+                                topic: "Ocean Currents and Climate",
+                                content: "Ocean currents play a crucial role in regulating Earth's climate by distributing heat around the planet. There are two main types of ocean currents: surface currents and deep water currents. Surface currents are primarily driven by wind patterns and affect the upper 400 meters of the ocean. These currents transport warm water from the equator toward the poles and cold water from the poles back toward the equator. For example, the Gulf Stream carries warm water from the Caribbean up the eastern coast of North America, which helps keep Western Europe much warmer than it would otherwise be. Deep water currents, also called thermohaline circulation, are driven by differences in water density caused by temperature and salinity variations. Cold, salty water is denser and sinks, while warm, less salty water rises. This creates a global conveyor belt of water circulation that takes about 1,000 years to complete one full cycle. This deep circulation is crucial for distributing nutrients and oxygen throughout the ocean depths."
+                            },
+                            question: "Using information from the lecture, explain how ocean currents help regulate Earth's climate and describe the two main types of currents.",
+                            type: "lecture"
+                        }
+                    ]
+                },
+                "set_6": {
+                    id: "set_6",
+                    test_type: "toefl",
+                    tasks: [
+                        {
+                            task: 1,
+                            question: "Do you agree or disagree with the following statement: It's better to take risks and try new things than to play it safe and stick to what you know. Use specific reasons and examples to support your position.",
+                            type: "independent"
+                        },
+                        {
+                            task: 2,
+                            scenario: {
+                                topic: "Campus Study Abroad Program",
+                                context: "Two students discuss changes to the university's study abroad program.",
+                                conversation: [
+                                    { speaker: "male", text: "Did you hear they're making study abroad mandatory for all language majors?" },
+                                    { speaker: "female", text: "Yes, and I think it's a great idea! You can't really master a language without immersing yourself in the culture." },
+                                    { speaker: "male", text: "But it's so expensive. Not everyone can afford to spend a semester overseas, even with financial aid." },
+                                    { speaker: "female", text: "That's a valid concern, but they're expanding scholarship opportunities and adding more affordable program options. The language skills and cultural understanding you gain are invaluable for career prospects." }
+                                ]
+                            },
+                            question: "The woman expresses her opinion about the mandatory study abroad requirement. State her opinion and explain the reasons she gives for supporting it.",
+                            type: "conversation"
+                        },
+                        {
+                            task: 3,
+                            reading: {
+                                title: "Supply and Demand",
+                                content: "**Reading Passage - Academic Course Material**\n\nSupply and Demand\n\nSupply and demand is a fundamental economic principle that explains how prices are determined in a market economy. Supply refers to the quantity of a product or service that producers are willing and able to offer at various prices. Generally, as prices increase, suppliers are willing to produce more. Demand refers to the quantity of a product or service that consumers are willing and able to purchase at various prices. Typically, as prices increase, consumer demand decreases.\n\nThe interaction between supply and demand determines the market price and quantity sold. When supply exceeds demand, prices tend to fall. When demand exceeds supply, prices tend to rise. The point where supply and demand curves intersect is called the equilibrium price."
+                            },
+                            lecture: {
+                                topic: "Supply and Demand in Real Markets",
+                                content: "Let's look at how supply and demand worked during the early days of the COVID-19 pandemic with hand sanitizer. Initially, demand for hand sanitizer skyrocketed as people became concerned about hygiene and virus transmission. However, supply couldn't immediately increase because manufacturers needed time to ramp up production and source raw materials. This created a shortage, and prices increased dramatically - some stores were charging $20 for a small bottle that normally cost $2. Over time, manufacturers increased production capacity, and new companies entered the market, increasing supply. Meanwhile, as people stockpiled sanitizer and the initial panic subsided, demand began to level off. Eventually, supply caught up with and even exceeded demand, causing prices to fall back to normal levels and even below in some cases as retailers tried to clear excess inventory."
+                            },
+                            question: "Using the hand sanitizer example from the lecture, explain how supply and demand forces affected pricing during the pandemic.",
+                            type: "lecture"
+                        },
+                        {
+                            task: 4,
+                            lecture: {
+                                topic: "Memory Formation and Sleep",
+                                content: "Sleep plays a critical role in memory formation and learning through a process called memory consolidation. During sleep, particularly during deep sleep and REM sleep, the brain processes and organizes information from the day. There are three main types of memory that benefit from sleep: declarative memory, which includes facts and events; procedural memory, which involves skills and habits; and emotional memory, which relates to feelings and emotional responses. During deep sleep, the brain replays neural patterns from the day, strengthening important connections and weakening unnecessary ones. This process helps transfer information from temporary storage in the hippocampus to long-term storage in the cortex. REM sleep is particularly important for creative problem-solving and emotional processing. Studies show that people who sleep after learning perform significantly better on memory tests than those who stay awake. Sleep deprivation, on the other hand, impairs the brain's ability to form new memories and can even cause existing memories to become distorted or lost."
+                            },
+                            question: "Using points from the lecture, explain how sleep contributes to memory formation and what happens when people don't get enough sleep.",
+                            type: "lecture"
+                        }
+                    ]
+                },
+                "set_7": {
+                    id: "set_7",
+                    test_type: "toefl",
+                    tasks: [
+                        {
+                            task: 1,
+                            question: "Some people think that children should be allowed to use technology and computers from an early age, while others believe children should not be exposed to technology until they are older. What is your opinion and why?",
+                            type: "independent"
+                        },
+                        {
+                            task: 2,
+                            scenario: {
+                                topic: "Campus Sustainability Initiative",
+                                context: "Two students discuss the university's new sustainability requirements.",
+                                conversation: [
+                                    { speaker: "female", text: "Have you heard about the new sustainability requirements? All students have to take a course on environmental issues." },
+                                    { speaker: "male", text: "Really? I think that's unnecessary. We already have enough required courses, and not everyone is interested in environmental topics." },
+                                    { speaker: "female", text: "But climate change affects everyone! Plus, the course teaches practical skills like energy conservation and waste reduction that students can use in their daily lives." },
+                                    { speaker: "male", text: "I suppose those skills could be useful, but I still think it should be optional. Students should be able to choose their own electives based on their interests and career goals." }
+                                ]
+                            },
+                            question: "The man expresses his opinion about the sustainability course requirement. State his opinion and explain the reasons he gives for his position.",
+                            type: "conversation"
+                        },
+                        {
+                            task: 3,
+                            reading: {
+                                title: "Cultural Relativism",
+                                content: "**Reading Passage - Academic Course Material**\n\nCultural Relativism\n\nCultural relativism is the principle that an individual's beliefs, values, and practices should be understood based on that person's own culture rather than judged against the criteria of another culture. This anthropological concept suggests that there are no universal moral standards and that what is considered right or wrong varies from culture to culture.\n\nCultural relativism encourages people to understand and respect cultural differences rather than making judgments based on their own cultural perspective. It helps prevent ethnocentrism, which is the tendency to view one's own culture as superior to others. However, critics argue that cultural relativism can be taken too far and may be used to justify harmful practices."
+                            },
+                            lecture: {
+                                topic: "Applying Cultural Relativism",
+                                content: "Let me give you an example of how cultural relativism works in practice. Consider the concept of time and punctuality. In many Western cultures, being on time is considered respectful and professional. If someone arrives 15 minutes late to a business meeting, it might be seen as rude or unprofessional. However, in some Latin American and African cultures, time is viewed more flexibly. Social relationships and current conversations may take priority over strict adherence to schedules. What might seem like 'being late' in one culture is simply a different approach to time management in another. A cultural relativist would argue that neither approach is inherently right or wrong - they're just different cultural values. However, this becomes complicated in international business settings where people from different cultures need to work together and establish common expectations."
+                            },
+                            question: "Using the example from the lecture, explain the concept of cultural relativism and discuss both its benefits and challenges.",
+                            type: "lecture"
+                        },
+                        {
+                            task: 4,
+                            lecture: {
+                                topic: "Artificial Intelligence in Healthcare",
+                                content: "Artificial intelligence is revolutionizing healthcare in several important ways. First, AI is improving diagnostic accuracy. Machine learning algorithms can analyze medical images like X-rays, MRIs, and CT scans to detect diseases such as cancer, often more accurately than human doctors. For example, AI systems can identify skin cancer in photographs with accuracy rates exceeding 90%. Second, AI is enabling personalized medicine by analyzing patient data to predict individual responses to treatments. This helps doctors choose the most effective medications and dosages for each patient. Third, AI is streamlining administrative tasks like scheduling appointments, processing insurance claims, and managing patient records, which reduces costs and allows healthcare workers to focus more on patient care. However, there are also challenges. AI systems require vast amounts of data to train effectively, raising privacy concerns. There's also the risk of bias if the training data isn't representative of diverse populations. Additionally, there are questions about liability when AI systems make mistakes, and some worry that over-reliance on AI might reduce doctors' diagnostic skills over time."
+                            },
+                            question: "Using information from the lecture, describe how AI is being used in healthcare and explain both the benefits and challenges of these applications.",
+                            type: "lecture"
+                        }
+                    ]
+                }
+            };
+
+            return testSets[testSetId] || null;
+        }
+
+        // Get default test content (fallback)
+        function getDefaultTestContent() {
+            return {
+                id: "set_1",
+                test_type: "toefl",
+                tasks: [
+                    {
+                        task: 1,
+                    question: "Some people prefer to study in a quiet environment, while others prefer to study with background music or in a more lively setting. Which do you prefer and why? Use specific reasons and examples to support your answer.",
+                    type: "independent"
+                },
+                    {
+                        task: 2,
+                    question: "The woman expresses her opinion about the library's extended hours. State her opinion and explain the reasons she gives for holding that opinion.",
+                    type: "campus_situation"
+                },
+                    {
+                        task: 3,
+                    question: "Using the example from the lecture, explain the concept of cognitive dissonance and how people resolve it.",
+                    type: "academic_course"
+                },
+                    {
+                        task: 4,
+                    question: "Using the examples from the lecture, explain the two types of symbiotic relationships and how they benefit the organisms involved.",
+                    type: "academic_lecture"
+                }
+                ]
+            };
+        }
+
+        // Get current task data for scoring
+        function getCurrentTaskData() {
+            if (!loadedTestContent || !loadedTestContent.tasks) {
+                console.warn("⚠️ No test content loaded, using fallback");
+                const fallback = getDefaultTestContent();
+                return fallback.tasks.find(t => t.task === currentTask) || { question: "Unknown question", type: "unknown" };
+            }
+            
+            const task = loadedTestContent.tasks.find(t => t.task === currentTask);
+            return task || { question: "Unknown question", type: "unknown" };
+        }
+
+        // Get task data for any task number
+        function getCurrentTaskDataForTask(taskNum) {
+            if (!loadedTestContent || !loadedTestContent.tasks) {
+                console.warn("⚠️ No test content loaded, using fallback");
+                const fallback = getDefaultTestContent();
+                return fallback.tasks.find(t => t.task === taskNum) || { question: "Unknown question", type: "unknown" };
+            }
+            
+            const task = loadedTestContent.tasks.find(t => t.task === taskNum);
+            return task || { question: "Unknown question", type: "unknown" };
+        }
+
+        // Get task type for scoring
+        function getTaskType(taskNumber) {
+            const types = {
+                1: "independent",
+                2: "campus_situation", 
+                3: "academic_course",
+                4: "academic_lecture"
+            };
+            return types[taskNumber] || "unknown";
+        }
+
+        // Activate voice system (required for browser permissions)
+        async function activateVoiceSystem() {
+            console.log("🎤 Activating revolutionary AI voice system with user interaction...");
+            
+            if (!window.speechSynthesis) {
+                alert('❌ Speech synthesis is not supported in this browser. Please use Chrome, Safari, or Edge.');
+                return;
+            }
+            
+            const activateBtn = document.getElementById('activate-voice-btn');
+            activateBtn.textContent = '🔄 Initializing Revolutionary Voice...';
+            activateBtn.disabled = true;
+            
+            try {
+                // Initialize the revolutionary natural speech engine
+                await naturalSpeechEngine.initialize();
+                
+                activateBtn.textContent = '🔄 Testing Revolutionary Voice Quality...';
+                
+                // Test with revolutionary natural speech system
+                await naturalSpeechEngine.speak(
+                    "Welcome to the TOEFL Speaking Test. I'm your revolutionary AI voice assistant with advanced human-like speech capabilities. This cutting-edge voice system features natural prosody, intelligent pausing, and emotional expression. Voice system is now fully activated and optimized for the most natural conversation experience possible.",
+                    'introduction',
+                    {
+                        voicePreference: 'neutral',
+                        onStart: () => {
+                            console.log("✅ Revolutionary AI voice system activated successfully");
+                            activateBtn.textContent = '✅ Revolutionary Voice Active!';
+                            activateBtn.style.background = '#28a745';
+                            activateBtn.style.color = 'white';
+                        },
+                        onEnd: () => {
+                            console.log("✅ Revolutionary voice activation demonstration complete");
+                            setTimeout(() => {
+                                activateBtn.textContent = '🎤 Activate AI Voice';
+                                activateBtn.style.background = '#ffc107';
+                                activateBtn.style.color = 'black';
+                                activateBtn.disabled = false;
+                            }, 2000);
+                        },
+                        onError: (event) => {
+                            console.error("❌ Revolutionary voice activation failed:", event.error);
+                            activateBtn.textContent = '❌ Voice Failed';
+                            activateBtn.style.background = '#dc3545';
+                            activateBtn.style.color = 'white';
+                            alert('❌ Revolutionary voice activation failed: ' + event.error);
+                            
+                            setTimeout(() => {
+                                activateBtn.textContent = '🎤 Activate AI Voice';
+                                activateBtn.style.background = '#ffc107';
+                                activateBtn.style.color = 'black';
+                                activateBtn.disabled = false;
+                            }, 2000);
+                        }
+                    }
+                );
+                
+                console.log("🎭 Revolutionary AI voice system ready with", naturalSpeechEngine.getAvailableVoices().length, "voices");
+                
+            } catch (error) {
+                console.error("❌ Failed to initialize revolutionary voice system:", error);
+                activateBtn.textContent = '❌ Initialization Failed';
+                activateBtn.style.background = '#dc3545';
+                activateBtn.style.color = 'white';
+                alert('❌ Revolutionary voice system initialization failed: ' + error.message);
+                
+                setTimeout(() => {
+                    activateBtn.textContent = '🎤 Activate AI Voice';
+                    activateBtn.style.background = '#ffc107';
+                    activateBtn.style.color = 'black';
+                    activateBtn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        // Test Groq connection
+        async function testGroqConnection() {
+            const testBtn = document.getElementById('test-groq-btn');
+            const originalText = testBtn.textContent;
+            
+            try {
+                testBtn.textContent = '🔄 Testing...';
+                testBtn.disabled = true;
+                
+                const response = await fetch(`${API_BASE}/test-groq`);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    testBtn.textContent = '✅ Working!';
+                    testBtn.style.background = '#28a745';
+                    alert(`✅ Scoring System Test Successful!\n\nGroq API Response: "${result.response}"\nModel: ${result.model}\nAPI Key: ${result.api_key_prefix}`);
+                } else {
+                    testBtn.textContent = '❌ Failed';
+                    testBtn.style.background = '#dc3545';
+                    alert(`❌ Scoring System Test Failed!\n\nError: ${result.message}\nType: ${result.error_type || 'Unknown'}`);
+                }
+                
+                setTimeout(() => {
+                    testBtn.textContent = originalText;
+                    testBtn.style.background = '#007bff';
+                    testBtn.disabled = false;
+                }, 3000);
+                
+            } catch (error) {
+                testBtn.textContent = '❌ Error';
+                testBtn.style.background = '#dc3545';
+                alert(`❌ Connection Error!\n\n${error.message}`);
+                
+                setTimeout(() => {
+                    testBtn.textContent = originalText;
+                    testBtn.style.background = '#007bff';
+                    testBtn.disabled = false;
+                }, 3000);
+            }
+        }
+
+        // Debug functions
+        let debugLogs = [];
+        
+        function addDebugLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLogs.push(`[${timestamp}] ${message}`);
+            updateDebugPanel();
+        }
+        
+        function updateDebugPanel() {
+            const debugContent = document.getElementById('debug-content');
+            if (debugContent) {
+                debugContent.innerHTML = debugLogs.join('<br>');
+                debugContent.scrollTop = debugContent.scrollHeight;
+            }
+        }
+        
+        function toggleDebugPanel() {
+            const panel = document.getElementById('debug-panel');
+            const btn = document.getElementById('debug-btn');
+            
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                btn.textContent = '🔍 Hide Debug';
+                addDebugLog('Debug panel opened');
+                
+                // Add current system status
+                addDebugLog(`Current task: ${currentTask}`);
+                addDebugLog(`Recording: ${isRecording ? 'Active' : 'Inactive'}`);
+                addDebugLog(`MediaRecorder: ${mediaRecorder ? 'Initialized' : 'Not initialized'}`);
+                addDebugLog(`Task responses: ${taskResponses.length}`);
+                addDebugLog(`API Base: ${API_BASE}`);
+            } else {
+                panel.style.display = 'none';
+                btn.textContent = '🔍 Debug';
+            }
+        }
+        
+        function clearDebugLog() {
+            debugLogs = [];
+            updateDebugPanel();
+            addDebugLog('Debug log cleared');
+        }
+
+        // Save responses to file
+        function saveResponsesToFile() {
+            const responseData = {
+                timestamp: new Date().toISOString(),
+                responses: taskResponses,
+                overallScore: calculateOverallScore(),
+                sessionInfo: {
+                    totalTasks: 4,
+                    completedTasks: taskResponses.length,
+                    testDuration: Date.now() - (taskResponses[0]?.timestamp || Date.now())
+                }
+            };
+            
+            const jsonData = JSON.stringify(responseData, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `toefl-responses-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            console.log('📁 Responses saved to file');
+            addDebugLog('Responses saved to file');
+        }
+
+        // Calculate overall score
+        function calculateOverallScore() {
+            let totalScore = 0;
+            let scoredTasks = 0;
+            
+            taskResponses.forEach(response => {
+                if (response.score && response.score.score && !isNaN(parseInt(response.score.score))) {
+                    totalScore += parseInt(response.score.score);
+                    scoredTasks++;
+                }
+            });
+            
+            return scoredTasks > 0 ? Math.round(totalScore / scoredTasks) : 0;
+        }
+
+        // Manually score responses (for testing/debugging)
+        async function manuallyScoreResponses() {
+            console.log('🎯 Manually scoring all responses...');
+            addDebugLog('Starting manual scoring of all responses');
+            
+            for (const response of taskResponses) {
+                if (!response.score || response.score.score === 'No Response') {
+                    console.log(`🎯 Scoring Task ${response.task}...`);
+                    addDebugLog(`Scoring Task ${response.task}...`);
+                    
+                    try {
+                        await scoreTaskResponse(response.task, response.question, response.response);
+                        addDebugLog(`✅ Task ${response.task} scored successfully`);
+                    } catch (error) {
+                        console.error(`❌ Error scoring Task ${response.task}:`, error);
+                        addDebugLog(`❌ Error scoring Task ${response.task}: ${error.message}`);
+                    }
+                }
+            }
+            
+            console.log('✅ Manual scoring completed');
+            addDebugLog('Manual scoring completed');
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Test - Basic Debug</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">IELTS Test Debug</h1>
+        
+        <div class="bg-white p-6 rounded-lg shadow mb-4">
+            <div id="status">Initializing...</div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow mb-4">
+            <button id="testBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Test Start</button>
+            <button id="apiBtn" class="bg-green-600 text-white px-4 py-2 rounded ml-2">Test API</button>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="font-bold mb-2">Debug Log:</h3>
+            <div id="log" class="text-sm text-gray-600 font-mono"></div>
+        </div>
+    </div>
+
+    <script>
+        const status = document.getElementById('status');
+        const testBtn = document.getElementById('testBtn');
+        const apiBtn = document.getElementById('apiBtn');
+        const log = document.getElementById('log');
+        
+        function addLog(message) {
+            log.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+            console.log(message);
+        }
+        
+        async function testAPI() {
+            try {
+                addLog('Testing API connection...');
+                const response = await fetch('/api/v1/health');
+                const data = await response.json();
+                addLog('✅ API health check passed: ' + data.status);
+                status.textContent = 'API working';
+            } catch (error) {
+                addLog('❌ API test failed: ' + error.message);
+                status.textContent = 'API failed';
+            }
+        }
+        
+        async function testMicrophone() {
+            try {
+                addLog('Testing microphone access...');
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                addLog('✅ Microphone access granted');
+                status.textContent = 'Microphone OK';
+                
+                // Test TTS
+                addLog('Testing speech synthesis...');
+                const utterance = new SpeechSynthesisUtterance('Hello, this is a test.');
+                speechSynthesis.speak(utterance);
+                addLog('✅ Speech synthesis test started');
+                
+            } catch (error) {
+                addLog('❌ Microphone test failed: ' + error.message);
+                status.textContent = 'Microphone failed';
+            }
+        }
+        
+        testBtn.addEventListener('click', testMicrophone);
+        apiBtn.addEventListener('click', testAPI);
+        
+        // Auto-test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            addLog('Page loaded, running auto-tests...');
+            testAPI();
+        });
+    </script>
+</body>
+</html>

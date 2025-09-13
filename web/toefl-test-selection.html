@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEFL Speaking Tests - UTERNITY</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237c3aed'><path d='M12 4L4 8L12 12L20 8L12 4Z'/><path d='M4 12L12 16L20 12'/><path d='M4 16L12 20L20 16'/></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header Section */
+        .page-header {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            color: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem 2rem;
+        }
+
+        /* Progress Overview */
+        .progress-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .progress-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .progress-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.15);
+        }
+
+        .progress-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .progress-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .progress-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6 0%, #06b6d4 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Test Grid */
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+
+        .test-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        .test-card.completed {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+        }
+
+        .test-card.in-progress {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+        }
+
+        .test-status {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-progress {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status-not-started {
+            background: #6b7280;
+            color: white;
+        }
+
+        /* Tooltip for status badges */
+        .test-status {
+            cursor: help;
+        }
+
+        .test-status::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 10;
+        }
+
+        .test-status:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .test-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .test-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-topics {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .test-score {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .score-badge {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .toefl-prediction {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .test-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .test-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .action-button {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+
+
+        /* Loading States */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .test-actions {
+                flex-direction: column;
+            }
+            
+            .action-button {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="main-container">
+            <a href="/voice" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+            <h1 class="page-title">TOEFL Speaking Tests</h1>
+            <p class="page-subtitle">Choose from 7 comprehensive test sets and track your progress</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Progress Overview -->
+        <div class="progress-overview">
+            <div class="progress-card">
+                <div class="progress-card-header">
+                    <div class="progress-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="progress-value" id="tests-completed">0/7</div>
+                <div class="progress-label">Tests Completed</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-card-header">
+                    <div class="progress-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                </div>
+                <div class="progress-value" id="average-score">--</div>
+                <div class="progress-label">Average Score</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-card-header">
+                    <div class="progress-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                </div>
+                <div class="progress-value" id="toefl-prediction">--</div>
+                <div class="progress-label">Predicted TOEFL Score</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <div class="progress-card-header">
+                    <div class="progress-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="progress-value" id="practice-time">0h</div>
+                <div class="progress-label">Total Practice Time</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Grid -->
+        <div class="test-grid">
+            <!-- Test Set 1 -->
+            <div class="test-card">
+                <div class="test-status status-not-started" data-tooltip="Not Started">○</div>
+                <div class="test-header">
+                    <h3 class="test-title">Test Set 1: Library & Psychology</h3>
+                    <p class="test-topics">Library Hours • Cognitive Dissonance • Symbiotic Relationships</p>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>4 Tasks</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>~18 minutes</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span>Intermediate Level</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-brain"></i>
+                        <span>Psychology Focus</span>
+                    </div>
+                </div>
+                <div class="test-actions">
+                    <button class="action-button btn-primary" onclick="startTest(1)">
+                        <i class="fas fa-play"></i>
+                        Start Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Set 2 -->
+            <div class="test-card">
+                <div class="test-status status-not-started" data-tooltip="Not Started">○</div>
+                <div class="test-header">
+                    <h3 class="test-title">Test Set 2: Campus & Biology</h3>
+                    <p class="test-topics">Bike Sharing • Confirmation Bias • Animal Adaptations</p>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>4 Tasks</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>~18 minutes</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span>Intermediate Level</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-microscope"></i>
+                        <span>Biology Focus</span>
+                    </div>
+                </div>
+                <div class="test-actions">
+                    <button class="action-button btn-primary" onclick="startTest(2)">
+                        <i class="fas fa-play"></i>
+                        Start Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Set 3 -->
+            <div class="test-card">
+                <div class="test-status status-not-started" data-tooltip="Not Started">○</div>
+                <div class="test-header">
+                    <h3 class="test-title">Test Set 3: Food Court & Energy</h3>
+                    <p class="test-topics">Campus Food Court • Social Learning • Renewable Energy</p>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>4 Tasks</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>~18 minutes</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span>Intermediate Level</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-bolt"></i>
+                        <span>Energy Focus</span>
+                    </div>
+                </div>
+                <div class="test-actions">
+                    <button class="action-button btn-primary" onclick="startTest(3)">
+                        <i class="fas fa-play"></i>
+                        Start Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Set 4 -->
+            <div class="test-card">
+                <div class="test-status status-not-started" data-tooltip="Not Started">○</div>
+                <div class="test-header">
+                    <h3 class="test-title">Test Set 4: Parking & Business</h3>
+                    <p class="test-topics">Parking Fees • Market Segmentation • Urban Heat Islands</p>
+                </div>
+                <div class="test-score-placeholder" style="height: 3rem; margin-bottom: 1rem;"></div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>4 Tasks</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>~17-20 minutes</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span>Intermediate Level</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Business Focus</span>
+                    </div>
+                </div>
+                <div class="test-actions">
+                    <button class="action-button btn-primary" onclick="startTest(4)">
+                        <i class="fas fa-play"></i>
+                        Start Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Set 5 -->
+            <div class="test-card">
+                <div class="test-status status-not-started" data-tooltip="Not Started">○</div>
+                <div class="test-header">
+                    <h3 class="test-title">Test Set 5: Gym & Leadership</h3>
+                    <p class="test-topics">Gym Renovation • Emotional Intelligence • Ocean Currents</p>
+                </div>
+                <div class="test-score-placeholder" style="height: 3rem; margin-bottom: 1rem;"></div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>4 Tasks</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>~17-20 minutes</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span>Intermediate Level</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-brain"></i>
+                        <span>Psychology Focus</span>
+                    </div>
+                </div>
+                <div class="test-actions">
+                    <button class="action-button btn-primary" onclick="startTest(5)">
+                        <i class="fas fa-play"></i>
+                        Start Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Set 6 -->
+            <div class="test-card">
+                <div class="test-status status-not-started" data-tooltip="Not Started">○</div>
+                <div class="test-header">
+                    <h3 class="test-title">Test Set 6: Study Abroad & Economics</h3>
+                    <p class="test-topics">Study Abroad • Supply & Demand • Memory & Sleep</p>
+                </div>
+                <div class="test-score-placeholder" style="height: 3rem; margin-bottom: 1rem;"></div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>4 Tasks</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>~17-20 minutes</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span>Advanced Level</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Economics Focus</span>
+                    </div>
+                </div>
+                <div class="test-actions">
+                    <button class="action-button btn-primary" onclick="startTest(6)">
+                        <i class="fas fa-play"></i>
+                        Start Test
+                    </button>
+                </div>
+            </div>
+
+            <!-- Test Set 7 -->
+            <div class="test-card">
+                <div class="test-status status-not-started" data-tooltip="Not Started">○</div>
+                <div class="test-header">
+                    <h3 class="test-title">Test Set 7: Sustainability & AI</h3>
+                    <p class="test-topics">Sustainability • Cultural Relativism • AI in Healthcare</p>
+                </div>
+                <div class="test-score-placeholder" style="height: 3rem; margin-bottom: 1rem;"></div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>4 Tasks</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>~17-20 minutes</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span>Advanced Level</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-robot"></i>
+                        <span>Technology Focus</span>
+                    </div>
+                </div>
+                <div class="test-actions">
+                    <button class="action-button btn-primary" onclick="startTest(7)">
+                        <i class="fas fa-play"></i>
+                        Start Test
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+
+
+        // Test action functions
+        function startTest(testSetId) {
+            console.log(`Starting test set ${testSetId}`);
+            
+            // Convert numeric ID to string format expected by frontend
+            const testSetString = `set_${testSetId}`;
+            
+            // Show loading state
+            const button = event.target;
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<div class="loading-spinner"></div> Starting...';
+            button.disabled = true;
+            
+            // Simulate loading and redirect
+            setTimeout(() => {
+                window.location.href = `toefl-instructions.html?test_set=${testSetString}`;
+            }, 1500);
+        }
+
+        function viewResults(testSetId) {
+            console.log(`Viewing results for test set ${testSetId}`);
+            
+            // Show loading state
+            const button = event.target;
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<div class="loading-spinner"></div> Loading...';
+            button.disabled = true;
+            
+            // Simulate loading and redirect to results page
+            setTimeout(() => {
+                window.location.href = `toefl-results.html?test_set=${testSetId}`;
+            }, 1000);
+        }
+
+        function retakeTest(testSetId) {
+            const confirmed = confirm(`Are you sure you want to retake Test Set ${testSetId}? This will start a new attempt.`);
+            if (confirmed) {
+                console.log(`Retaking test set ${testSetId}`);
+                
+                // Show loading state
+                const button = event.target;
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<div class="loading-spinner"></div> Starting...';
+                button.disabled = true;
+                
+                // Simulate loading and redirect
+                setTimeout(() => {
+                    window.location.href = `toefl-instructions.html?test_set=${testSetId}&retake=true`;
+                }, 1500);
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 TOEFL Test Selection page loaded');
+            
+            // Load user progress data (mock data for now)
+            loadProgressData();
+        });
+
+        function loadProgressData() {
+            // Fetch real user progress data from backend
+            console.log('📊 Loading progress data...');
+            
+            // This function will be called to update progress when tests are completed
+            // For now, showing fresh user experience (0 tests completed)
+            updateProgressDisplay({
+                testsCompleted: 0,
+                totalTests: 7,
+                averageScore: null,
+                toeflPrediction: null,
+                practiceTime: 0
+            });
+        }
+
+        function updateProgressDisplay(data) {
+            // Update progress overview with real data
+            document.getElementById('tests-completed').textContent = `${data.testsCompleted}/${data.totalTests}`;
+            document.getElementById('average-score').textContent = data.averageScore || '--';
+            document.getElementById('toefl-prediction').textContent = data.toeflPrediction || '--';
+            document.getElementById('practice-time').textContent = data.practiceTime > 0 ? `${data.practiceTime}h` : '0h';
+            
+            // Update progress bars
+            const completionPercentage = (data.testsCompleted / data.totalTests) * 100;
+            document.querySelector('#tests-completed').parentElement.querySelector('.progress-fill').style.width = `${completionPercentage}%`;
+            
+            if (data.averageScore) {
+                document.querySelector('#average-score').parentElement.querySelector('.progress-fill').style.width = `${data.averageScore}%`;
+            }
+            
+            if (data.toeflPrediction) {
+                const toeflPercentage = (parseInt(data.toeflPrediction.split('-')[0]) / 30) * 100;
+                document.querySelector('#toefl-prediction').parentElement.querySelector('.progress-fill').style.width = `${toeflPercentage}%`;
+            }
+            
+            if (data.practiceTime > 0) {
+                const timePercentage = Math.min((data.practiceTime / 10) * 100, 100); // Assuming 10h is max
+                document.querySelector('#practice-time').parentElement.querySelector('.progress-fill').style.width = `${timePercentage}%`;
+            }
+        }
+
+        // Function to be called when a test is completed
+        function onTestCompleted(testSetId, results) {
+            console.log(`✅ Test ${testSetId} completed with results:`, results);
+            
+            // Update the specific test card to show completed status
+            updateTestCard(testSetId, results);
+            
+            // Refresh overall progress
+            loadProgressData();
+        }
+
+        function updateTestCard(testSetId, results) {
+            // This function will update a specific test card when completed
+            // Implementation would update the card from "Not Started" to "Completed"
+            // with actual scores, dates, and performance metrics
+            console.log(`🔄 Updating test card ${testSetId} with results`);
+        }
+
+        // Smooth page transitions
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(20px)';
+            document.body.style.transition = 'all 0.4s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

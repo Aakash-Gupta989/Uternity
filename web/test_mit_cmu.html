@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIT vs CMU Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            color: #7c3aed;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-buttons {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        button {
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+        }
+        .response {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #7c3aed;
+            min-height: 100px;
+        }
+        .loading {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .response h1, .response h2, .response h3 {
+            color: #7c3aed;
+            margin-top: 20px;
+        }
+        .response h1:first-child, .response h2:first-child, .response h3:first-child {
+            margin-top: 0;
+        }
+        .response table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .response th, .response td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .response th {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            font-weight: 600;
+        }
+        .response ul {
+            padding-left: 20px;
+        }
+        .response li {
+            margin: 8px 0;
+        }
+        .response strong {
+            color: #374151;
+            font-weight: 600;
+        }
+        .response a {
+            color: #0066cc;
+            text-decoration: underline;
+        }
+        .response a:hover {
+            background: #eff6ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 MIT vs CMU Comparison Test</h1>
+        
+        <div class="test-buttons">
+            <button onclick="testQuery('MIT vs CMU')">Test: MIT vs CMU</button>
+            <button onclick="testQuery('Compare MIT and Stanford')">Test: MIT vs Stanford</button>
+            <button onclick="testQuery('Harvard vs Yale differences')">Test: Harvard vs Yale</button>
+            <button onclick="testQuery('What are the requirements for studying in the US?')">Test: General Query</button>
+            <button onclick="testQuery('Generate bullet points')">Test: Bullet Points</button>
+        </div>
+        
+        <div id="response" class="response">
+            <p style="text-align: center; color: #6b7280;">Click a button above to test the comparison functionality</p>
+        </div>
+    </div>
+
+    <script>
+        async function testQuery(message) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = '<div class="loading">🤔 Processing your query...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:8000/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        user_id: 'test_user',
+                        session_id: 'test_session_' + Date.now()
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Convert markdown to HTML for better display
+                let htmlResponse = data.response
+                    .replace(/### (.*)/g, '<h3>$1</h3>')
+                    .replace(/## (.*)/g, '<h2>$1</h2>')
+                    .replace(/# (.*)/g, '<h1>$1</h1>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/• (.*)/g, '<li>$1</li>')
+                    .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br>');
+                
+                // Wrap in paragraphs
+                htmlResponse = '<p>' + htmlResponse + '</p>';
+                
+                // Fix nested ul tags
+                htmlResponse = htmlResponse.replace(/<\/ul><br><ul>/g, '');
+                
+                responseDiv.innerHTML = `
+                    <div style="margin-bottom: 15px;">
+                        <strong>Query:</strong> "${message}"<br>
+                        <strong>Strategy:</strong> ${data.strategy_used}<br>
+                        <strong>Confidence:</strong> ${(data.confidence_score * 100).toFixed(1)}%<br>
+                        <strong>Processing Time:</strong> ${data.processing_time_ms.toFixed(1)}ms
+                    </div>
+                    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 15px 0;">
+                    ${htmlResponse}
+                `;
+                
+                console.log('✅ Response received:', data);
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                responseDiv.innerHTML = `
+                    <div style="color: #dc2626;">
+                        <strong>Error:</strong> ${error.message}<br>
+                        <em>Make sure the backend server is running on http://localhost:8000</em>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

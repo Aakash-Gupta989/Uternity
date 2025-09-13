@@ -1,0 +1,49 @@
+# Core RAG System Dependencies
+llama-index>=0.10.0
+llama-index-vector-stores-chroma>=0.1.7
+llama-index-embeddings-huggingface>=0.2.0
+llama-index-llms-huggingface>=0.1.21
+llama-index-llms-groq>=0.1.20
+llama-index-readers-file>=0.1.22
+
+# Vector Database
+chromadb>=0.5.0
+
+# Web Framework
+fastapi>=0.110.0
+uvicorn[standard]>=0.25.0
+
+# Data Processing
+pandas>=2.2.0
+numpy>=1.26.0
+rapidfuzz>=3.9.0
+tika>=2.6.0
+beautifulsoup4>=4.12.3
+
+# HTTP and Validation
+requests>=2.31.0
+pydantic>=2.5.0
+
+# Local Embeddings and LLM
+sentence-transformers>=2.2.2
+transformers>=4.37.0
+torch>=2.1.2
+
+# Lightweight Local LLM (optional - for complex queries only)
+accelerate>=0.25.0
+bitsandbytes>=0.41.3  # For model quantization (reduces memory usage)
+
+# Async Support
+aiohttp>=3.9.1
+asyncio-throttle>=1.0.2
+
+# Logging and Monitoring
+python-json-logger>=2.0.7
+
+# Development and Testing
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+httpx>=0.25.2
+
+# Optional: For better performance
+orjson>=3.9.10

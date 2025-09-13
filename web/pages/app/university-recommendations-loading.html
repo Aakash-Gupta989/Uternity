@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preparing Recommendations...</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    .progress-bar { height: 10px; border-radius: 999px; background: #eef2ff; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#67e8f9 0%,#8b5cf6 100%); transition: width 500ms ease; }
+    .step { color: #6b7280; }
+    .step.active { color: #1f2937; font-weight: 600; }
+    .step .dot { width: 18px; height: 18px; border-radius: 999px; border: 2px solid #e5e7eb; display: grid; place-items: center; background: #fff; color: #9ca3af; }
+    .step.done { color: #1f2937; }
+    .step.done .dot { background: #10b981; border-color: #10b981; color: #fff; }
+  </style>
+</head>
+<body class="bg-white">
+  <div id="header-container"></div>
+
+  <main class="max-w-3xl mx-auto px-4 py-0 min-h-screen flex items-center justify-center">
+    <section class="w-full bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-400 to-violet-500 text-white grid place-items-center">
+          <i class="fas fa-plane"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-extrabold text-gray-900">Preparing your recommendations…</h1>
+          <p class="text-gray-500 text-sm">This usually takes 30–60 seconds.</p>
+        </div>
+      </div>
+
+      <div class="mt-6 progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+
+      <div class="mt-6 grid gap-3">
+        <div id="st1" class="step active flex items-center gap-3">
+          <div class="dot"><i class="fas fa-spinner fa-spin text-xs"></i></div>
+          <span>Submitting profile</span>
+        </div>
+        <div id="st2" class="step flex items-center gap-3">
+          <div class="dot"><i class="fas fa-spinner text-xs"></i></div>
+          <span>Scoring and normalizing inputs</span>
+        </div>
+        <div id="st3" class="step flex items-center gap-3">
+          <div class="dot"><i class="fas fa-spinner text-xs"></i></div>
+          <span>Matching departments and filtering universities</span>
+        </div>
+        <div id="st4" class="step flex items-center gap-3">
+          <div class="dot"><i class="fas fa-spinner text-xs"></i></div>
+          <span>Generating AI insights</span>
+        </div>
+        <div id="st5" class="step flex items-center gap-3">
+          <div class="dot"><i class="fas fa-spinner text-xs"></i></div>
+          <span>Finalizing recommendations</span>
+        </div>
+      </div>
+
+      <div id="errorBox" class="hidden mt-6 p-4 rounded-lg border border-red-200 bg-red-50 text-red-700 text-sm">
+        Something went wrong. Please try again.
+        <div class="mt-3">
+          <a href="/pages/app/university-recommender.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-600 text-white font-semibold hover:bg-red-700">
+            <i class="fas fa-rotate-right"></i> Try again
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    async function loadHeaderNow(){
+      document.getElementById('header-container').innerHTML = '';
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', loadHeaderNow); } else { loadHeaderNow(); }
+
+    (async function run(){
+      try {
+        // Build payload from previously saved form data
+        const formData = localStorage.getItem('universityRecommenderData');
+        if (!formData) return window.location.href = 'university-recommender.html';
+        const d = JSON.parse(formData);
+        const selectedProvider = localStorage.getItem('llm_provider') || d.llmProvider || 'groq';
+        const payload = {
+          // Academic Background
+          gpa: parseFloat(d.gpa || '0'),
+          course: d.course || 'Computer Science',
+          degree: d.degree || 'masters',
+          currentUniversity: d.currentUniversity || '',
+          universityTier: (d.universityTier || 'tier2').toLowerCase(),
+          intake: d.intake || 'fall2025',
+          
+          // Test Scores
+          greQuant: parseInt(d.greQuant || '155'),
+          greVerbal: parseInt(d.greVerbal || '150'),
+          greAwa: parseFloat(d.greAwa || '4.0'),
+          toefl: parseInt(d.toefl || '95'),
+          
+          // Experience
+          workExperience: d.workExperience || '',
+          researchPapers: d.researchPapers || '',
+          certifications: d.certifications || '',
+          extracurriculars: d.extracurriculars || '',
+          
+          // Preferences (NEW - these were missing!)
+          preferredLocation: d.preferredLocation || 'Any',
+          universityType: d.universityType || 'Any',
+          tuitionFee: d.tuitionFee || '',
+          livingCost: d.livingCost || '',
+          fullTimeOpportunity: d.fullTimeOpportunity || 'somewhat',
+          scholarship: d.scholarship || 'preferred',
+          greRequired: d.greRequired || 'either',
+          courseAcronym: d.courseAcronym || '',
+          additionalRequirements: d.additionalRequirements || '',
+          
+          // LLM Provider
+          llmProvider: selectedProvider
+        };
+
+        // UI progress animation
+        const fill = document.getElementById('progressFill');
+        const stepIds = ['st1','st2','st3','st4','st5'];
+        const setDone = (i)=>{ const el=document.getElementById(stepIds[i]); el.classList.remove('active'); el.classList.add('done'); el.querySelector('.dot').innerHTML='<i class="fas fa-check text-xs"></i>'; };
+        const setActive = (i)=>{ const el=document.getElementById(stepIds[i]); el.classList.add('active'); el.querySelector('.dot').innerHTML='<i class="fas fa-spinner fa-spin text-xs"></i>'; };
+        let pct=0; const timer=setInterval(()=>{ pct=Math.min(90, pct+4+Math.random()*4); fill.style.width=pct+'%'; },600);
+        setTimeout(()=>{ setDone(0); setActive(1); },700);
+        setTimeout(()=>{ setDone(1); setActive(2); },2200);
+
+        // Call recommender API (LLM based) through gateway
+        const r = await fetch('/api/university/api/v1/recommendations', {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+        });
+        
+        if (!r.ok) {
+          // Handle LLM system errors specifically
+          if (r.status === 503) {
+            const errorData = await r.json().catch(() => ({}));
+            showLLMError(errorData.detail || {});
+            return;
+          }
+          throw new Error('API error: ' + r.status);
+        }
+        
+        const res = await r.json();
+        localStorage.setItem('api_recommendations_response', JSON.stringify(res));
+        setTimeout(()=>{ setDone(2); setActive(3); }, 400);
+        setTimeout(()=>{ setDone(3); setActive(4); }, 800);
+        clearInterval(timer); fill.style.width='100%'; setDone(4);
+        window.location.href = '/university-recommendations.html';
+      } catch (e) {
+        console.error('❌ Loading error:', e);
+        document.getElementById('errorBox').classList.remove('hidden');
+      }
+      
+      function showLLMError(errorDetail) {
+        const errorBox = document.getElementById('errorBox');
+        const message = errorDetail.message || 'LLM recommendation system is currently unavailable';
+        const recommendation = errorDetail.recommendation || 'Please try again later.';
+        
+        errorBox.innerHTML = `
+          <div class="flex items-start gap-3">
+            <i class="fas fa-exclamation-triangle text-red-500 mt-1"></i>
+            <div>
+              <h3 class="font-semibold text-red-800 mb-2">AI Recommendation System Unavailable</h3>
+              <p class="text-red-700 mb-2">${message}</p>
+              <p class="text-red-600 text-sm mb-4">${recommendation}</p>
+              <div class="flex gap-3">
+                <a href="/pages/app/university-recommender.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-600 text-white font-semibold hover:bg-red-700">
+                  <i class="fas fa-rotate-right"></i> Try Again
+                </a>
+                <button onclick="window.history.back()" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-300 text-red-700 font-semibold hover:bg-red-50">
+                  <i class="fas fa-arrow-left"></i> Go Back
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        errorBox.classList.remove('hidden');
+      }
+    })();
+  </script>
+</body>
+</html>

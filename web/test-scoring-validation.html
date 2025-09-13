@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TOEFL Scoring Validation Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-case { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .result { margin-top: 10px; padding: 10px; border-radius: 3px; }
+        .valid { background-color: #d4edda; border-left: 5px solid #28a745; }
+        .invalid { background-color: #f8d7da; border-left: 5px solid #dc3545; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>TOEFL Scoring Validation Test</h1>
+    <p>This page tests the new strict validation logic that prevents corrupted/gibberish responses from getting 18/30 scores.</p>
+    
+    <div class="test-case">
+        <h3>Test 1: Empty Response</h3>
+        <button onclick="testScoring('')">Test Empty Response</button>
+        <div id="result1" class="result"></div>
+    </div>
+    
+    <div class="test-case">
+        <h3>Test 2: Corrupted Response (User's Screenshot)</h3>
+        <button onclick="testScoring('1,5g de semugar 1,5g de beaten wirmen 6g de wird 180gr de ver gece 1.5% dextr. 1.5% dextr. 1.5% dextr. 1.5% dextr.')">Test Corrupted Response</button>
+        <div id="result2" class="result"></div>
+    </div>
+    
+    <div class="test-case">
+        <h3>Test 3: Mixed Valid/Invalid</h3>
+        <button onclick="testScoring('I think semugar wirmen gece dextr blahblah nonsense gibberish')">Test Mixed Response</button>
+        <div id="result3" class="result"></div>
+    </div>
+    
+    <div class="test-case">
+        <h3>Test 4: Valid English Response</h3>
+        <button onclick="testScoring('I personally prefer to study in a quiet environment because it helps me concentrate better and focus on my work without any distractions.')">Test Valid Response</button>
+        <div id="result4" class="result"></div>
+    </div>
+    
+    <script>
+        async function testScoring(response) {
+            const resultDiv = event.target.nextElementSibling;
+            resultDiv.innerHTML = "Testing...";
+            
+            try {
+                const requestData = {
+                    task_number: 1,
+                    question: "Some people prefer to study in a quiet environment, while others prefer to study with background music or in a more lively setting. Which do you prefer and why?",
+                    response: response,
+                    task_type: "independent"
+                };
+                
+                const apiResponse = await fetch('http://localhost:8002/api/v1/score-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                const scoreData = await apiResponse.json();
+                const isValid = scoreData.score !== "Invalid" && scoreData.score !== "Error";
+                
+                resultDiv.className = `result ${isValid ? 'valid' : 'invalid'}`;
+                resultDiv.innerHTML = `
+                    <strong>Response:</strong> "${response.substring(0, 100)}${response.length > 100 ? '...' : ''}"<br>
+                    <strong>Score:</strong> ${scoreData.score}<br>
+                    <strong>Feedback:</strong> ${scoreData.feedback}<br>
+                    <strong>Status:</strong> ${isValid ? '✅ Valid (will get real LLM score)' : '❌ Invalid (correctly blocked)'}
+                `;
+            } catch (error) {
+                resultDiv.className = "result invalid";
+                resultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

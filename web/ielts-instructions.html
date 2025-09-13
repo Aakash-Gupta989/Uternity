@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Speaking Test - Official Instructions</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .exam-header {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 2rem 0;
+            border-bottom: 4px solid #991b1b;
+        }
+
+        .warning-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 2px solid #b45309;
+        }
+
+        .section-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header {
+            background: #f3f4f6;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #374151;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        .part-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .part-header {
+            background: #dc2626;
+            color: white;
+            padding: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .part-content {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .timing-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        .warning-box {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #ef4444;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .success-box {
+            background: #dcfce7;
+            border: 1px solid #22c55e;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #22c55e;
+        }
+
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .score-table th,
+        .score-table td {
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .score-table th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+
+        .start-exam-section {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 2rem;
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.3);
+        }
+
+        .start-button {
+            background: white;
+            color: #dc2626;
+            padding: 1rem 3rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+
+        .requirement-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.75rem;
+            margin-top: 0.125rem;
+            flex-shrink: 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+        }
+
+        .checklist-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.75rem;
+            color: #dc2626;
+        }
+
+        .band-score {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin: 0.125rem;
+        }
+
+        .band-9 { background: #22c55e; color: white; }
+        .band-8 { background: #84cc16; color: white; }
+        .band-7 { background: #eab308; color: white; }
+        .band-6 { background: #f97316; color: white; }
+        .band-5 { background: #ef4444; color: white; }
+        .band-4 { background: #dc2626; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="exam-header">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold mb-2">IELTS Speaking Test</h1>
+                    <p class="text-xl opacity-90">International English Language Testing System</p>
+                    <p class="text-lg opacity-75 mt-1">Duration: 11-14 minutes | 3 Parts | Band Score: 0-9</p>
+                </div>
+                <div>
+                    <a href="pages/app/voice-dashboard.html" class="back-button">
+                        ← Return to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-6 py-8 max-w-6xl">
+        
+        <!-- Critical Information -->
+        <div class="section-card">
+            <div class="section-header">
+                🚨 CRITICAL TEST INFORMATION - READ CAREFULLY
+            </div>
+            <div class="section-content">
+                <div class="warning-box">
+                    <h3 class="font-bold text-red-700 mb-2">⚠️ IMPORTANT WARNINGS</h3>
+                    <ul class="list-disc list-inside space-y-1 text-red-700">
+                        <li><strong>NO PAUSING:</strong> Once started, the test cannot be paused, stopped, or restarted</li>
+                        <li><strong>STRICT TIMING:</strong> All time limits are enforced automatically - no extensions</li>
+                        <li><strong>CONVERSATIONAL FLOW:</strong> Respond naturally as if speaking with an examiner</li>
+                        <li><strong>NO TECHNICAL SUPPORT:</strong> Ensure all equipment works before starting</li>
+                        <li><strong>QUIET ENVIRONMENT:</strong> Background noise will affect your score</li>
+                        <li><strong>CLEAR SPEECH:</strong> Speak clearly and at normal pace - mumbling affects scores</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h3 class="font-bold text-blue-700 mb-2">📋 Test Overview</h3>
+                    <p class="text-blue-700">The IELTS Speaking test assesses your English speaking skills through a face-to-face conversation with an examiner. You will be evaluated on fluency, vocabulary, grammar, and pronunciation across three distinct parts.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part Breakdown -->
+        <div class="section-card">
+            <div class="section-header">
+                📚 DETAILED PART BREAKDOWN
+            </div>
+            <div class="section-content">
+                
+                <!-- Part 1 -->
+                <div class="part-card">
+                    <div class="part-header">
+                        <span>PART 1: Introduction and Interview</span>
+                        <span class="text-sm">4-5 minutes</span>
+                    </div>
+                    <div class="part-content">
+                        <p class="mb-3"><strong>Description:</strong> The examiner will introduce themselves and ask you to confirm your identity. You'll then answer general questions about familiar topics.</p>
+                        
+                        <div class="timing-box">
+                            ⏱️ <strong>Duration:</strong> 4-5 minutes (Introduction + Q&A)
+                        </div>
+                        
+                        <p class="mb-2"><strong>What you'll discuss:</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li><strong>Home/Accommodation:</strong> Where you live, your neighborhood, changes</li>
+                            <li><strong>Work/Studies:</strong> Your job, studies, daily routine, future plans</li>
+                            <li><strong>Familiar Topics:</strong> Hobbies, family, food, transport, technology, etc.</li>
+                        </ul>
+                        
+                        <div class="success-box">
+                            <p class="text-green-700"><strong>💡 Tips:</strong> Keep answers natural but detailed (30-45 seconds per response). Use personal examples and experiences. Show range of vocabulary and grammar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2 -->
+                <div class="part-card">
+                    <div class="part-header">
+                        <span>PART 2: Long Turn (Individual Presentation)</span>
+                        <span class="text-sm">3-4 minutes</span>
+                    </div>
+                    <div class="part-content">
+                        <p class="mb-3"><strong>Description:</strong> You'll receive a task card with a topic and points to cover. After 1 minute preparation, you'll speak for 1-2 minutes on the topic.</p>
+                        
+                        <div class="timing-box">
+                            ⏱️ <strong>Timing:</strong> 1 minute preparation + 1-2 minutes speaking + follow-up questions
+                        </div>
+                        
+                        <p class="mb-2"><strong>Task card structure:</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li>Main topic with 3-4 specific points to address</li>
+                            <li>Usually covers: describe, explain, and say how you feel/why important</li>
+                            <li>Topics: personal experiences, people, places, objects, events</li>
+                        </ul>
+                        
+                        <div class="info-box">
+                            <p class="text-blue-700"><strong>📝 Example topics:</strong> Describe a memorable journey, a person who influenced you, a skill you'd like to learn, a place you'd recommend to tourists</p>
+                        </div>
+                        
+                        <div class="success-box">
+                            <p class="text-green-700"><strong>💡 Strategy:</strong> Use preparation time to plan structure and key vocabulary. Speak for the full time allocated. Cover all points on the card.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 3 -->
+                <div class="part-card">
+                    <div class="part-header">
+                        <span>PART 3: Two-way Discussion</span>
+                        <span class="text-sm">4-5 minutes</span>
+                    </div>
+                    <div class="part-content">
+                        <p class="mb-3"><strong>Description:</strong> The examiner will ask more complex questions related to the topic from Part 2. This tests your ability to discuss abstract ideas and give opinions.</p>
+                        
+                        <div class="timing-box">
+                            ⏱️ <strong>Duration:</strong> 4-5 minutes of in-depth discussion
+                        </div>
+                        
+                        <p class="mb-2"><strong>Question types:</strong></p>
+                        <ul class="list-disc list-inside ml-4 space-y-1">
+                            <li><strong>Opinion questions:</strong> "What do you think about...?"</li>
+                            <li><strong>Comparison questions:</strong> "How has this changed over time?"</li>
+                            <li><strong>Hypothetical questions:</strong> "What might happen if...?"</li>
+                            <li><strong>Analysis questions:</strong> "Why do you think this happens?"</li>
+                        </ul>
+                        
+                        <div class="warning-box">
+                            <p class="text-red-700"><strong>⚠️ Important:</strong> This part tests abstract thinking and complex language. Avoid simple yes/no answers. Develop your ideas with examples and explanations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scoring Criteria -->
+        <div class="section-card">
+            <div class="section-header">
+                📊 OFFICIAL BAND SCORE CRITERIA
+            </div>
+            <div class="section-content">
+                <p class="mb-4">Your speaking is assessed equally across four criteria, each contributing 25% to your final band score:</p>
+                
+                <table class="score-table">
+                    <thead>
+                        <tr>
+                            <th>Criterion</th>
+                            <th>Weight</th>
+                            <th>Key Assessment Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fluency & Coherence</strong></td>
+                            <td>25%</td>
+                            <td>Speaking smoothly, logical flow, appropriate linking, confidence</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lexical Resource</strong></td>
+                            <td>25%</td>
+                            <td>Vocabulary range, accuracy, appropriateness, natural usage</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Grammatical Range & Accuracy</strong></td>
+                            <td>25%</td>
+                            <td>Sentence variety, complex structures, error frequency and impact</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pronunciation</strong></td>
+                            <td>25%</td>
+                            <td>Clear speech, stress/intonation, individual sounds, rhythm</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="info-box">
+                    <h3 class="font-bold text-blue-700 mb-2">🎯 Band Score Range</h3>
+                    <div class="text-blue-700">
+                        <p class="mb-2">IELTS uses a 9-band scoring system:</p>
+                        <div class="space-y-1">
+                            <div><span class="band-score band-9">Band 9</span> Expert User - Full operational command</div>
+                            <div><span class="band-score band-8">Band 8</span> Very Good User - Occasional inaccuracies</div>
+                            <div><span class="band-score band-7">Band 7</span> Good User - Flexible and precise language</div>
+                            <div><span class="band-score band-6">Band 6</span> Competent User - Generally effective</div>
+                            <div><span class="band-score band-5">Band 5</span> Modest User - Partial command</div>
+                            <div><span class="band-score band-4">Band 4</span> Limited User - Basic competence</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Requirements -->
+        <div class="section-card">
+            <div class="section-header">
+                🔧 TECHNICAL REQUIREMENTS & CHECKLIST
+            </div>
+            <div class="section-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold mb-3">📱 System Requirements</h3>
+                        <div class="space-y-2">
+                            <div class="checklist-item">
+                                <span class="checklist-icon">🎤</span>
+                                <span>Working microphone (built-in or external)</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="checklist-icon">🔊</span>
+                                <span>Clear audio output (speakers/headphones)</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="checklist-icon">🌐</span>
+                                <span>Stable internet connection</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="checklist-icon">💻</span>
+                                <span>Modern web browser (Chrome, Firefox, Safari)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-bold mb-3">🏠 Environment Setup</h3>
+                        <div class="space-y-2">
+                            <div class="checklist-item">
+                                <span class="checklist-icon">🤫</span>
+                                <span>Quiet, private room</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="checklist-icon">💡</span>
+                                <span>Good lighting (for confidence)</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="checklist-icon">🚫</span>
+                                <span>No interruptions or distractions</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="checklist-icon">⏰</span>
+                                <span>Allocate 20 minutes total time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="section-card">
+            <div class="section-header">
+                📝 FINAL REMINDERS
+            </div>
+            <div class="section-content">
+                <div class="warning-box">
+                    <h3 class="font-bold text-red-700 mb-2">🎯 Key Success Factors</h3>
+                    <ul class="list-disc list-inside space-y-1 text-red-700">
+                        <li><strong>Be Natural:</strong> Speak as you would in a real conversation</li>
+                        <li><strong>Think Aloud:</strong> It's okay to pause briefly to organize thoughts</li>
+                        <li><strong>Extend Answers:</strong> Give full responses with examples and details</li>
+                        <li><strong>Stay Calm:</strong> Nervousness is normal - the examiner understands</li>
+                        <li><strong>Ask for Clarification:</strong> If you don't understand, it's okay to ask</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Exam Section -->
+        <div class="start-exam-section">
+            <h2 class="text-3xl font-bold mb-4">Ready to Begin Your IELTS Speaking Test?</h2>
+            <p class="text-xl mb-6 opacity-90">
+                Make sure you've read all instructions carefully and your environment is set up properly.
+                <br>Once you click "Start Test", the examination will begin immediately.
+            </p>
+            <div class="space-y-4">
+                <button onclick="startIELTSTest()" class="start-button">
+                    🎤 Start IELTS Speaking Test
+                </button>
+                <p class="text-sm opacity-75">
+                    Test Duration: Approximately 11-14 minutes | No breaks allowed
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startIELTSTest() {
+            // Show loading state
+            const button = document.querySelector('.start-button');
+            button.innerHTML = '⏳ Starting Test...';
+            button.disabled = true;
+            
+            // Redirect to the new IELTS test page
+            setTimeout(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const section = urlParams.get('section');
+                const suffix = section ? (`?section=${encodeURIComponent(section)}`) : '';
+                window.location.href = 'ielts-test.html' + suffix;
+            }, 1000);
+        }
+    </script>
+</body>
+</html> 

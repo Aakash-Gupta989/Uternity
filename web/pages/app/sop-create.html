@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UTERNITY - SOP Board</title>
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		body { font-family: 'Inter', sans-serif; background: #f8fafc; min-height: 100vh; color: #1f2937; }
+		.header-container { position: relative; z-index: 50; padding: 1rem; }
+		.header-nav { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-radius: 24px; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 10px 15px -3px rgba(0,0,0,.1); }
+		.nav-link { color: rgba(255,255,255,.85); font-weight: 500; padding: 10px 14px; border-radius: 12px; transition: all .2s ease; display: inline-flex; align-items: center; gap: 8px; }
+		.nav-link:hover { color: #fff; background: rgba(255,255,255,.15); transform: translateY(-2px); }
+		.nav-link.active { color: #fff; background: rgba(255,255,255,.25); font-weight: 600; }
+
+		.section-title { background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 800; }
+		.card { background: #fff; border: 1px solid rgba(226,232,240,.85); border-radius: 16px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,.08); }
+		.card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+		.icon-box { width: 44px; height: 44px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: #fff; }
+		.icon-purple { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+		.input { width: 100%; padding: 12px 14px; border: 2px solid #e5e7eb; border-radius: 12px; background: #f9fafb; transition: all .2s ease; }
+		.input:focus { outline: none; border-color: #8b5cf6; background: #fff; box-shadow: 0 0 0 3px rgba(139,92,246,.1); }
+		.btn-primary { background: linear-gradient(135deg, #8b5cf6, #ec4899); color: #fff; padding: 16px 24px; border-radius: 9999px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all .2s ease; font-size: 18px; }
+		.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(139,92,246,.28); }
+		.suggestion-list { position: absolute; left: 0; right: 0; top: calc(100% + 8px); background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,.1); max-height: 220px; overflow: auto; z-index: 20; }
+		.suggestion-item { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid #f3f4f6; }
+		.suggestion-item:last-child{border-bottom:none}
+		.suggestion-item:hover { background: #f9fafb; color: #8b5cf6; }
+	</style>
+</head>
+<body class="min-h-screen">
+	<div id="header-container"></div>
+	<main class="px-6" style="padding-top: 3.2px;">
+		<div class="max-w-6xl mx-auto">
+			<section class="text-center pt-10 pb-6">
+				<h1 class="section-title text-5xl md:text-6xl leading-tight mb-2">Craft Your Statement of Purpose</h1>
+				<p class="text-gray-600 text-base md:text-lg max-w-3xl mx-auto">
+					Start or resume an SOP tailored to your target university.
+					The AI asks focused questions and drafts concise, polished sections.
+				</p>
+			</section>
+
+			<section class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-8">
+				<!-- New SOP -->
+				<div class="card">
+					<div class="card-header">
+						<span class="icon-box icon-purple"><i class="fa-solid fa-file-circle-plus text-lg"></i></span>
+						<div>
+							<h2 class="text-lg font-bold text-gray-900">Start New SOP</h2>
+							<p class="text-gray-600 text-sm">Enter target details</p>
+						</div>
+					</div>
+					<form id="sopCreateForm" class="space-y-4">
+						<div>
+							<label class="text-sm font-semibold text-gray-700 mb-1 block">Target University *</label>
+							<div class="relative">
+								<input id="university" class="input" placeholder="e.g., University of Florida" autocomplete="off" required>
+								<div id="universitySuggestions" class="suggestion-list hidden"></div>
+							</div>
+						</div>
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<div class="sm:col-span-2">
+								<label class="text-sm font-semibold text-gray-700 mb-1 block">Field of Study</label>
+								<input id="fieldOfStudy" class="input" placeholder="e.g., Energy Systems">
+							</div>
+						</div>
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+							<div>
+								<label class="text-sm font-semibold text-gray-700 mb-1 block">Degree Type</label>
+								<select id="degreeType" class="input">
+									<option value="MS">MS</option>
+									<option value="MEng">MEng</option>
+									<option value="PhD">PhD</option>
+									<option value="MBA">MBA</option>
+									<option value="Other">Other</option>
+								</select>
+							</div>
+							<div>
+								<label class="text-sm font-semibold text-gray-700 mb-1 block">Deadline</label>
+								<input id="deadline" type="date" class="input">
+							</div>
+						</div>
+						<button type="submit" class="btn-primary w-full"><i class="fa-solid fa-rocket"></i> Launch SOP Workspace</button>
+					</form>
+				</div>
+
+				<!-- Saved SOPs -->
+				<div class="card">
+					<div class="card-header">
+						<span class="icon-box icon-purple"><i class="fa-solid fa-folder-open text-lg"></i></span>
+						<div>
+							<h2 class="text-lg font-bold text-gray-900">Your SOPs</h2>
+							<p class="text-gray-600 text-sm">Continue where you left off</p>
+						</div>
+					</div>
+					<div id="savedSopsGrid" class="space-y-3"></div>
+					<div class="mt-4 text-center text-gray-500 text-sm">Click any saved card to resume that SOP.</div>
+					<div class="mt-2 text-center">
+						<button id="clearSavedBtn" class="text-red-600 hover:text-red-700 text-sm font-semibold">Clear saved SOPs</button>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<script>
+		// Build header identical to the comparison page (SOP active)
+		document.getElementById('header-container').innerHTML = `
+			<header class="header-container">
+				<nav class="header-nav">
+					<div class="flex items-center space-x-2">
+						<div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
+							<svg class="w-6 h-6 text-purple-600" viewBox="0 0 24 24" fill="none">
+								<path d="M12 4L4 8L12 12L20 8L12 4Z" stroke="currentColor" stroke-width="2"/>
+								<path d="M4 12L12 16L20 12" stroke="currentColor" stroke-width="2"/>
+								<path d="M4 16L12 20L20 16" stroke="currentColor" stroke-width="2"/>
+							</svg>
+						</div>
+						<span class="text-2xl font-bold text-white">UTERNITY</span>
+					</div>
+					<div class="flex items-center space-x-6">
+						<a href="chat.html" class="nav-link text-white"><i class="fas fa-comments mr-2"></i>Chat</a>
+						<a href="sop-create.html" class="nav-link text-white active"><i class="fas fa-file-alt mr-2"></i>SOP</a>
+						<a href="cost-calculator.html" class="nav-link text-white"><i class="fas fa-calculator mr-2"></i>Cost Calculator</a>
+						<a href="university-recommender.html" class="nav-link text-white"><i class="fas fa-university mr-2"></i>Recommend</a>
+						<a href="voice-dashboard.html" class="nav-link text-white"><i class="fas fa-graduation-cap mr-2"></i>TOEFL/IELTS</a>
+					</div>
+					<div class="flex items-center space-x-4">
+						<div class="relative user-menu">
+							<button id="userMenuButton" class="flex items-center space-x-2 p-2 hover:bg-white hover:bg-opacity-10 rounded-lg transition-colors">
+								<div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+									<span id="userInitial" class="text-sm font-semibold text-white">?</span>
+								</div>
+								<span id="userDisplayName" class="text-white font-medium hidden sm:block"></span>
+								<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+								</svg>
+							</button>
+							<div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 hidden" style="z-index: 9999;">
+								<div class="px-4 py-2 border-b border-gray-100">
+									<p id="userDropdownName" class="text-sm font-medium text-gray-800"></p>
+									<p id="userEmail" class="text-xs text-gray-500 mt-1"></p>
+								</div>
+								<a href="/profile" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+									<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+									</svg>
+									Profile
+								</a>
+								<button id="logoutButton" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
+									<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+									</svg>
+									Sign Out
+								</button>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</header>
+		`;
+
+		// Add CSS for dropdown hover functionality
+		const dropdownCSS = `
+			<style>
+				.user-menu:hover #userDropdown {
+					display: block !important;
+				}
+				.user-menu #userDropdown {
+					display: none;
+				}
+				.user-menu:hover #userDropdown.hidden {
+					display: block !important;
+				}
+			</style>
+		`;
+		document.head.insertAdjacentHTML('beforeend', dropdownCSS);
+
+		// Setup header dropdown functionality
+		function setupHeaderDropdowns() {
+			// User dropdown
+			const userMenuButton = document.getElementById('userMenuButton');
+			const userDropdown = document.getElementById('userDropdown');
+			const logoutButton = document.getElementById('logoutButton');
+
+			if (userMenuButton && userDropdown) {
+				userMenuButton.addEventListener('click', function(e) {
+					e.stopPropagation();
+					userDropdown.classList.toggle('hidden');
+				});
+
+				// Close dropdown when clicking outside
+				document.addEventListener('click', function(e) {
+					if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+						userDropdown.classList.add('hidden');
+					}
+				});
+			}
+
+			// Logout functionality - UPDATED TO CLEAR ALL AUTH DATA
+			if (logoutButton) {
+				logoutButton.addEventListener('click', async function() {
+					if (confirm('Are you sure you want to sign out?')) {
+						console.log('🚪 Starting logout process from SOP page');
+						try {
+							// Try to call our auth service logout endpoint
+							const accessToken = localStorage.getItem('uternity_access_token') || localStorage.getItem('access_token');
+							if (accessToken) {
+								try {
+									await fetch('http://localhost:8001/auth/logout', {
+										method: 'POST',
+										headers: {
+											'Authorization': `Bearer ${accessToken}`,
+											'Content-Type': 'application/json'
+										}
+									});
+									console.log('✅ Auth service logout successful from SOP page');
+								} catch (error) {
+									console.warn('⚠️ Auth service logout failed from SOP page, continuing with local cleanup:', error);
+								}
+							}
+
+							// Clear all authentication and session data
+							const keys = [
+								'access_token','refresh_token','session_id','user_data',
+								'uternity_user','uternity_access_token','uternity_refresh_token',
+								'uternity_current_session_id','uternity_token'
+							];
+							keys.forEach(k => localStorage.removeItem(k));
+							
+							console.log('✅ All local storage cleared from SOP page');
+							window.location.href = '/auth/login';
+						} catch (error) {
+							console.error('❌ Logout failed from SOP page:', error);
+							// Even if logout fails, clear local data and redirect
+							localStorage.clear();
+							window.location.href = '/auth/login';
+						}
+					}
+				});
+			}
+		}
+
+		// Populate user initials across header
+		(function populateHeaderUserInfo(){
+			try {
+				const raw = localStorage.getItem('uternity_user') || localStorage.getItem('user_data');
+				let user = {}; if (raw) { try { user = JSON.parse(raw); } catch { user = {}; } }
+				const name = user.name || user.full_name || user.fullName || user.username || '';
+				const email = user.email || user.user_email || '';
+				function initials(n,e){
+					if(n&&n.trim()){const p=n.trim().split(/\s+/).filter(Boolean);const f=p[0]?.[0]||'';const l=p.length>1?p[p.length-1][0]:'';return((f+l)||'?').toUpperCase();}
+					if(e&&e.trim()){const u=(e.split('@')[0]||'');const t=u.split(/[^a-zA-Z]+/).filter(Boolean);const f=t[0]?.[0]||'';const l=t.length>1?t[t.length-1][0]:'';return((f+l)||u[0]||'?').toUpperCase();}
+					return'?';
+				}
+				const init=initials(name,email);
+				const elI=document.getElementById('userInitial');
+				const elD=document.getElementById('userDisplayName');
+				const elDN=document.getElementById('userDropdownName');
+				const elE=document.getElementById('userEmail');
+				if(elI) elI.textContent=init;
+				if(elD){elD.textContent=''; elD.style.display='none';}
+				if(elDN) elDN.textContent=name||'';
+				if(elE) elE.textContent=email||'';
+			}catch(e){console.warn('populateHeaderUserInfo failed:',e)}
+		})();
+
+		// Initialize dropdown functionality
+		setupHeaderDropdowns();
+
+		// University autocomplete
+		let isLoading = false;
+		const uniInput = document.getElementById('university');
+		const sugBox = document.getElementById('universitySuggestions');
+		uniInput.addEventListener('input', async function() {
+			const q = this.value.trim();
+			if (q.length < 2) { sugBox.classList.add('hidden'); return; }
+			if (isLoading) return;
+			try {
+				isLoading = true;
+				if (window.sopAPI && window.sopAPI.searchUniversities) {
+					const results = await window.sopAPI.searchUniversities(q);
+					const items = (results || []).slice(0, 8);
+					if (items.length === 0) { sugBox.classList.add('hidden'); return; }
+					sugBox.innerHTML = items.map(u => `<div class=\"suggestion-item\" onclick=\"(function(v){document.getElementById('university').value=v;document.getElementById('universitySuggestions').classList.add('hidden');})('${(u.name||u).toString().replace(/'/g,'&#39;')}')\">${u.name||u}</div>`).join('');
+					sugBox.classList.remove('hidden');
+				} else {
+					sugBox.innerHTML = '<div class="p-4 text-gray-500 text-center">Connect backend to enable suggestions</div>';
+					sugBox.classList.remove('hidden');
+				}
+			} catch {
+				sugBox.classList.add('hidden');
+			} finally { isLoading = false; }
+		});
+		document.addEventListener('click', e => { if (!sugBox.contains(e.target) && e.target !== uniInput) sugBox.classList.add('hidden'); });
+
+		// Saved SOPs render
+		function renderSavedSops() {
+			const grid = document.getElementById('savedSopsGrid');
+			try {
+				const saved = JSON.parse(localStorage.getItem('sopSavedByUniversity') || '{}');
+				const universities = Object.keys(saved);
+				if (universities.length === 0) {
+					grid.innerHTML = `<div class=\"text-center py-8\"><div class=\"w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3\"><i class=\"fa-solid fa-file-lines text-gray-400\"></i></div><p class=\"text-gray-500\">No saved SOPs yet</p><p class=\"text-sm text-gray-400 mt-1\">Start your first SOP above</p></div>`;
+					return;
+				}
+				grid.innerHTML = universities.map(u => {
+					const count = Object.keys(saved[u] || {}).length;
+					return `<div class=\"card cursor-pointer\" onclick=\"(function(name){const t={university:name, fieldOfStudy:'', degreeType:'MS'}; localStorage.setItem('sopTargetContext', JSON.stringify(t)); window.location.href='sop-workspace.html';})('${u.replace(/'/g,'&#39;')}')\"><div class=\"flex items-center justify-between\"><div><h3 class=\"text-base font-bold text-gray-900\">${u}</h3><p class=\"text-sm text-gray-600\">${count} section(s) completed</p></div><div class=\"w-9 h-9 icon-box icon-purple\"><i class=\"fa-solid fa-play\"></i></div></div></div>`;
+				}).join('');
+			} catch {
+				grid.innerHTML = `
+ 					<div class=\"text-center py-12\">\n\t\t\t\t\t\t<div class=\\"w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4\\"><i class=\\"fas fa-file-alt text-gray-400 text-xl\\"></i></div>\n\t\t\t\t\t\t<p class=\\"text-gray-500\\">No saved SOPs yet</p>\n\t\t\t\t\t\t<p class=\\"text-sm text-gray-400 mt-1\\">Start your first SOP above</p>\n\t\t\t\t\t</div>
+ 				`;
+			}
+		}
+
+		renderSavedSops();
+
+		// Clear saved SOPs
+		const clearBtn = document.getElementById('clearSavedBtn');
+		if (clearBtn) {
+			clearBtn.addEventListener('click', () => {
+				localStorage.removeItem('sopSavedByUniversity');
+				renderSavedSops();
+			});
+		}
+
+		// Submit
+		document.getElementById('sopCreateForm').addEventListener('submit', function(e) {
+			e.preventDefault();
+			const formData = {
+				university: (document.getElementById('university').value || '').trim(),
+				fieldOfStudy: (document.getElementById('fieldOfStudy').value || '').trim(),
+				degreeType: (document.getElementById('degreeType').value || '').trim(),
+				deadline: (document.getElementById('deadline').value || '').trim()
+			};
+
+			if (!formData.university) {
+				alert('Please provide the University');
+				return;
+			}
+
+			localStorage.setItem('sopTargetContext', JSON.stringify(formData));
+			window.location.href = 'sop-workspace.html';
+		});
+	</script>
+</body>
+</html>

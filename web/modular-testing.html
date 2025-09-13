@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modular Testing - UTERNITY</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237c3aed'><path d='M12 4L4 8L12 12L20 8L12 4Z'/><path d='M4 12L12 16L20 12'/><path d='M4 16L12 20L20 16'/></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-button:not(.active) {
+            background: white;
+            color: #6b7280;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button:not(.active):hover {
+            background: #f9fafb;
+            transform: translateY(-2px);
+        }
+
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .task-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        .task-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .task-icon.independent { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .task-icon.campus { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .task-icon.course { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .task-icon.lecture { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .task-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-description {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .task-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .available-count {
+            background: #dcfce7;
+            color: #166534;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-button:disabled {
+            background: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .usage-stats {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .stats-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Back Button -->
+        <a href="/voice" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Modular Testing</h1>
+            <p class="page-subtitle">Practice individual tasks from our comprehensive test library</p>
+        </div>
+
+        <!-- Usage Statistics -->
+        <div class="usage-stats">
+            <h3 class="stats-title">
+                <i class="fas fa-chart-bar"></i>
+                Your Practice Statistics
+            </h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-practiced">0</div>
+                    <div class="stat-label">Tasks Practiced</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="available-tasks">28</div>
+                    <div class="stat-label">Available Tasks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="completion-rate">0%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="favorite-task">--</div>
+                    <div class="stat-label">Most Practiced</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <button class="tab-button active" onclick="showTab('toefl')" id="toefl-tab">
+                <i class="fas fa-graduation-cap"></i>
+                TOEFL Sections
+            </button>
+            <button class="tab-button" onclick="showTab('ielts')" id="ielts-tab">
+                <i class="fas fa-globe"></i>
+                IELTS Sections
+            </button>
+            <button class="tab-button" onclick="showTab('history')" id="history-tab">
+                <i class="fas fa-history"></i>
+                History
+            </button>
+        </div>
+
+        <!-- TOEFL Tasks -->
+        <div id="toefl-content" class="task-grid">
+            <!-- Independent Speaking -->
+            <div class="task-card">
+                <div class="task-icon independent">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <h3 class="task-title">Independent Speaking</h3>
+                <p class="task-description">
+                    Express your opinion on familiar topics. Practice giving clear, well-structured responses.
+                </p>
+                <div class="task-details">
+                    <span><i class="fas fa-clock"></i> Task 1 • 15 seconds prep, 45 seconds speak</span>
+                    <span class="available-count" id="independent-count">7 available</span>
+                </div>
+                <button class="start-button" onclick="startModularTask('independent')">
+                    <i class="fas fa-play"></i>
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- Campus Situation -->
+            <div class="task-card">
+                <div class="task-icon campus">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h3 class="task-title">Campus Situation</h3>
+                <p class="task-description">
+                    Respond to campus-related conversations and express your opinion clearly.
+                </p>
+                <div class="task-details">
+                    <span><i class="fas fa-clock"></i> Task 2 • 30 seconds prep, 60 seconds speak</span>
+                    <span class="available-count" id="campus-count">7 available</span>
+                </div>
+                <button class="start-button" onclick="startModularTask('campus')">
+                    <i class="fas fa-play"></i>
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- Academic Course -->
+            <div class="task-card">
+                <div class="task-icon course">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3 class="task-title">Academic Course</h3>
+                <p class="task-description">
+                    Summarize academic content and express your understanding of course material.
+                </p>
+                <div class="task-details">
+                    <span><i class="fas fa-clock"></i> Task 3 • 30 seconds prep, 60 seconds speak</span>
+                    <span class="available-count" id="course-count">7 available</span>
+                </div>
+                <button class="start-button" onclick="startModularTask('course')">
+                    <i class="fas fa-play"></i>
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- Academic Lecture -->
+            <div class="task-card">
+                <div class="task-icon lecture">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h3 class="task-title">Academic Lecture</h3>
+                <p class="task-description">
+                    Summarize lecture content and demonstrate understanding of academic concepts.
+                </p>
+                <div class="task-details">
+                    <span><i class="fas fa-clock"></i> Task 4 • 20 seconds prep, 60 seconds speak</span>
+                    <span class="available-count" id="lecture-count">7 available</span>
+                </div>
+                <button class="start-button" onclick="startModularTask('lecture')">
+                    <i class="fas fa-play"></i>
+                    Start Practice
+                </button>
+            </div>
+        </div>
+
+        <!-- IELTS Tasks (Hidden by default) -->
+        <div id="ielts-content" class="task-grid hidden">
+            <div class="task-card">
+                <div class="task-icon independent">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="task-title">Part 1: Introduction</h3>
+                <p class="task-description">
+                    Answer questions about yourself, your family, work, studies, and interests.
+                </p>
+                <div class="task-details">
+                    <span><i class="fas fa-clock"></i> 4-5 minutes</span>
+                    <span class="available-count">Coming Soon</span>
+                </div>
+                <button class="start-button" disabled>
+                    <i class="fas fa-clock"></i>
+                    Coming Soon
+                </button>
+            </div>
+
+            <div class="task-card">
+                <div class="task-icon campus">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="task-title">Part 2: Long Turn</h3>
+                <p class="task-description">
+                    Speak for 1-2 minutes on a given topic after 1 minute of preparation.
+                </p>
+                <div class="task-details">
+                    <span><i class="fas fa-clock"></i> 3-4 minutes total</span>
+                    <span class="available-count">Coming Soon</span>
+                </div>
+                <button class="start-button" disabled>
+                    <i class="fas fa-clock"></i>
+                    Coming Soon
+                </button>
+            </div>
+
+            <div class="task-card">
+                <div class="task-icon course">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3 class="task-title">Part 3: Discussion</h3>
+                <p class="task-description">
+                    Discuss abstract ideas and issues related to the Part 2 topic.
+                </p>
+                <div class="task-details">
+                    <span><i class="fas fa-clock"></i> 4-5 minutes</span>
+                    <span class="available-count">Coming Soon</span>
+                </div>
+                <button class="start-button" disabled>
+                    <i class="fas fa-clock"></i>
+                    Coming Soon
+                </button>
+            </div>
+        </div>
+
+        <!-- History Tab (Hidden by default) -->
+        <div id="history-content" class="hidden">
+            <div class="usage-stats">
+                <h3 class="stats-title">
+                    <i class="fas fa-history"></i>
+                    Practice History
+                </h3>
+                <div id="history-list">
+                    <p style="text-align: center; color: #6b7280; padding: 2rem;">
+                        No practice sessions yet. Start practicing to see your history here!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Task usage tracking system
+        class ModularTaskManager {
+            constructor() {
+                this.storageKey = 'uternity_modular_tasks';
+                this.testSets = [
+                    'set_1', 'set_2', 'set_3', 'set_4', 'set_5', 'set_6', 'set_7'
+                ];
+                this.taskTypes = ['independent', 'campus', 'course', 'lecture'];
+                this.usageData = this.loadUsageData();
+            }
+
+            loadUsageData() {
+                const stored = localStorage.getItem(this.storageKey);
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                
+                // Initialize fresh usage data
+                const data = {
+                    usedTasks: {},
+                    practiceHistory: [],
+                    stats: {
+                        totalPracticed: 0,
+                        taskCounts: {
+                            independent: 0,
+                            campus: 0,
+                            course: 0,
+                            lecture: 0
+                        }
+                    }
+                };
+
+                // Initialize used tasks tracking
+                this.taskTypes.forEach(taskType => {
+                    data.usedTasks[taskType] = [];
+                });
+
+                return data;
+            }
+
+            saveUsageData() {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.usageData));
+            }
+
+            getAvailableTasksCount(taskType) {
+                const totalTasks = this.testSets.length; // 7 test sets
+                const usedTasks = this.usageData.usedTasks[taskType] || [];
+                return totalTasks - usedTasks.length;
+            }
+
+            getRandomAvailableTask(taskType) {
+                const usedTasks = this.usageData.usedTasks[taskType] || [];
+                const availableSets = this.testSets.filter(setId => !usedTasks.includes(setId));
+                
+                if (availableSets.length === 0) {
+                    // All tasks used, reset the pool
+                    this.resetTaskPool(taskType);
+                    return this.testSets[Math.floor(Math.random() * this.testSets.length)];
+                }
+                
+                return availableSets[Math.floor(Math.random() * availableSets.length)];
+            }
+
+            resetTaskPool(taskType) {
+                console.log(`🔄 Resetting task pool for ${taskType} - all tasks completed!`);
+                this.usageData.usedTasks[taskType] = [];
+                this.saveUsageData();
+            }
+
+            markTaskAsUsed(taskType, testSetId) {
+                if (!this.usageData.usedTasks[taskType].includes(testSetId)) {
+                    this.usageData.usedTasks[taskType].push(testSetId);
+                }
+                
+                // Add to practice history
+                this.usageData.practiceHistory.unshift({
+                    taskType,
+                    testSetId,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toLocaleDateString(),
+                    time: new Date().toLocaleTimeString()
+                });
+
+                // Update stats
+                this.usageData.stats.totalPracticed++;
+                this.usageData.stats.taskCounts[taskType]++;
+                
+                // Keep only last 50 history items
+                if (this.usageData.practiceHistory.length > 50) {
+                    this.usageData.practiceHistory = this.usageData.practiceHistory.slice(0, 50);
+                }
+                
+                this.saveUsageData();
+                this.updateUI();
+            }
+
+            updateUI() {
+                // Update available counts
+                this.taskTypes.forEach(taskType => {
+                    const count = this.getAvailableTasksCount(taskType);
+                    const element = document.getElementById(`${taskType}-count`);
+                    if (element) {
+                        element.textContent = `${count} available`;
+                        
+                        // Update button state
+                        const button = element.closest('.task-card').querySelector('.start-button');
+                        if (count === 0) {
+                            button.disabled = true;
+                            button.innerHTML = '<i class="fas fa-check"></i> All Completed';
+                        } else {
+                            button.disabled = false;
+                            button.innerHTML = '<i class="fas fa-play"></i> Start Practice';
+                        }
+                    }
+                });
+
+                // Update stats
+                const stats = this.usageData.stats;
+                document.getElementById('total-practiced').textContent = stats.totalPracticed;
+                document.getElementById('available-tasks').textContent = 
+                    this.taskTypes.reduce((total, type) => total + this.getAvailableTasksCount(type), 0);
+                
+                const totalTasks = this.testSets.length * this.taskTypes.length;
+                const completionRate = Math.round((stats.totalPracticed / totalTasks) * 100);
+                document.getElementById('completion-rate').textContent = `${completionRate}%`;
+
+                // Find most practiced task type
+                const mostPracticed = Object.entries(stats.taskCounts)
+                    .sort(([,a], [,b]) => b - a)[0];
+                document.getElementById('favorite-task').textContent = 
+                    mostPracticed[1] > 0 ? this.formatTaskType(mostPracticed[0]) : '--';
+
+                // Update history
+                this.updateHistoryDisplay();
+            }
+
+            formatTaskType(taskType) {
+                const names = {
+                    independent: 'Independent',
+                    campus: 'Campus',
+                    course: 'Academic Course',
+                    lecture: 'Academic Lecture'
+                };
+                return names[taskType] || taskType;
+            }
+
+            updateHistoryDisplay() {
+                const historyList = document.getElementById('history-list');
+                const history = this.usageData.practiceHistory;
+                
+                if (history.length === 0) {
+                    historyList.innerHTML = `
+                        <p style="text-align: center; color: #6b7280; padding: 2rem;">
+                            No practice sessions yet. Start practicing to see your history here!
+                        </p>
+                    `;
+                    return;
+                }
+
+                historyList.innerHTML = history.map(item => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f9fafb; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <div>
+                            <strong>${this.formatTaskType(item.taskType)}</strong>
+                            <span style="color: #6b7280; margin-left: 0.5rem;">from ${item.testSetId.replace('_', ' ').toUpperCase()}</span>
+                        </div>
+                        <div style="color: #6b7280; font-size: 0.875rem;">
+                            ${item.date} at ${item.time}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize the task manager
+        const taskManager = new ModularTaskManager();
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all content
+            document.getElementById('toefl-content').classList.add('hidden');
+            document.getElementById('ielts-content').classList.add('hidden');
+            document.getElementById('history-content').classList.add('hidden');
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected content and activate tab
+            document.getElementById(`${tabName}-content`).classList.remove('hidden');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // Start modular task
+        function startModularTask(taskType) {
+            console.log(`🎯 Starting modular task: ${taskType}`);
+            
+            // Get a random available task
+            const selectedTestSet = taskManager.getRandomAvailableTask(taskType);
+            
+            // Mark this task as used
+            taskManager.markTaskAsUsed(taskType, selectedTestSet);
+            
+            console.log(`📝 Selected ${taskType} task from ${selectedTestSet}`);
+            
+            // Map task types to section names for URL
+            const sectionMap = {
+                independent: 'independent',
+                campus: 'conversation', 
+                course: 'lecture',
+                lecture: 'lecture'
+            };
+            
+            // Redirect to TOEFL instructions with specific parameters
+            const section = sectionMap[taskType];
+            const url = `toefl-instructions.html?section=${section}&test_set=${selectedTestSet}&modular=true`;
+            
+            console.log(`🚀 Redirecting to: ${url}`);
+            window.location.href = url;
+        }
+
+        // Initialize UI on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 Modular Testing page loaded');
+            taskManager.updateUI();
+            
+            // Smooth page transition
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(20px)';
+            document.body.style.transition = 'all 0.4s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Debug function to reset all data (for testing)
+        function resetAllData() {
+            if (confirm('Are you sure you want to reset all practice data? This cannot be undone.')) {
+                localStorage.removeItem('uternity_modular_tasks');
+                location.reload();
+            }
+        }
+
+        // Add reset button for development (can be removed in production)
+        console.log('🔧 Development: Use resetAllData() to clear all practice history');
+    </script>
+</body>
+</html>

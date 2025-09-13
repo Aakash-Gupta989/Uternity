@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Task Test - UTERNITY</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        .test-container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
+        .test-link { 
+            display: block; 
+            margin: 10px 0; 
+            padding: 15px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 8px; 
+            text-align: center; 
+            font-weight: bold; 
+        }
+        .test-link:hover { 
+            opacity: 0.9; 
+        }
+        .backend-status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status-healthy { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Single Task Testing Page</h1>
+        
+        <div id="backend-status" class="backend-status">
+            Checking backend status...
+        </div>
+        
+        <h2>🎯 TOEFL Individual Tasks</h2>
+        <a href="toefl-instructions.html?section=independent" class="test-link">
+            🎤 Independent Speaking (Task 1)
+        </a>
+        <a href="toefl-instructions.html?section=campus" class="test-link">
+            🏫 Campus Situation (Task 2)
+        </a>
+        <a href="toefl-instructions.html?section=academic-course" class="test-link">
+            📚 Academic Course (Task 3)
+        </a>
+        <a href="toefl-instructions.html?section=academic-lecture" class="test-link">
+            🎓 Academic Lecture (Task 4)
+        </a>
+        
+        <h2>🌍 IELTS Individual Parts</h2>
+        <a href="ielts-instructions.html?section=part1" class="test-link">
+            👋 Part 1: Introduction
+        </a>
+        <a href="ielts-instructions.html?section=part2" class="test-link">
+            🗣️ Part 2: Long Turn
+        </a>
+        <a href="ielts-instructions.html?section=part3" class="test-link">
+            💭 Part 3: Discussion
+        </a>
+        
+        <h2>🔧 Full Tests (for comparison)</h2>
+        <a href="toefl-instructions.html" class="test-link">
+            📝 Full TOEFL Test (All 4 Tasks)
+        </a>
+        <a href="ielts-instructions.html" class="test-link">
+            📝 Full IELTS Test (All 3 Parts)
+        </a>
+        
+        <h2>📊 Direct Test Pages (bypass instructions)</h2>
+        <a href="toefl-test-working.html?section=independent" class="test-link">
+            🎯 Direct: TOEFL Independent Task
+        </a>
+        <a href="ielts-test.html?section=part2" class="test-link">
+            🎯 Direct: IELTS Part 2
+        </a>
+    </div>
+
+    <script>
+        // Test backend connectivity
+        async function checkBackendStatus() {
+            const statusDiv = document.getElementById('backend-status');
+            try {
+                const response = await fetch('http://localhost:8002/api/v1/health/');
+                if (response.ok) {
+                    const data = await response.json();
+                    statusDiv.textContent = `✅ Backend Healthy (v${data.version}) - LLM Scoring Available`;
+                    statusDiv.className = 'backend-status status-healthy';
+                } else {
+                    statusDiv.textContent = `⚠️ Backend responding but unhealthy (${response.status})`;
+                    statusDiv.className = 'backend-status status-error';
+                }
+            } catch (error) {
+                statusDiv.textContent = `❌ Backend not responding - LLM scoring unavailable`;
+                statusDiv.className = 'backend-status status-error';
+            }
+        }
+        
+        // Test scoring endpoint
+        async function testScoring() {
+            try {
+                const response = await fetch('http://localhost:8002/api/v1/score-response', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        transcript: "I prefer studying in quiet places because it helps me concentrate.",
+                        task_type: "independent_speaking",
+                        question: "Test question"
+                    })
+                });
+                const result = await response.json();
+                console.log('✅ Scoring test successful:', result);
+            } catch (error) {
+                console.error('❌ Scoring test failed:', error);
+            }
+        }
+        
+        // Run tests
+        checkBackendStatus();
+        testScoring();
+        
+        // Add click tracking
+        document.querySelectorAll('.test-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                console.log('🔗 Testing link:', this.href);
+                console.log('🔗 Expected behavior:', this.textContent.trim());
+            });
+        });
+    </script>
+</body>
+</html>
